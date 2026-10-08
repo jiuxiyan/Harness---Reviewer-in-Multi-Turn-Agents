@@ -11,7 +11,8 @@ from local_experiments.storage import Store,RunFailure,write_json
 from local_experiments.provider import Client,live_client
 
 def main():
- config_path,mode,output=sys.argv[1:]
+ config_path,mode,output=sys.argv[1:4]
+ recovery_args=sys.argv[4:]
  config=load(config_path)
  os.umask(0o077)
  store=Store(output,config,mode)
@@ -19,12 +20,16 @@ def main():
   # Build the explicit client before imports. No credentials are loaded in dry-run.
   if mode=='dry-run':
    from local_experiments.mock import MockTransport
-   client=Client(config,store,MockTransport(),{r:'mock-'+r for r in ('actor','reviewer','user')})
+   client=Client(config,store,MockTransport(config['review']['fixture_scenario']),{r:'mock-'+r for r in ('actor','reviewer','user','self')})
   elif mode=='live':
    client=live_client(config,store)
    # Upstream never receives the provider credential; our transport alone owns it.
    os.environ.pop('MODEL_API_KEY',None)
   else: raise RunFailure('invalid_mode')
+  if recovery_args:
+   from local_experiments.recovery import Recovery
+   if len(recovery_args)!=2:raise RunFailure('invalid_recovery_arguments')
+   client.recovery=Recovery(*recovery_args,client)
   from local_experiments.provenance import verify_upstream
   verify_upstream()
   pilot=ROOT/'code_inputs/reviewer_pilot'
@@ -41,7 +46,7 @@ def main():
   for name,module in list(sys.modules.items()):
    if name.startswith('tau2.') and hasattr(module,'generate'): module.generate=denied
   from local_experiments.engine import run
-  store.save('capabilities.json',{'official_domain':'telecom','scope':'single assistant READ intervention; text half-duplex; exposed development tasks','supported_arms':['B_bare','B','A','P0','P','R','C'],'unsupported_arms':['S'],'supported_stages':['wire-smoke','natural-pilot'],'confirmatory':False,'provider_acceptance_measured':False,'formal_model_experiments':0})
+  store.save('capabilities.json',{'official_domain':'telecom','scope':'single assistant READ or roaming WRITE intervention; fixed-goal Telecom tasks; text half-duplex','supported_arms':['B_bare','B','S','A','P0','P','R','C'],'unsupported_arms':[],'supported_stages':['wire-smoke','natural-pilot','confirmatory-roots'],'confirmatory':config['stage']=='confirmatory-roots','provider_acceptance_measured':False,'formal_model_experiments':0})
   run(config,store,client)
   return 0
  except BaseException as exc:

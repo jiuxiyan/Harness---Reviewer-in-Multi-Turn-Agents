@@ -32,6 +32,10 @@ def main():
    ['-m','local_experiments','analyze','--input-dir','results/wire-smoke','--output-dir','results/wire-smoke-analysis'],
    ['-m','local_experiments','export','--input-dir','results/wire-smoke-analysis','--output-dir','exports/wire-smoke'],
    ['-m','local_experiments','run','--config','configs/natural-pilot.json','--output-dir','results/pilot'],
+   ['-m','local_experiments','run','--config','configs/write-smoke.json','--output-dir','results/write-smoke'],
+   ['-m','local_experiments','recovery-plan','--input-dir','results/wire-smoke','--output-file','results/recovery-decisions.json'],
+   ['-m','local_experiments','resume','--config','configs/wire-smoke.json','--input-dir','results/wire-smoke','--decisions','results/recovery-decisions.json','--output-dir','results/recovered-wire'],
+   ['-m','local_experiments','analyze','--input-dir','results/recovered-wire','--output-dir','results/recovered-analysis'],
    ['-m','local_experiments','validate','--config','configs/confirmatory-roots.json'],
    ['-m','local_experiments','validate','--config','configs/end-to-end.json'],
   ]
@@ -39,12 +43,15 @@ def main():
   for i,args in enumerate(commands):
    p=subprocess.run([sys.executable,*args],cwd=dest,capture_output=True,text=True)
    (logs/f'{i}.log').write_text(p.stdout+p.stderr)
-   expected=2 if i>=10 else 0
+   expected=2 if any(x in args for x in ('configs/confirmatory-roots.json','configs/end-to-end.json')) else 0
    receipt={'command':'python3 '+' '.join(args),'exit_code':p.returncode,'expected_exit_code':expected}
    receipts.append(receipt);print(json.dumps(receipt),flush=True)
    if p.returncode!=expected: raise SystemExit('Clean acceptance failed; see ignored logs')
-  for name in ('wire-smoke','pilot'):
+  for name in ('wire-smoke','pilot','write-smoke','recovered-wire'):
    status=json.loads((dest/'results'/name/'status.json').read_text());assert status['real_model_calls']==0 and status['status']=='completed'
+  original=json.loads((dest/'results/wire-smoke/status.json').read_text());recovered=json.loads((dest/'results/recovered-wire/status.json').read_text())
+  assert original['physical_attempts']==recovered['physical_attempts']
+  pilot=json.loads((dest/'results/pilot/status.json').read_text());assert pilot['coverage']['roots']==4 and pilot['outcomes']==68
   if manifest.source_digest(manifest.inventory())!=frozen_source_hash: raise SystemExit('Source changed during acceptance; rerun after changes settle')
   receipt={'schema_version':1,'source_tree_sha256':frozen_source_hash,'commands':receipts,'formal_model_calls':0,'status':'passed','scope':'new source directory and fresh pinned virtual environment; all executions offline/mock after dependency setup'}
   (logs/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')

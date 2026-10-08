@@ -24,7 +24,7 @@ class ConfigTests(unittest.TestCase):
   with self.assertRaises(ConfigError) as caught: validate(c)
   self.assertIn('delta',str(caught.exception));self.assertIn('epsilon',str(caught.exception));self.assertIn('ineligible',str(caught.exception))
   c=copy.deepcopy(DEFAULT);c['arms']=['S']
-  with self.assertRaises(ConfigError): validate(c)
+  self.assertEqual(validate(c)['arms'],['S'])
  def test_malformed_and_duplicate_files(self):
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/'input.json'

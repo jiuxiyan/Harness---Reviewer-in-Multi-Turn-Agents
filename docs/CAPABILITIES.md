@@ -1,78 +1,81 @@
 # Implemented scope and evidence limits
 
-The new `local_experiments` runner is distinct from the four historical guarded
-packages. Their live entrypoints remain blocked. Only the new explicit local
-transport can call a provider when the user chooses `--mode live`.
+The v2 runner uses pinned official Telecom tools and evaluation. Preparation has
+made **zero real model calls**. Historical guarded launchers remain offline;
+only the new CLI's explicit `--mode live` reads local provider configuration.
 
-## Implemented and exercised offline
+## Executable scope
 
-- Strict versioned configuration, all missing-field reporting, unknown-field
-  rejection, default dry-run, fresh private run directories, bounded append-only
-  request journals and response persistence before parsing.
-- HTTPS, bearer-authenticated, nonstreaming Chat Completions with system/user/
-  assistant/tool roles, one tool call per generated message, temperature and
-  optional provider seeds, bounded requests/retries/time/output. Redirects are
-  denied rather than forwarded. HTTP 429/500/502/503/504 may retry; an uncertain
-  connection result does not retry. Malformed response content is not redrawn.
-- Official Telecom tools, native participant ownership, environment replay,
-  native counters, full required ENV_ASSERTION reward basis through official
-  `EvaluationType.ALL`, and native max-step failure scoring. No LLM judge runs.
-- Single public trigger: at least two completed assistant tool returns, at least
-  one user text event, and a pending single READ. No hidden success predicate
-  controls eligibility. All raw reviewer draws remain private evidence; invalid
-  format/out-of-scope draws fall back to original action without a packet.
-- Public completion binds a predeclared deterministic ID of the root's selected
-  call to the actual normal return plus one valid actor response. Failed calls,
-  unresolved declarations and failed generations do not consume closure.
-- P/R/C first response and intervening tool/user events sampled once per common
-  segment, then restored into independent official objects. Suffix actors/users
-  issue fresh requests. A/P0/B/B_bare get independent first segments. Early
-  shared terminal outcomes count once per common segment, not cloned suffixes.
-- JSON checkpoints preserve histories, participant states, environment replay
-  assertions, native routing/counters, exposure, RNG and elapsed start metadata.
-  A fresh-process save/restore check exercises continuation and evaluation.
-- Initial-false acquired protected goals and separately stored initially-true
-  membership. Task-macro aggregation averages suffixes within common segment,
-  common segments within root, roots within task, then tasks equally. Cluster
-  bootstrap resamples task contrasts. Missing endpoint worst/best bounds are
-  separate from exploratory available-endpoint point estimates.
-- Local aggregate export has a typed allowlist; no raw files/text/identities
-  are copied. Known client credentials and authorization fields are redacted
-  if echoed into a response. Full response evidence is therefore redacted when
-  necessary, not claimed byte-identical to secret-bearing input.
+- All eight arms: B_bare (manuscript B_native), B, S, A, P0, P, R, C. S spends
+  one actor-model reconsideration request under the configured response budget,
+  executes its selected action, and shows no reviewer packet. This matches a
+  budget rule, not realized token counts or monetary costs.
+- Public roots after two assistant tool returns and a user text event. Roots
+  are collected from an unmodified reference trajectory before interventions;
+  multiple starts, multiple roots, common-prefix repeats and suffix repeats are
+  configurable. No evaluator controls root selection or proposal acceptance.
+- READ tools plus the bounded assistant WRITEs `enable_roaming` and
+  `disable_roaming`. The roaming fixture changes official carrier state and can
+  repair a task assertion. This is a test of an actual mutation, not an estimate
+  of natural model repair. Other known assistant WRITEs are explicit capability
+  missingness, not silently executed or counted as successes.
+- P/R/C share the exact draw, selected action, receipt and first exposure through
+  the next actor boundary. Suffixes use fresh objects and fresh logical requests.
+  C closes only a declared action-local call after its normal return and one
+  valid actor response. Ongoing declarations and errors never close. Closure is
+  independent of whether a task goal improved or worsened.
+- Native task `ENV_ASSERTION` evaluation with fixed task goals. Initially false
+  goals acquired at the root are protected; initially true properties are
+  separately recorded. **Dynamic user revocation/change of goals is unsupported.**
+- Snapshots bind task/config/source, native histories, routing/counters, RNG,
+  environment and consumed intervention state. Restore constructs an uninitialized
+  environment and replays initialization plus history exactly once. READ,
+  roaming WRITE and non-idempotent suspension initialization have process tests.
+- Executable `confirmatory-roots` under a locally frozen design/task/source/model
+  manifest. Exposed development tasks and near-duplicate fault families are
+  excluded; selected confirmation units must share no normalized fault component.
+  This is an explicit design assumption, not empirical proof of independence.
+  Operator knowledge of other prior exposure is required; software cannot infer it.
 
-## Explicitly not delivered as implemented capabilities
+## Failure and recovery policy
 
-- S fixed-budget self-reconsideration; confirmatory-root execution; episode-start
-  end-to-end policy utility; unseen/frozen confirmation data or sample allocation.
-- Arbitrary assistant WRITE tools, multiple tool calls, voice, streaming,
-  timeout-aware native checkpoints, other domains, persistent automatic resume
-  of a partially dispatched provider request, or idempotency guarantees.
-- Real-provider acceptance, price snapshots/currency ceilings, physical-to-logical
-  cost allocation, provider token-matched headers, or historical P0 byte parity
-  across different renderer versions. Current usage counts can be unknown.
-- Automated semantic truth checks of reviewer declarations, Omega shadow
-  stratification, complete delayed/recurrent/per-goal diagnostics, a separately
-  analyzed initially-true maintained-state stratum, and full negative-control
-  battery. These remain preconditions for the corresponding scientific claims.
-- Independently replicated natural incidence, meaningful repair effects,
-  statistical power, or broad task/family generality. No live model run was made.
+Received empty, refusal, truncated or malformed model messages become native
+AGENT_ERROR/USER_ERROR endpoints (completion zero), with the response retained.
+Mixed text/tool messages use the upstream communication-error rule. Multiple or
+hallucinated tools are declared model protocol errors. Reviewer received-invalid
+output consumes one draw and executes original-action/no-packet fallback; it is
+never resampled. Damaged provider envelopes and unknown network results remain
+infrastructure missingness. Native step/error limits remain observed failures.
 
-The default smoke fixture is authored and can reach official success. That
-checks routing and evaluation, not the natural probability of success.
-`natural-pilot --mode dry-run` remains `scripted_fixture`; changing stage labels
-never turns fixture data into model evidence. All seven input tasks are exposed.
+`recovery-plan` and `resume` replay durable responses locally into reconstructed
+benchmark state. Unknown dispatches require an explicit per-request abandon or
+retry decision; retry acknowledges possible duplicate billing. They never retry
+automatically. Confirmed response model identity is checked again. Physical,
+per-logical retry and original wall-time budgets persist (wall time includes the
+pause). Divergent requests, changed source/config/model, torn journals and
+redacted payloads fail closed. In-flight requests may still be billed. No remote
+cancellation, idempotency guarantee or arbitrary-provider recovery is claimed.
 
-## Failures and interpretation
+## Statistics and costs
 
-Completed runs may contain explicit missing endpoints. Analyses refuse runs
-without a settled journal/status because omitted assignments would invalidate
-bounds. Native max-step/error terminations remain observed endpoints; transport,
-restore, output-budget and implementation errors do not become successes.
-A stopped run's private files remain available for diagnosis, but the CLI does
-not automatically replay unknown-billed requests. Start a new run after a fix.
+The primary contrast averages suffixes within common segments, segments within
+roots, roots within tasks, then tasks equally. Task-cluster bootstrap preserves
+paired contrasts. Shared terminal segments count once. Available-endpoint point
+estimates have explicit missingness bounds. Reference failures are reported
+separately and prohibit a confirmation verdict; no-trigger reference trajectories
+are a different root-conditioned coverage outcome. Equal-family sensitivity is
+only a point estimate, not a shared-family cluster interval.
 
-A whole-run wall limit is checked before each model dispatch; a single in-flight
-request can additionally consume its per-request timeout. Output limits apply
-to evidence writes, not total process RAM or tool execution time. These are
-operational controls, not a kernel sandbox or hard currency cap.
+Every physical retry counts once globally. Each arm path includes its reference,
+proposal/self-review, common-prefix and own-suffix request ancestry, including
+retries. Shared ancestry is repeated only in logical path costs. Absent usage and
+prices stay unknown, not zero. Monetary caps and provider-token matched headers
+are unsupported. All mock effects remain null / `not_run`.
+
+## Remaining extensions
+
+Episode-start end-to-end utility, arbitrary assistant mutations, voice, streaming,
+other domains, dynamic goal masks, semantic declaration auditing, Omega strata,
+full delayed/recurrent goal diagnostics, and empirical price/provider calibration
+are not implemented. No natural incidence, power, repair effect or efficacy is
+established by this offline release. Original research has no specified license.

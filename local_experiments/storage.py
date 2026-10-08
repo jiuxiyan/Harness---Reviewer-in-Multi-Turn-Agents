@@ -22,10 +22,10 @@ class Store:
   self.secrets=();self.config=config;self.mode=mode;self.run_id=self.root.name+'-'+str(time.time_ns())
   from .provenance import source_hashes
   self.sources=source_hashes();self.protocol_hash=digest({'config':config,'sources':self.sources});self.sequence=0;self.used=0;self.parent=None
-  self.evidence='scripted_fixture' if mode=='dry-run' else 'exploratory_live'
+  self.evidence='scripted_fixture' if mode=='dry-run' else ('confirmatory_live' if config['stage']=='confirmatory-roots' else 'exploratory_live')
   for name in ('private/requests','private/responses','private/checkpoints','private/evaluation','journal','derived'):
    (self.root/name).mkdir(parents=True,exist_ok=True)
-  self.save('run_manifest.json',{'run_id':self.run_id,'protocol_hash':self.protocol_hash,'config':config,'mode':mode,'evidence_kind':self.evidence,'schema_version':1,'source_hashes':self.sources})
+  self.save('run_manifest.json',{'run_id':self.run_id,'budget_origin_ns':time.time_ns(),'protocol_hash':self.protocol_hash,'config':config,'mode':mode,'evidence_kind':self.evidence,'schema_version':1,'source_hashes':self.sources})
  def sanitize(self,value):
   if isinstance(value,str):
    for secret in self.secrets: value=value.replace(secret,'[REDACTED_CREDENTIAL]')

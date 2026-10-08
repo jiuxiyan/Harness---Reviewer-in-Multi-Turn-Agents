@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "protocol_id": "advice-lifetimes-local-v1",
+  "schema_version": 2,
+  "protocol_id": "advice-lifetimes-local-v2",
   "stage": "wire-smoke",
   "evidence_kind": "not_run",
   "study_label": "exploratory",
@@ -12,7 +12,9 @@
     "population": "exposed_development_only",
     "task_indices": [
       0
-    ]
+    ],
+    "exposure_manifests": [],
+    "operator_attests_unseen": false
   },
   "models": {
     "api_protocol": "openai-compatible-chat-completions",
@@ -23,7 +25,11 @@
     "user_model_env": "USER_MODEL",
     "temperature": 0.0,
     "provider_seed_supported": false,
-    "max_completion_tokens": 1024
+    "max_completion_tokens": 1024,
+    "actor_model": null,
+    "reviewer_model": null,
+    "user_model": null,
+    "require_reported_model": false
   },
   "arms": [
     "P",
@@ -33,11 +39,17 @@
   "review": {
     "max_slots": 1,
     "draws_per_root": 1,
-    "public_trigger_version": "public_single_read_after_two_tools_v1",
+    "public_trigger_version": "public_single_call_after_two_tools_v2",
     "fallback": "original_action_no_packet",
-    "projection_version": "local-receipt-v1"
+    "projection_version": "local-receipt-v2",
+    "allowed_writes": [
+      "enable_roaming",
+      "disable_roaming"
+    ],
+    "fixture_scenario": "read"
   },
   "sampling": {
+    "max_roots_per_trajectory": 1,
     "starts_per_task": 1,
     "common_prefix_repeats": 1,
     "suffix_repeats": 1,
@@ -81,5 +93,7 @@
     "raw_private": true,
     "overwrite": false,
     "export_allowlist_only": true
-  }
+  },
+  "endpoint_policy": "fixed_task_goals_native_model_errors_v1",
+  "independence_policy": "one_task_per_disjoint_fault_component_v1"
 }

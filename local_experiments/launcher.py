@@ -6,7 +6,7 @@ import sys
 from .config import ROOT
 from .storage import RunFailure
 
-def launch(config_path,mode,output):
+def launch(config_path,mode,output,recovery=None):
  pilot=ROOT/'code_inputs/reviewer_pilot'
  python=pilot/'.venv/bin/python'
  if not python.is_file(): raise RunFailure('Install pinned CPU dependencies using the documented setup commands')
@@ -26,4 +26,4 @@ def launch(config_path,mode,output):
               'HTTP_PROXY','HTTPS_PROXY','ALL_PROXY','NO_PROXY','http_proxy','https_proxy','all_proxy','no_proxy',
               'SSL_CERT_FILE','SSL_CERT_DIR','REQUESTS_CA_BUNDLE'):
    if key in os.environ: env[key]=os.environ[key]
- return subprocess.run([str(python),'-I','-B',str(ROOT/'local_experiments/worker.py'),str(Path(config_path).resolve()),mode,str(output)],env=env,cwd=ROOT).returncode
+ return subprocess.run([str(python),'-I','-B',str(ROOT/'local_experiments/worker.py'),str(Path(config_path).resolve()),mode,str(output),*(list(map(str,recovery)) if recovery else [])],env=env,cwd=ROOT).returncode

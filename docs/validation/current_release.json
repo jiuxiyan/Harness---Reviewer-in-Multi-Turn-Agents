@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_tree_sha256": "3f76597260e726338d83e2f6ce24f7d082f5f861acbd101944537162e2d6a83d",
+  "source_tree_sha256": "dc4fd115c0f7ffa618a53264164969a39f62e7b89cff795da90a4ae54d774830",
   "commands": [
     {
       "command": "python3 tools/public_manifest.py --check",
@@ -53,6 +53,26 @@
       "expected_exit_code": 0
     },
     {
+      "command": "python3 -m local_experiments run --config configs/write-smoke.json --output-dir results/write-smoke",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments recovery-plan --input-dir results/wire-smoke --output-file results/recovery-decisions.json",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments resume --config configs/wire-smoke.json --input-dir results/wire-smoke --decisions results/recovery-decisions.json --output-dir results/recovered-wire",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments analyze --input-dir results/recovered-wire --output-dir results/recovered-analysis",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
       "command": "python3 -m local_experiments validate --config configs/confirmatory-roots.json",
       "exit_code": 2,
       "expected_exit_code": 2
@@ -70,10 +90,16 @@
   "tested_python": "3.12.14",
   "base_commit": "815809e8f304d3a22425c197ecd001754db3733d",
   "input_commit": "87d665519223aa97c2a52ed9fa3ce9c59545cdd0",
-  "independent_review": "passed_for_bounded_READ_development_release",
-  "new_outer_unittest_cases": 28,
-  "guarded_engine_cases": 11,
-  "fresh_process_new_runner_restore": "passed",
+  "intermediate_commit": "d7d0d0e7ef8b960610a20e05635ac38afda79ecd",
+  "independent_review": "no_blockers_for_bounded_v2_clean_acceptance; eight recovery tests independently passed",
+  "new_outer_unittest_cases": 41,
+  "guarded_engine_cases": 23,
+  "fresh_process_restore_cases": [
+    "READ continuation",
+    "roaming WRITE continuation",
+    "non-idempotent official suspension initialization",
+    "non-idempotent initial user WRITE history"
+  ],
   "four_layer_checks": {
     "evidence_kind": "scripted_fixture",
     "formal_model_calls": 0,
@@ -102,17 +128,26 @@
   },
   "upstream_files_sha256_verified": 281,
   "manuscript_docx_png_svg_preserved_exactly": true,
-  "public_text_and_docx_key_pattern_scan": "passed",
+  "public_credential_token_pattern_scan": "passed; 440 public files including DOCX XML",
+  "runtime_artifacts_in_public_manifest": 0,
   "real_provider_compatibility": "not_run",
   "confirmatory_experiments": "not_run",
+  "confirmatory_gate_tests": "metadata-only positive freeze/binding, exposure/family exclusions, independence restriction and unseen attestation; no heldout task simulated",
+  "natural_pilot_fixture": {
+    "tasks": 2,
+    "roots": 4,
+    "arms": 8,
+    "outcomes": 68,
+    "evidence_kind": "scripted_fixture",
+    "formal_model_calls": 0
+  },
   "unsupported": [
-    "S",
-    "confirmatory-roots",
-    "end-to-end",
-    "assistant WRITE interventions",
-    "streaming or multi-call",
-    "automatic partial-provider-run resume",
-    "currency caps and logical cost attribution"
+    "episode-start end-to-end",
+    "arbitrary assistant WRITE",
+    "dynamic goal revocation/change",
+    "voice/streaming/other domains",
+    "currency caps and known dollar pricing",
+    "semantic declaration truth audit"
   ],
-  "no_push_performed": true
+  "publication_status": "new v2 changes prepared locally for parent review; no new push"
 }

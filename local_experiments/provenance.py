@@ -6,7 +6,7 @@ from .config import ROOT
 from .storage import RunFailure
 
 def source_hashes():
- paths=list((ROOT/'local_experiments').glob('*.py'))+[ROOT/'paper/manuscript.txt',ROOT/'docs/protocol/current_protocol.md',ROOT/'docs/planning/manifests/tasks_readiness.json',ROOT/'code_inputs/reviewer_pilot/source_manifest_final.json']
+ paths=list((ROOT/'local_experiments').glob('*.py'))+[ROOT/'docs/protocol/local_runner_v2.md',ROOT/'docs/validation/development_exposures.json',ROOT/'paper/manuscript.txt',ROOT/'docs/protocol/current_protocol.md',ROOT/'docs/planning/manifests/tasks_readiness.json',ROOT/'code_inputs/reviewer_pilot/source_manifest_final.json']
  return {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(paths)}
 
 def verify_upstream():

@@ -11,6 +11,11 @@ class HTTPFailure(Exception):
  def __init__(self,status): self.status=status
 class UnknownResult(Exception): pass
 
+class ModelOutputError(RunFailure):
+ def __init__(self,response,reason):
+  super().__init__("received_model_output_invalid");self.response=response;self.reason=reason
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
  def redirect_request(self,*args,**kwargs): raise HTTPFailure(302)
 
@@ -56,13 +61,15 @@ def parse_response(response):
   choices=response['choices']
   if not isinstance(choices,list) or len(choices)!=1: raise ValueError()
   if not isinstance(choices[0],dict): raise ValueError()
-  if choices[0].get('finish_reason') not in ('stop','tool_calls'): raise ValueError()
+  if choices[0].get('finish_reason') not in ('stop','tool_calls'):
+   raise ModelOutputError(response,'finish_reason')
   m=choices[0]['message']
   if not isinstance(m,dict): raise ValueError()
-  if m.get('role')!='assistant' or m.get('refusal'): raise ValueError()
+  if m.get('role')!='assistant': raise ValueError()
+  if m.get('refusal'): raise ModelOutputError(response,'refusal')
   text=m.get('content');calls=m.get('tool_calls') or []
   if text is not None and not isinstance(text,str): raise ValueError()
-  if not isinstance(calls,list) or (not text and not calls) or (text and calls): raise ValueError()
+  if not isinstance(calls,list): raise ModelOutputError(response,'invalid_tool_calls')
   seen=set()
   for c in calls:
    if not isinstance(c,dict): raise ValueError()
@@ -73,12 +80,15 @@ def parse_response(response):
    args=json.loads(f['arguments'])
    if not isinstance(args,dict): raise ValueError()
   return {'role':'assistant','content':text,'tool_calls':calls}
- except (KeyError,TypeError,ValueError): raise RunFailure('actor_output_invalid') from None
+ except (KeyError,TypeError,ValueError):
+  if isinstance(response,dict) and isinstance(response.get('choices'),list) and len(response['choices'])==1 and isinstance(response['choices'][0],dict) and isinstance(response['choices'][0].get('message'),dict) and response['choices'][0]['message'].get('role')=='assistant':
+   raise ModelOutputError(response,'invalid_model_message') from None
+  raise RunFailure('provider_envelope_invalid') from None
 
 class Client:
  def __init__(self,config,store,transport,models):
   self.config=config;self.store=store;self.transport=transport;self.models=models
-  self.calls=0;self.logical=0;self.started=time.monotonic()
+  self.recovery=None;self.records=[];self.calls=0;self.logical=0;self.started=time.monotonic()
  def __deepcopy__(self,memo): return self
  def call(self,role,messages,tools=None,context=None):
   validate_wire(messages);self.logical+=1;logical=self.logical
@@ -89,25 +99,37 @@ class Client:
   payload={'model':self.models[role], 'messages':messages, 'temperature':m['temperature'], 'max_completion_tokens':m['max_completion_tokens'],'stream':False,'n':1}
   if tools: payload.update(tools=tools,parallel_tool_calls=False)
   if m['provider_seed_supported']: payload['seed']=(c['sampling']['allocation_seed']+logical)%2147483647
-  for attempt in range(limits['max_retries_per_request']+1):
+  start_attempt=0
+  if self.recovery:
+   cached,response=self.recovery.replay(logical,payload)
+   if cached:
+    if m['require_reported_model'] and (not isinstance(response,dict) or response.get('model')!=self.models[role]):raise RunFailure('reported_model_identity_mismatch')
+    return parse_response(response)
+   start_attempt=len(self.recovery.groups.get(logical,[]))
+  for attempt in range(start_attempt,limits['max_retries_per_request']+1):
    if self.calls>=limits['max_physical_requests'] or time.monotonic()-self.started>=limits['run_timeout_seconds']: raise RunFailure('budget_stopped')
    self.calls+=1;physical=self.calls;start=time.monotonic()
    self.store.save(f'private/requests/{physical}.json',payload)
    common={'physical_call_id':physical,'logical_request_id':logical,'attempt':attempt,'role':role,'payload_digest':digest(payload),'stored_payload_digest':digest(self.store.sanitize(payload)),'context':context or {}}
+   self.records.append({**common,'status':'dispatched_unknown','usage':None,'cost':None})
    self.store.event('request_dispatched',**common)
    try:
     response=self.transport(payload)
     # Persist before parsing: malformed reviewer output is never redrawn.
     self.store.save(f'private/responses/{physical}.json',response)
    except HTTPFailure as e:
+    self.records[-1].update(status='http_failure',status_code=e.status)
     self.store.event('request_failed',**common,status_code=e.status,charge_status='unknown',latency_seconds=time.monotonic()-start)
     if e.status in (429,500,502,503,504) and attempt<limits['max_retries_per_request']:
      time.sleep(min(limits['retry_backoff_seconds']*(2**attempt),60));continue
     raise RunFailure('provider_error_exhausted') from None
    except UnknownResult:
+    self.records[-1]['status']='provider_result_unknown'
     self.store.event('request_failed',**common,status='provider_result_unknown',charge_status='unknown',latency_seconds=time.monotonic()-start)
     raise RunFailure('provider_result_unknown') from None
+   self.records[-1].update(status='response_saved',usage=usage_fields(response))
    self.store.event('response_saved',**common,received_response_digest=digest(response),stored_response_digest=digest(self.store.sanitize(response)),usage=usage_fields(response),cost=None,cost_status='unknown',latency_seconds=time.monotonic()-start)
+   if m['require_reported_model'] and (not isinstance(response,dict) or response.get('model')!=self.models[role]): raise RunFailure('reported_model_identity_mismatch')
    return parse_response(self.store.sanitize(response))
   raise RunFailure('provider_error_exhausted')
 
@@ -118,8 +140,10 @@ def live_client(config,store):
  values=[os.environ.get(name) for name in names]
  if any(not x or x.startswith('REPLACE_') for x in values): raise RunFailure('missing_local_provider_configuration')
  base,key,actor,reviewer,user=values
+ for role,value in (('actor',actor),('reviewer',reviewer),('user',user)):
+  if m[role+'_model'] is not None and m[role+'_model']!=value: raise RunFailure('configured_model_identity_mismatch')
  store.secrets=(key,)
- return Client(config,store,HTTPTransport(base,key,config['limits']['request_timeout_seconds'],config['limits']['max_response_bytes']),{'actor':actor,'reviewer':reviewer,'user':user})
+ return Client(config,store,HTTPTransport(base,key,config['limits']['request_timeout_seconds'],config['limits']['max_response_bytes']),{'actor':actor,'reviewer':reviewer,'user':user,'self':actor})
 
 
 def usage_fields(response):

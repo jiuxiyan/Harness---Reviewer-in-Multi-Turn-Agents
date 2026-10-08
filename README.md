@@ -66,35 +66,37 @@ TLS verification stays enabled; redirects are rejected. See the
 
 ## Implemented scope and limits
 
-The new runner supports one public-triggered, single assistant READ intervention
-per reference start, text half-duplex Telecom, explicit receipt provenance,
-public action-local closure, common P/R/C segments, JSON checkpoints restored
-into new official objects, and independent actor/user suffix requests. The
-included mock path uses exposed task 0. Other exposed tasks can be selected for
-exploratory live development, but all assistant mutation, multi-call, streaming
-and unsupported evaluator paths fail explicitly. These are method-pipeline
-checks, not natural repair evidence or comprehensive benchmark support.
+The v2 runner supports official Telecom READ tools and bounded roaming WRITEs,
+multiple roots/tasks, all eight arms, independent repeated suffixes, native model
+failure scoring, frozen-manifest confirmation, request-level cost attribution
+and explicit interrupted-run recovery. WRITE smoke changes actual official
+state. All bundled observations remain development fixtures.
 
-| Arm | New runner capability | Limitation |
-| --- | --- | --- |
-| B_bare | Original native action/message representation | READ scope only; maps to manuscript B_native |
-| B | Original action with factual controller receipt | Instrumentation comparison needs live calibration |
-| S | Rejected explicitly | Budget-matched model self-reconsideration not implemented |
-| A | Same selected action and receipt, no packet | Different first segment from packet arms |
-| P0 | Unwrapped persistent packet | Cross-renderer/provider calibration against historical representation remains unmeasured |
-| P | Exact packet plus neutral status sentence | Provider-token equality not assumed |
-| R | Common first exposure, then packet/header removed | Separate receipt and native history retained |
-| C | Same packet; public-success completion status after one valid response | Syntactic local closure, not proof of correct advice or repair |
+| Arm | Behavior |
+| --- | --- |
+| B_bare | Original native representation; manuscript B_native |
+| B | Original action with factual controller receipt |
+| S | One actor-model self-reconsideration; selected action, no packet |
+| A | Reviewer-selected action and receipt, no packet |
+| P0 | Unwrapped persistent packet |
+| P | Exact packet plus neutral status sentence |
+| R | Shared first exposure, then packet/header removed; receipt retained |
+| C | Same packet; only later public completion-status header changes |
 
-`wire-smoke` and `natural-pilot` use the implemented root runner with different
-sample sizes. `confirmatory-roots` and `end-to-end` are **rejected**, even in
-dry-run. Their configurations and planning documents expose future work,
-not implemented studies. See [capabilities and remaining work](docs/CAPABILITIES.md).
+`wire-smoke`, `natural-pilot` and `confirmatory-roots` use the implemented root
+runner. The confirmation template initially rejects because its sample, margins,
+models and freeze are unset and its default tasks are exposed. The
+[runbook](docs/LOCAL_RUNBOOK.md) explains how to freeze a separately selected
+unseen sample and execute it locally. Episode-start `end-to-end` is a separate
+unimplemented extension.
 
-All seven Telecom witnesses are **exposed development material**, including the
-three originally in upstream test. Confirmation needs a separately frozen,
-unseen task/family sample. The final manuscript governs the proposed scientific
-study; supported software scope does not redefine that study.
+The study scope is fixed-goal tasks, with explicit independent-unit assumptions;
+dynamic user goal changes and arbitrary mutations are unsupported. Public call
+closure does not prove repair. See [capabilities](docs/CAPABILITIES.md) and the
+[v2 operational protocol](docs/protocol/local_runner_v2.md) for failure,
+missingness, recovery and statistical limits. All seven original witnesses plus
+the non-idempotent restore regression task are exposed development material.
+No real model run was performed during preparation.
 
 ## Research and reproducibility
 

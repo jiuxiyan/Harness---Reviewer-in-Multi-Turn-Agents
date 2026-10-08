@@ -47,12 +47,12 @@ def analyze(input_dir,output_dir):
  manifest=json.loads((source/'run_manifest.json').read_text());rows=read_lines(source/'derived/root_outcomes.jsonl');events=read_lines(source/'journal/events.jsonl')
  kind=manifest['evidence_kind'];protocol=manifest['protocol_hash']
  if not events or events[-1]['kind']!='run_settled' or events[-1]['assigned_rows']!=len(rows): raise RunFailure('Run ledger is not settled')
- if kind not in ('scripted_fixture','exploratory_live'): raise RunFailure('unsupported_evidence_kind')
+ if kind not in ('scripted_fixture','exploratory_live','confirmatory_live'): raise RunFailure('unsupported_evidence_kind')
  if any(r['evidence_kind']!=kind for r in rows) or any(e['protocol_hash']!=protocol or e['evidence_kind']!=kind for e in events): raise RunFailure('mixed_evidence_or_protocol')
  identities=[(r['root_id'],r['arm_id'],r['common_prefix_repeat_id'],r['suffix_repeat_id']) for r in rows]
  if len(identities)!=len(set(identities)): raise RunFailure('duplicate_outcome')
  config=manifest['config']['analysis'];both={'P','C'}<=set(manifest['config']['arms'])
- live=kind=='exploratory_live';loss=contrast(rows,'loss') if both else [];completion=contrast(rows,'completion') if both else []
+ live=kind in ('exploratory_live','confirmatory_live');loss=contrast(rows,'loss') if both else [];completion=contrast(rows,'completion') if both else []
  attempts=[e for e in events if e['kind']=='request_dispatched'];responses=[e for e in events if e['kind']=='response_saved']
  input_tokens=[];output_tokens=[]
  for e in responses:
@@ -69,7 +69,7 @@ def analyze(input_dir,output_dir):
  for r in rows: family_groups[r['family_id']].append(r)
  sensitivity=[mean(contrast(v,'loss')) for v in family_groups.values()] if both else []
  report={'schema_version':1,'evidence_kind':kind,'protocol_hash':protocol,
- 'model_outcomes':'exploratory' if live else 'not_run','formal_experiments':0,
+ 'model_outcomes':('confirmatory' if kind=='confirmatory_live' else 'exploratory') if live else 'not_run','formal_experiments':int(kind=='confirmatory_live'),
  'task_count':len({r['task_id'] for r in rows}),'family_count':len(family_groups),'row_count':len(rows),'missing_endpoints':missing,
  'loss_reduction':mean(loss) if live else None,'completion_difference':mean(completion) if live else None,
  'loss_interval':interval(loss,config['bootstrap_replicates'],config['bootstrap_seed'],config['confidence_level']) if live else None,
@@ -77,12 +77,22 @@ def analyze(input_dir,output_dir):
  'missingness_bounds':bounds,'family_macro_loss_reduction':mean([v for v in sensitivity if v is not None]) if live else None,
  'physical_attempts':len(attempts),'reported_input_tokens':sum(input_tokens) if input_tokens else None,
  'reported_output_tokens':sum(output_tokens) if output_tokens else None,'calls_missing_usage':len(attempts)-len(input_tokens),
- 'cost':None,'cost_status':'unknown','logical_cost_status':'not_implemented',
- 'interval_caution':'task-cluster bootstrap; fewer than two tasks yields no interval; few tasks/families are unstable',
+ 'cost':None,'cost_status':'unknown','logical_cost_status':'request_ancestry_with_retries_in_derived_costs_json',
+ 'interval_caution':'task-cluster bootstrap; confirmation restricts units to disjoint normalized fault components; fewer than two units yields no interval; family sensitivity is a point estimate only',
  'estimand':'equal common-segment means within roots; equal roots within tasks; equal tasks',
  'point_estimate_missingness':'available endpoints within task; consult assignment-based worst/best bounds',
  'structural_zero_rows':sum(bool(r.get('structural_zero')) for r in rows),'draw_classifications':{k:sum(e['kind']=='draw_captured' and e.get('classification')==k for e in events) for k in ('invalid','out_of_scope','unchanged','valid_changed')},
  'claim_status':'no_confirmatory_claim'}
+ if kind=='confirmatory_live':
+  from .freeze import verify_freeze,check_dataset
+  verify_freeze(manifest['config']);selected=check_dataset(manifest['config'])
+  represented={r['task_id'] for r in rows}
+  coverage=json.loads((source/'derived/coverage.json').read_text())
+  report['reference_coverage']=coverage
+  complete_units=coverage['reference_failures']==0 and len(represented)==len(selected) and all(r['task_id'] in represented for r in selected)
+  lo=report['loss_interval'];co=report['completion_interval']
+  report['claim_status']='criteria_met' if complete_units and missing==0 and lo and co and lo[0]>config['delta'] and co[0]>=-config['epsilon'] else 'not_established'
+  report['confirmation_scope']='fixed task goals; root-conditioned; independently declared disjoint fault components; no dynamic goal revocation; offline freeze is not external preregistration'
  target.mkdir(parents=True);target.chmod(0o700)
  write_json(target/'summary.json',report)
  write_json(target/'analysis_manifest.json',{'schema_version':1,'protocol_hash':protocol,'evidence_kind':kind,'summary_sha256':digest(report),'analysis_config':config})
@@ -93,14 +103,14 @@ def export(input_dir,output_dir):
  if target.exists(): raise RunFailure('Output directory already exists')
  r=json.loads((source/'summary.json').read_text());m=json.loads((source/'analysis_manifest.json').read_text())
  if digest(r)!=m['summary_sha256'] or r['protocol_hash']!=m['protocol_hash']: raise RunFailure('analysis_integrity_mismatch')
- if r['evidence_kind'] not in ('scripted_fixture','exploratory_live'): raise RunFailure('invalid_evidence_kind')
+ if r['evidence_kind'] not in ('scripted_fixture','exploratory_live','confirmatory_live'): raise RunFailure('invalid_evidence_kind')
  # Rebuild from a typed numeric allowlist; never copy arbitrary files/text.
- safe={'schema_version':1,'evidence_kind':r['evidence_kind'],'formal_experiments':0}
+ safe={'schema_version':1,'evidence_kind':r['evidence_kind'],'formal_experiments':int(r['evidence_kind']=='confirmatory_live')}
  for key in SCALARS:
   value=r[key]
   if value is not None and (type(value) not in (int,float) or not -1e15<value<1e15): raise RunFailure('invalid_export_scalar')
   safe[key]=value
- safe['cost_status']='unknown';safe['model_outcomes']='not_run' if safe['evidence_kind']=='scripted_fixture' else 'exploratory'
+ safe['cost_status']='unknown';safe['model_outcomes']='not_run' if safe['evidence_kind']=='scripted_fixture' else ('confirmatory' if safe['evidence_kind']=='confirmatory_live' else 'exploratory')
  if safe['evidence_kind']=='scripted_fixture':
   safe['loss_reduction']=safe['completion_difference']=None
  target.mkdir(parents=True);target.chmod(0o700)

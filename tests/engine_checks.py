@@ -19,15 +19,22 @@ from local_experiments.provider import Client
 from local_experiments.mock import MockTransport
 from tau2.domains.telecom.environment import get_tasks
 
-def setup_run(directory):
- c=copy.deepcopy(DEFAULT);store=Store(Path(directory)/'run',c,'dry-run')
- client=Client(c,store,MockTransport(),{r:'mock-'+r for r in ('actor','user','reviewer')})
- meta=json.loads((ROOT/c['dataset']['manifest']).read_text())['tasks'][0]
- task=next(t for t in get_tasks('base') if t.id==meta['task_id'])
+def setup_run(directory,index=0,scenario="read"):
+ c=copy.deepcopy(DEFAULT);c['review']['fixture_scenario']=scenario;store=Store(Path(directory)/'run',c,'dry-run')
+ client=Client(c,store,MockTransport(scenario),{r:'mock-'+r for r in ('actor','user','reviewer','self')})
+ meta=json.loads((ROOT/c['dataset']['manifest']).read_text())['tasks'][index]
+ task=next(t for t in get_tasks(None) if t.id==meta['task_id'])
  o=e.make(task,client,c)
  while not o.done and not e.trigger(o):o.step();o._check_termination()
  assert e.trigger(o)
  return c,store,client,task,o
+
+def history_task(task):
+ task=task.model_copy(deep=True);task.initial_state.initialization_data=None;task.initial_state.initialization_actions=[]
+ call=e.ToolCall(id='authored-history-toggle',requestor='user',name='toggle_airplane_mode',arguments={})
+ env=e.get_environment();response=env.get_response(call);response.timestamp=None
+ task.initial_state.message_history=[e.UserMessage(role='user',tool_calls=[call],timestamp=None),response]
+ return task
 
 class EngineChecks(unittest.TestCase):
  def setUp(self):
@@ -114,12 +121,140 @@ class EngineChecks(unittest.TestCase):
   trace=e.advance(self.o,[],self.task)
   self.assertEqual(e.outcome(self.o,self.task,[0],trace)['completion'],0)
 
+ def test_received_truncated_reviewer_is_one_fallback_draw(self):
+  before=self.client.calls
+  self.client.transport=lambda p:{'choices':[{'finish_reason':'length','message':{'role':'assistant','content':'{"selected_action":'}}]}
+  q=self.draw();self.assertEqual(self.client.calls,before+1)
+  self.assertEqual(q['classification'],'invalid');self.assertEqual(q['packet'],'')
+  self.assertEqual(q['selected_action'],e.action(self.o.message));e.execute(self.o,q,'C')
+  self.assertEqual(self.o.agent.record['packet'],'')
+ def test_mixed_received_actor_is_native_failure(self):
+  q=self.draw();e.execute(self.o,q,'P')
+  self.client.transport=lambda p:{'choices':[{'finish_reason':'tool_calls','message':{'role':'assistant','content':'I will check','tool_calls':[{'id':'mixed','type':'function','function':{'name':'get_data_usage','arguments':'{"customer_id":"C1001","line_id":"L1002"}'}}]}}]}
+  trace=e.advance(self.o,[],self.task)
+  result=e.outcome(self.o,self.task,[],trace)
+  self.assertEqual(self.o.termination_reason,e.TerminationReason.AGENT_ERROR)
+  self.assertEqual(result['completion'],0);self.assertEqual(self.o.agent.valid,0)
+ def test_truncated_actor_is_native_failure(self):
+  q=self.draw();e.execute(self.o,q,'P')
+  self.client.transport=lambda p:{'choices':[{'finish_reason':'length','message':{'role':'assistant','content':'incomplete'}}]}
+  e.advance(self.o,[],self.task)
+  self.assertEqual(self.o.termination_reason,e.TerminationReason.AGENT_ERROR)
+ def test_nonidempotent_official_initialization_restored_once(self):
+  task=next(t for t in get_tasks(None) if t.id=='[service_issue]overdue_bill_suspension[PERSONA:Easy]')
+  self.assertIsNone(task.initial_state.initialization_data)
+  o=e.make(task,self.client,self.c);saved=e.snapshot(o)
+  restored=e.restore(saved,task,self.client,self.c)
+  self.assertEqual(e.env_state(o.environment),e.env_state(restored.environment))
+ def test_roaming_write_repairs_real_state_and_restores(self):
+  with tempfile.TemporaryDirectory() as directory:
+   c,store,client,task,o=setup_run(directory,4,'roaming')
+   initial=e.env_state(o.environment);before=e.vector(o.environment,task)
+   q=e.capture(o,client);self.assertEqual(q['selected_action']['name'],'enable_roaming')
+   e.execute(o,q,'C');after=e.vector(o.environment,task)
+   self.assertNotEqual(initial,e.env_state(o.environment));self.assertTrue(o.agent.record['state_change_observed'])
+   self.assertTrue(o.agent.record['closable']);self.assertTrue(any(not a and b for a,b in zip(before,after)))
+   saved=e.snapshot(o);restored=e.restore(saved,task,client,c)
+   self.assertEqual(e.env_state(restored.environment),e.env_state(o.environment))
+   result=e.outcome(restored,task,[],e.advance(restored,[],task))
+   self.assertEqual(result['completion'],1)
+ def test_roaming_ongoing_and_error_do_not_close(self):
+  with tempfile.TemporaryDirectory() as directory:
+   c,store,client,task,o=setup_run(directory,4,'roaming');saved=e.snapshot(o)
+   q=e.capture(o,client);q['declaration']['scope']='ongoing';e.execute(o,q,'C')
+   self.assertTrue(o.agent.record['state_change_observed']);self.assertFalse(o.agent.record['closable'])
+   o=e.restore(saved,task,client,c);q['declaration']['scope']='action_local';q['selected_action']['arguments']['line_id']='missing-line'
+   e.execute(o,q,'C');self.assertTrue(o.agent.record['receipt']['result']['error']);self.assertFalse(o.agent.record['closable'])
+ def test_s_reconsiders_once_without_extra_packet(self):
+  self.client.models['self']='mock-actor'
+  q=e.capture(self.o,self.client,True);e.execute(self.o,q,'S')
+  self.assertEqual(self.o.agent.record['packet'],'')
+  self.assertEqual(self.client.records[-1]['role'],'self')
+
+ def test_actor_and_user_received_invalid_endpoints(self):
+  cases=[{'finish_reason':'stop','message':{'role':'assistant','content':''}},
+         {'finish_reason':'stop','message':{'role':'assistant','refusal':'no'}},
+         {'finish_reason':'length','message':{'role':'assistant','content':'truncated'}},
+         {'finish_reason':'tool_calls','message':{'role':'assistant','tool_calls':[{'id':'bad','type':'function','function':{'name':'get_data_usage','arguments':'{'}}]}}]
+  for role in ('actor','user'):
+   for choice in cases:
+    o=e.restore(e.snapshot(self.o),self.task,self.client,self.c)
+    # Route to the requested native participant using the existing public message.
+    if role=='actor':o.step()
+    else:o.from_role=e.Role.AGENT;o.to_role=e.Role.USER;o.message=e.AssistantMessage(role='assistant',content='Please continue.',timestamp=e.get_now())
+    self.client.transport=lambda p,choice=choice:{'choices':[choice]}
+    o.step();self.assertTrue(o.done)
+    self.assertEqual(o.termination_reason,e.TerminationReason.AGENT_ERROR if role=='actor' else e.TerminationReason.USER_ERROR)
+    self.assertEqual(e.outcome(o,self.task,[],[])['completion'],0)
+ def test_completed_run_recovery_replays_without_model_dispatch(self):
+  from local_experiments.recovery import Recovery,plan
+  with tempfile.TemporaryDirectory() as directory:
+   c=copy.deepcopy(DEFAULT);old=Store(Path(directory)/'old',c,'dry-run')
+   client=Client(c,old,MockTransport(),{r:'mock-'+r for r in ('actor','user','reviewer','self')})
+   before=e.run(c,old,client);decisions=Path(directory)/'decisions.json';plan(old.root,decisions)
+   new=Store(Path(directory)/'new',c,'dry-run')
+   recovered=Client(c,new,lambda p:self.fail('durable response resent'),client.models)
+   recovered.recovery=Recovery(old.root,decisions,recovered)
+   after=e.run(c,new,recovered)
+   self.assertEqual(before,after);self.assertEqual(client.calls,recovered.calls)
+
+ def test_nonidempotent_initial_message_history_once(self):
+  task=history_task(self.task);o=e.make(task,self.client,self.c);saved=e.snapshot(o)
+  restored=e.restore(saved,task,self.client,self.c)
+  self.assertEqual(e.env_state(restored.environment),e.env_state(o.environment))
+
+ def test_public_normal_write_close_is_not_oracle_success(self):
+  with tempfile.TemporaryDirectory() as directory:
+   c,store,client,task,o=setup_run(directory,4,'roaming')
+   # Add a completed official enable call to public history, then propose a READ.
+   q=e.capture(o,client);e.execute(o,q,'P');e.advance(o,[],task,True)
+   o.agent.draw_consumed=False;o.agent.intervention_executed=False
+   # This is an authored negative-control root, not a natural sampled draw.
+   while not o.done and not (o.from_role==e.Role.AGENT and o.to_role==e.Role.ENV):o.step();o._check_termination()
+   before=e.vector(o.environment,task)
+   q={'selected_action':{'name':'disable_roaming','arguments':{'customer_id':'C1001','line_id':'L1002'}},'packet':'Execute target call.',
+      'declaration':{'target_action_id':e.target_id(o.message,{}),'scope':'action_local','instruction':'execute_target_call','close_condition':'normal_tool_return'}}
+   e.execute(o,q,'C');after=e.vector(o.environment,task)
+   self.assertTrue(o.agent.record['closable']);self.assertTrue(any(a and not b for a,b in zip(before,after)))
+
+ def test_interrupted_reviewer_requires_explicit_retry_and_keeps_prefix(self):
+  from local_experiments.recovery import Recovery,plan
+  with tempfile.TemporaryDirectory() as directory:
+   c=copy.deepcopy(DEFAULT);old=Store(Path(directory)/'old',c,'dry-run');mock=MockTransport()
+   def interrupted(payload):
+    if payload['model']=='mock-reviewer':raise KeyboardInterrupt()
+    return mock(payload)
+   client=Client(c,old,interrupted,{r:'mock-'+r for r in ('actor','user','reviewer','self')})
+   with self.assertRaises(KeyboardInterrupt):e.run(c,old,client)
+   decisions=Path(directory)/'decisions.json';plan(old.root,decisions)
+   decision=json.loads(decisions.read_text());self.assertEqual(len(decision['unknown_requests']),1)
+   for value in decision['unknown_requests'].values():value.update(decision='retry',accept_possible_duplicate_charge=True)
+   decisions.write_text(json.dumps(decision))
+   new=Store(Path(directory)/'new',c,'dry-run');calls=[]
+   def transport(payload):calls.append(payload['model']);return mock(payload)
+   recovered=Client(c,new,transport,client.models);recovered.recovery=Recovery(old.root,decisions,recovered)
+   rows=e.run(c,new,recovered)
+   self.assertEqual(calls[0],'mock-reviewer');self.assertEqual(calls.count('mock-reviewer'),1)
+   self.assertEqual(len(rows),3);self.assertTrue(all(r['completion']==1 for r in rows))
+
 if __name__=='__main__':
- if len(sys.argv)>1 and sys.argv[1] in ('save','restore'):
+ if len(sys.argv)>1 and sys.argv[1] in ('save','restore','save-write','restore-write','save-init','restore-init','save-history','restore-history'):
   phase,path=sys.argv[1:];path=Path(path)
   with tempfile.TemporaryDirectory() as tmp:
-   c,s,client,task,o=setup_run(tmp)
-   if phase=='save':
+   c,s,client,task,o=setup_run(tmp,4 if 'write' in phase else 0,'roaming' if 'write' in phase else 'read')
+   if 'history' in phase:
+    task=history_task(task);o=e.make(task,client,c)
+    if phase.startswith('save'):write_json(path,e.snapshot(o))
+    else:
+     saved=json.loads(path.read_text());o=e.restore(saved,task,client,c);assert e.env_state(o.environment)==saved['payload']['environment']
+    print('fresh-process nonidempotent history replayed once');raise SystemExit(0)
+   if 'init' in phase:
+    task=next(t for t in get_tasks(None) if t.id=='[service_issue]overdue_bill_suspension[PERSONA:Easy]');o=e.make(task,client,c)
+    if phase.startswith('save'):write_json(path,e.snapshot(o))
+    else:
+     saved=json.loads(path.read_text());o=e.restore(saved,task,client,c);assert e.env_state(o.environment)==saved['payload']['environment']
+    print('fresh-process initialization restored once');raise SystemExit(0)
+   if phase.startswith('save'):
     q=e.capture(o,client);e.execute(o,q,'P');e.advance(o,[],task,True);write_json(path,e.snapshot(o))
    else:
     saved=json.loads(path.read_text());o=e.restore(saved,task,client,c)

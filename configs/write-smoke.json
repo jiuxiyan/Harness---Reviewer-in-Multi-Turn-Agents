@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "protocol_id": "advice-lifetimes-local-v2",
-  "stage": "end-to-end",
+  "stage": "wire-smoke",
   "evidence_kind": "not_run",
   "study_label": "exploratory",
   "source": {
@@ -11,7 +11,7 @@
     "manifest": "docs/planning/manifests/tasks_readiness.json",
     "population": "exposed_development_only",
     "task_indices": [
-      0
+      4
     ],
     "exposure_manifests": [],
     "operator_attests_unseen": false
@@ -46,7 +46,7 @@
       "enable_roaming",
       "disable_roaming"
     ],
-    "fixture_scenario": "read"
+    "fixture_scenario": "roaming"
   },
   "sampling": {
     "max_roots_per_trajectory": 1,

@@ -21,3 +21,7 @@ jobs:
       - run: python3 -m local_experiments run --config configs/wire-smoke.json --output-dir results/ci-wire
       - run: python3 -m local_experiments analyze --input-dir results/ci-wire --output-dir results/ci-analysis
       - run: python3 -m local_experiments export --input-dir results/ci-analysis --output-dir exports/ci-wire
+      - run: python3 -m local_experiments run --config configs/write-smoke.json --output-dir results/ci-write
+      - run: python3 -m local_experiments run --config configs/natural-pilot.json --output-dir results/ci-pilot
+      - run: python3 -m local_experiments recovery-plan --input-dir results/ci-wire --output-file results/ci-decisions.json
+      - run: python3 -m local_experiments resume --config configs/wire-smoke.json --input-dir results/ci-wire --decisions results/ci-decisions.json --output-dir results/ci-resumed

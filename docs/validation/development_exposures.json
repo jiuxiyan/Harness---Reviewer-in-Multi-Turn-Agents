@@ -1,0 +1,8 @@
+{
+  "tasks": [
+    {
+      "task_id": "[service_issue]overdue_bill_suspension[PERSONA:Easy]",
+      "reason": "offline non-idempotent initialization restore regression; development exposed"
+    }
+  ]
+}
