@@ -90,3 +90,11 @@ class ProviderTests(unittest.TestCase):
   self.assertEqual(events[-1]['stored_response_digest'],digest(stored))
   for event in events:
    signature=event.pop('content_hash');self.assertEqual(signature,digest(event))
+
+ def test_finish_reason_without_model_message_is_envelope_missingness(self):
+  from local_experiments.provider import ModelOutputError
+  for response in ({'choices':[{}]}, {'choices':[{'finish_reason':'length'}]}):
+   with self.subTest(response=response):
+    with self.assertRaisesRegex(RunFailure,'^provider_envelope_invalid$') as caught:
+     parse_response(response)
+    self.assertNotIsInstance(caught.exception,ModelOutputError)

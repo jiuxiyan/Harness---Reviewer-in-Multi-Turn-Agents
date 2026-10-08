@@ -1,7 +1,8 @@
 # Reviewer advice lifetimes in multi-turn agents
 
 An **experiment-preparation release**, with a CPU-local runner and mock-tested
-integration of the pinned official τ²-bench Telecom environment. **Formal model
+integration of the pinned official `tau2-bench` repository, **τ³ release line**,
+using its Telecom environment (`tau2` package version `1.0.1`). **Formal model
 experiments run: zero.** No efficacy or causal improvement is claimed.
 
 The primary proposed comparison is **C versus P**: the same reviewer text,
@@ -13,7 +14,8 @@ valid actor response. Earlier persistent feedback is called P0.
 
 ## Run locally
 
-Tested on Linux with Python 3.12. Python 3.12–3.13 is the upstream-supported
+Tested on Linux with Python 3.12. **macOS execution has not been validated.**
+Python 3.12–3.13 is the upstream-supported
 range; Windows is not supported by these POSIX launchers. No GPU is needed.
 Use a checkout and an existing official installation of `uv` on PATH. Setup
 uses only the official PyPI lock and hash-pinned wheels; it does not run models.

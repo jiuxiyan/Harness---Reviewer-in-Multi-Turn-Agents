@@ -1,153 +1,185 @@
 {
-  "schema_version": 1,
-  "source_tree_sha256": "dc4fd115c0f7ffa618a53264164969a39f62e7b89cff795da90a4ae54d774830",
+  "schema_version": 2,
+  "status": "passed",
+  "source_tree_sha256": "9f8b2a62154d5b7d4b59de57e6f89a67fe6a1d43676a86d7cc57cd37a1b10856",
+  "scope": "targeted provider-envelope classification patch and documentation corrections; existing pinned virtual environment, not a repeat of full clean-directory acceptance",
   "commands": [
-    {
-      "command": "python3 tools/public_manifest.py --check",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 code_inputs/reviewer_pilot/install_locked.py",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 code_inputs/reviewer_pilot/install_locked.py gap",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
     {
       "command": "python3 -m unittest discover -s tests -v",
       "exit_code": 0,
       "expected_exit_code": 0
     },
     {
-      "command": "python3 tools/offline_checks.py",
+      "command": "git diff --check",
       "exit_code": 0,
       "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments validate --config configs/wire-smoke.json",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments run --config configs/wire-smoke.json --output-dir results/wire-smoke",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments analyze --input-dir results/wire-smoke --output-dir results/wire-smoke-analysis",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments export --input-dir results/wire-smoke-analysis --output-dir exports/wire-smoke",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments run --config configs/natural-pilot.json --output-dir results/pilot",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments run --config configs/write-smoke.json --output-dir results/write-smoke",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments recovery-plan --input-dir results/wire-smoke --output-file results/recovery-decisions.json",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments resume --config configs/wire-smoke.json --input-dir results/wire-smoke --decisions results/recovery-decisions.json --output-dir results/recovered-wire",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments analyze --input-dir results/recovered-wire --output-dir results/recovered-analysis",
-      "exit_code": 0,
-      "expected_exit_code": 0
-    },
-    {
-      "command": "python3 -m local_experiments validate --config configs/confirmatory-roots.json",
-      "exit_code": 2,
-      "expected_exit_code": 2
-    },
-    {
-      "command": "python3 -m local_experiments validate --config configs/end-to-end.json",
-      "exit_code": 2,
-      "expected_exit_code": 2
     }
   ],
-  "formal_model_calls": 0,
-  "status": "passed",
-  "scope": "new source directory and fresh pinned virtual environment; all executions offline/mock after dependency setup",
-  "date": "2026-10-08",
-  "tested_python": "3.12.14",
-  "base_commit": "815809e8f304d3a22425c197ecd001754db3733d",
-  "input_commit": "87d665519223aa97c2a52ed9fa3ce9c59545cdd0",
-  "intermediate_commit": "d7d0d0e7ef8b960610a20e05635ac38afda79ecd",
-  "independent_review": "no_blockers_for_bounded_v2_clean_acceptance; eight recovery tests independently passed",
-  "new_outer_unittest_cases": 41,
+  "new_outer_unittest_cases": 42,
   "guarded_engine_cases": 23,
-  "fresh_process_restore_cases": [
-    "READ continuation",
-    "roaming WRITE continuation",
-    "non-idempotent official suspension initialization",
-    "non-idempotent initial user WRITE history"
+  "formal_model_calls": 0,
+  "received_envelope_regressions": [
+    "choices=[{}] -> provider_envelope_invalid",
+    "choices=[{finish_reason:length}] -> provider_envelope_invalid"
   ],
-  "four_layer_checks": {
-    "evidence_kind": "scripted_fixture",
-    "formal_model_calls": 0,
-    "backend_tasks": 7,
-    "fresh_process_restores": 14,
-    "layers": {
-      "reviewer_interventions": {
-        "tests_run": 36,
-        "failures": 0,
-        "errors": 0,
-        "successful": true
+  "upstream_release_line": "pinned tau2-bench repository, tau3 release line",
+  "package_version": "tau2==1.0.1",
+  "benchmark_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+  "validated_platform": "Linux",
+  "macos_execution": "not_validated",
+  "baseline_commit": "98efe6c9e0b793adb7bc2ca307c6f72cddb5f939",
+  "baseline_full_clean_validation": {
+    "schema_version": 1,
+    "source_tree_sha256": "dc4fd115c0f7ffa618a53264164969a39f62e7b89cff795da90a4ae54d774830",
+    "commands": [
+      {
+        "command": "python3 tools/public_manifest.py --check",
+        "exit_code": 0,
+        "expected_exit_code": 0
       },
-      "controller_receipt_adapter": {
-        "tests_run": 37,
-        "failures": 0,
-        "errors": 0,
-        "successful": true
+      {
+        "command": "python3 code_inputs/reviewer_pilot/install_locked.py",
+        "exit_code": 0,
+        "expected_exit_code": 0
       },
-      "advice_lifetime_controls": {
-        "tests_run": 40,
-        "failures": 0,
-        "errors": 0,
-        "successful": true
+      {
+        "command": "python3 code_inputs/reviewer_pilot/install_locked.py gap",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests -v",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 tools/offline_checks.py",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments validate --config configs/wire-smoke.json",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments run --config configs/wire-smoke.json --output-dir results/wire-smoke",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments analyze --input-dir results/wire-smoke --output-dir results/wire-smoke-analysis",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments export --input-dir results/wire-smoke-analysis --output-dir exports/wire-smoke",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments run --config configs/natural-pilot.json --output-dir results/pilot",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments run --config configs/write-smoke.json --output-dir results/write-smoke",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments recovery-plan --input-dir results/wire-smoke --output-file results/recovery-decisions.json",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments resume --config configs/wire-smoke.json --input-dir results/wire-smoke --decisions results/recovery-decisions.json --output-dir results/recovered-wire",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments analyze --input-dir results/recovered-wire --output-dir results/recovered-analysis",
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "command": "python3 -m local_experiments validate --config configs/confirmatory-roots.json",
+        "exit_code": 2,
+        "expected_exit_code": 2
+      },
+      {
+        "command": "python3 -m local_experiments validate --config configs/end-to-end.json",
+        "exit_code": 2,
+        "expected_exit_code": 2
       }
-    }
+    ],
+    "formal_model_calls": 0,
+    "status": "passed",
+    "scope": "new source directory and fresh pinned virtual environment; all executions offline/mock after dependency setup",
+    "date": "2026-10-08",
+    "tested_python": "3.12.14",
+    "base_commit": "815809e8f304d3a22425c197ecd001754db3733d",
+    "input_commit": "87d665519223aa97c2a52ed9fa3ce9c59545cdd0",
+    "intermediate_commit": "d7d0d0e7ef8b960610a20e05635ac38afda79ecd",
+    "independent_review": "no_blockers_for_bounded_v2_clean_acceptance; eight recovery tests independently passed",
+    "new_outer_unittest_cases": 41,
+    "guarded_engine_cases": 23,
+    "fresh_process_restore_cases": [
+      "READ continuation",
+      "roaming WRITE continuation",
+      "non-idempotent official suspension initialization",
+      "non-idempotent initial user WRITE history"
+    ],
+    "four_layer_checks": {
+      "evidence_kind": "scripted_fixture",
+      "formal_model_calls": 0,
+      "backend_tasks": 7,
+      "fresh_process_restores": 14,
+      "layers": {
+        "reviewer_interventions": {
+          "tests_run": 36,
+          "failures": 0,
+          "errors": 0,
+          "successful": true
+        },
+        "controller_receipt_adapter": {
+          "tests_run": 37,
+          "failures": 0,
+          "errors": 0,
+          "successful": true
+        },
+        "advice_lifetime_controls": {
+          "tests_run": 40,
+          "failures": 0,
+          "errors": 0,
+          "successful": true
+        }
+      }
+    },
+    "upstream_files_sha256_verified": 281,
+    "manuscript_docx_png_svg_preserved_exactly": true,
+    "public_credential_token_pattern_scan": "passed; 440 public files including DOCX XML",
+    "runtime_artifacts_in_public_manifest": 0,
+    "real_provider_compatibility": "not_run",
+    "confirmatory_experiments": "not_run",
+    "confirmatory_gate_tests": "metadata-only positive freeze/binding, exposure/family exclusions, independence restriction and unseen attestation; no heldout task simulated",
+    "natural_pilot_fixture": {
+      "tasks": 2,
+      "roots": 4,
+      "arms": 8,
+      "outcomes": 68,
+      "evidence_kind": "scripted_fixture",
+      "formal_model_calls": 0
+    },
+    "unsupported": [
+      "episode-start end-to-end",
+      "arbitrary assistant WRITE",
+      "dynamic goal revocation/change",
+      "voice/streaming/other domains",
+      "currency caps and known dollar pricing",
+      "semantic declaration truth audit"
+    ],
+    "publication_status": "new v2 changes prepared locally for parent review; no new push"
   },
-  "upstream_files_sha256_verified": 281,
-  "manuscript_docx_png_svg_preserved_exactly": true,
-  "public_credential_token_pattern_scan": "passed; 440 public files including DOCX XML",
-  "runtime_artifacts_in_public_manifest": 0,
-  "real_provider_compatibility": "not_run",
-  "confirmatory_experiments": "not_run",
-  "confirmatory_gate_tests": "metadata-only positive freeze/binding, exposure/family exclusions, independence restriction and unseen attestation; no heldout task simulated",
-  "natural_pilot_fixture": {
-    "tasks": 2,
-    "roots": 4,
-    "arms": 8,
-    "outcomes": 68,
-    "evidence_kind": "scripted_fixture",
-    "formal_model_calls": 0
-  },
-  "unsupported": [
-    "episode-start end-to-end",
-    "arbitrary assistant WRITE",
-    "dynamic goal revocation/change",
-    "voice/streaming/other domains",
-    "currency caps and known dollar pricing",
-    "semantic declaration truth audit"
-  ],
-  "publication_status": "new v2 changes prepared locally for parent review; no new push"
+  "publication_status": "patch prepared locally for parent review; not pushed"
 }

@@ -61,11 +61,11 @@ def parse_response(response):
   choices=response['choices']
   if not isinstance(choices,list) or len(choices)!=1: raise ValueError()
   if not isinstance(choices[0],dict): raise ValueError()
-  if choices[0].get('finish_reason') not in ('stop','tool_calls'):
-   raise ModelOutputError(response,'finish_reason')
   m=choices[0]['message']
   if not isinstance(m,dict): raise ValueError()
   if m.get('role')!='assistant': raise ValueError()
+  if choices[0].get('finish_reason') not in ('stop','tool_calls'):
+   raise ModelOutputError(response,'finish_reason')
   if m.get('refusal'): raise ModelOutputError(response,'refusal')
   text=m.get('content');calls=m.get('tool_calls') or []
   if text is not None and not isinstance(text,str): raise ValueError()

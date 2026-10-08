@@ -1,7 +1,10 @@
 # Local execution and recovery
 
 Use the root README setup on Linux/Python 3.12 with official `uv`. Run from a
-checkout. All supplied dry-runs and tests are offline after dependency setup.
+checkout. Linux is validated; macOS execution has not been validated. The pinned
+`tau2-bench` repository is the τ³ release line, package `tau2==1.0.1`, commit
+`4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699`; it is not the earlier τ² paper snapshot.
+All supplied dry-runs and tests are offline after dependency setup.
 
 ```sh
 python3 -m unittest discover -s tests -v

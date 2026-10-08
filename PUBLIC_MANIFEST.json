@@ -1,7 +1,7 @@
 {
   "schema_version": "public-release-v1",
   "not_preregistration": true,
-  "source_tree_sha256": "dc4fd115c0f7ffa618a53264164969a39f62e7b89cff795da90a4ae54d774830",
+  "source_tree_sha256": "9f8b2a62154d5b7d4b59de57e6f89a67fe6a1d43676a86d7cc57cd37a1b10856",
   "files": [
     {
       "path": ".env.example",
@@ -20,8 +20,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 6702,
-      "sha256": "02fdcc676a67c0afee444f2c0c2591fcc848df9117cdad0bd29b062d3d9b11e6"
+      "bytes": 6826,
+      "sha256": "b82f1de57075b588d2b60b041f30ec4b7c988302b1fe8a0457fa09b5ea2d7cce"
     },
     {
       "path": "code_inputs/advice_lifetime_controls/PLAN.md",
@@ -1805,13 +1805,13 @@
     },
     {
       "path": "docs/CAPABILITIES.md",
-      "bytes": 5212,
-      "sha256": "37208e4f4dac423946668c208ccd1cde516833d972b2d809c2f7f141c102c14b"
+      "bytes": 5401,
+      "sha256": "ad8bd0ca0612b7d8b8cd4036dc40093c6f6b8ff37055b680b419fff1350ae48a"
     },
     {
       "path": "docs/LOCAL_RUNBOOK.md",
-      "bytes": 5830,
-      "sha256": "a84e31d48422640cd046afd5e236f980f6261311c1924dae7be45e0ddb7d73da"
+      "bytes": 6068,
+      "sha256": "27babacb8ec0235107d12257e1b7844831cab4684fec6c7ddbb8d7b3b6dbec2a"
     },
     {
       "path": "docs/components/advice_lifetime_controls.md",
@@ -2010,8 +2010,8 @@
     },
     {
       "path": "docs/validation/current_release.json",
-      "bytes": 5265,
-      "sha256": "7cb7470115b70be948a2803b4e3a022e32386127764a1655d0d756d2688de37f"
+      "bytes": 6818,
+      "sha256": "61a1ba9e5beb140efc54c9319f57c1d66035babd488054aca3f4af7ba0b89665"
     },
     {
       "path": "docs/validation/development_exposures.json",
@@ -2086,7 +2086,7 @@
     {
       "path": "local_experiments/provider.py",
       "bytes": 9237,
-      "sha256": "f8a27041e9b548268a502142639566d2c3d63d88d73ea0163d78acb9739c07d7"
+      "sha256": "8ec9a4b09d46530a7211d3eba0676022170ce439da93e54eefa6e34bf0c9bb88"
     },
     {
       "path": "local_experiments/recovery.py",
@@ -2165,8 +2165,8 @@
     },
     {
       "path": "tests/test_provider.py",
-      "bytes": 5898,
-      "sha256": "0b6fc03a3b17e349b88450b0845567cddac2cee8be5b0c6e10364c36f0be6767"
+      "bytes": 6334,
+      "sha256": "09081a17a67681b69007cc417a6f02e1f2fb0b788f681c13f7c9635fc243b39a"
     },
     {
       "path": "tests/test_recovery.py",

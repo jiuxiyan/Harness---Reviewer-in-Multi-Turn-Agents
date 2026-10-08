@@ -1,6 +1,9 @@
 # Implemented scope and evidence limits
 
-The v2 runner uses pinned official Telecom tools and evaluation. Preparation has
+The v2 runner uses official Telecom tools and evaluation from the pinned
+`tau2-bench` repository, τ³ release line (`tau2==1.0.1`, commit
+`4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699`). Linux execution is validated;
+macOS execution has not been validated. Preparation has
 made **zero real model calls**. Historical guarded launchers remain offline;
 only the new CLI's explicit `--mode live` reads local provider configuration.
 
