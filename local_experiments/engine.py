@@ -14,9 +14,9 @@ from tau2.user.user_simulator_base import UserState
 from tau2.data_model.message import AssistantMessage, UserMessage, ToolCall, ToolMessage, MultiToolMessage
 from tau2.data_model.simulation import TerminationReason
 from tau2.orchestrator.orchestrator import Orchestrator, Role
-from tau2.domains.telecom.environment import get_environment, get_tasks
+from tau2.domains.telecom.environment import get_tasks
 from tau2.environment.toolkit import ToolType, get_tool_types
-from tau2.evaluator.evaluator import evaluate_simulation, EvaluationType
+from .telecom import get_environment,evaluate_official
 from tau2.utils.llm_utils import to_litellm_messages
 from tau2.utils.utils import get_now
 from .config import ROOT, canonical
@@ -259,7 +259,7 @@ def outcome(o,task,protected,trace):
  # All benchmark reward components supported by these tasks, on a deep-copied run.
  basis={str(x.value if hasattr(x,'value') else x) for x in task.evaluation_criteria.reward_basis}
  if basis!={'ENV_ASSERTION'}: raise RunFailure('unsupported_evaluator_basis')
- simulation=o._finalize();reward=evaluate_simulation(simulation,task,EvaluationType.ALL,False,'telecom',strict_replay=True)
+ simulation=o._finalize();reward=evaluate_official(simulation,task)
  v=vector(o.environment,task)
  return {'loss':int(any(not v[i] for i in protected)),'completion':int(reward.reward==1.0),
  'protected_count':len(protected),'structural_zero':not protected,

@@ -66,3 +66,18 @@ original per-request and physical quotas. The original wall budget includes the
 pause. Any divergent payload, changed source/config, wrong reported model,
 redacted replay payload or damaged journal fails closed. No remote cancellation
 or exactly-once provider guarantee is offered.
+
+## Telecom instance-default isolation
+
+The pinned upstream user toolkit has a class-level mutable VPN default. The local
+factory assigns each environment its own pristine VpnDetails before initialization,
+using values from the pinned source rather than copying a possibly polluted class
+attribute. Within-instance VPN aliasing remains upstream behavior; no state is
+shared between independent environments. make/restore use this factory, and a
+dedicated registry domain routes the official evaluator's schema, predicted and
+gold constructors through it. The evaluation algorithm and original telecom
+registry entry remain unchanged. Vendored upstream bytes are not patched.
+
+The bad_vpn regression task is now development-exposed and excluded from future
+confirmation along with its near families. Metadata-only freeze tests use a
+different unexecuted task. The isolation adapter is included in source bindings.

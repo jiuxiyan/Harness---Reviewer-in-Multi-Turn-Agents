@@ -36,6 +36,16 @@ def history_task(task):
  task.initial_state.message_history=[e.UserMessage(role='user',tool_calls=[call],timestamp=None),response]
  return task
 
+def vpn_task():
+ return next(t for t in get_tasks(None) if t.id=='[mobile_data_issue]bad_vpn[PERSONA:None]')
+
+def finish_vpn(o,client):
+ # Authored user policy: disconnect the broken VPN, then stop. No model/API.
+ responses=[{'choices':[{'finish_reason':'tool_calls','message':{'role':'assistant','tool_calls':[{'id':'fixture-vpn-disconnect','type':'function','function':{'name':'disconnect_vpn','arguments':'{}'}}]}}]},
+            {'choices':[{'finish_reason':'stop','message':{'role':'assistant','content':'###STOP###'}}]}]
+ with patch.object(client,'transport',side_effect=lambda payload:responses.pop(0)):
+  return e.advance(o,[],o.task)
+
 class EngineChecks(unittest.TestCase):
  def setUp(self):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
@@ -237,11 +247,67 @@ class EngineChecks(unittest.TestCase):
    self.assertEqual(calls[0],'mock-reviewer');self.assertEqual(calls.count('mock-reviewer'),1)
    self.assertEqual(len(rows),3);self.assertTrue(all(r['completion']==1 for r in rows))
 
+ def test_vpn_defaults_are_per_instance_in_both_orders(self):
+  from tau2.domains.telecom.user_tools import TelecomUserTools
+  from tau2.domains.telecom.user_data_model import PerformanceLevel
+  global_before=TelecomUserTools.default_vpn_details.model_dump()
+  for first in (0,1):
+   pair=[e.get_environment(),e.get_environment()]
+   self.assertIsNot(pair[0].user_tools.default_vpn_details,pair[1].user_tools.default_vpn_details)
+   pair[first].user_tools.break_vpn();pair[1-first].user_tools.connect_vpn()
+   self.assertEqual(pair[first].user_tools.device.vpn_details.server_performance,PerformanceLevel.POOR)
+   self.assertEqual(pair[1-first].user_tools.device.vpn_details.server_performance,PerformanceLevel.EXCELLENT)
+   self.assertEqual(TelecomUserTools.default_vpn_details.model_dump(),global_before)
+ def test_vpn_factory_ignores_already_polluted_class_default(self):
+  from tau2.domains.telecom.user_tools import TelecomUserTools
+  from tau2.domains.telecom.user_data_model import PerformanceLevel
+  polluted=TelecomUserTools.default_vpn_details.model_copy(deep=True);polluted.server_performance=PerformanceLevel.POOR
+  with patch.object(TelecomUserTools,'default_vpn_details',polluted):
+   env=e.get_environment();env.user_tools.connect_vpn()
+   self.assertEqual(env.user_tools.device.vpn_details.server_performance,PerformanceLevel.EXCELLENT)
+   self.assertEqual(polluted.server_performance,PerformanceLevel.POOR)
+ def test_vpn_make_restore_and_task_order_are_isolated(self):
+  task=vpn_task();baseline=None
+  for order in (('bad','clean'),('clean','bad')):
+   objects={name:e.make(task if name=='bad' else self.task,self.client,self.c) for name in order}
+   before=e.env_state(objects['clean'].environment)
+   if baseline is None:baseline=before
+   self.assertEqual(before,baseline)
+   saved=e.snapshot(objects['bad']);restored=e.restore(saved,task,self.client,self.c)
+   self.assertEqual(e.env_state(restored.environment),saved['payload']['environment'])
+   self.assertIsNot(restored.environment.user_tools.default_vpn_details,objects['bad'].environment.user_tools.default_vpn_details)
+   trace=finish_vpn(restored,self.client);self.assertEqual(e.outcome(restored,task,[],trace)['completion'],1)
+   self.assertEqual(e.env_state(objects['clean'].environment),baseline)
+ def test_official_evaluation_vpn_constructors_do_not_pollute_live_or_global(self):
+  from local_experiments import telecom
+  from tau2.domains.telecom.user_tools import TelecomUserTools
+  task=vpn_task();o=e.make(task,self.client,self.c);trace=finish_vpn(o,self.client)
+  neighbor=e.get_environment();global_before=TelecomUserTools.default_vpn_details.model_dump()
+  before=e.env_state(o.environment);neighbor_before=e.env_state(neighbor);created=[]
+  original=telecom.registry.get_env_constructor('telecom')
+  def factory(**kwargs):
+   env=telecom.get_environment(**kwargs);created.append(env);return env
+  with patch.dict(telecom.registry._domains,{telecom.EVALUATION_DOMAIN:factory}):
+   for _ in range(2):self.assertEqual(e.outcome(o,task,[],trace)['completion'],1)
+  self.assertEqual(len(created),6) # schema, predicted and gold for each evaluation
+  self.assertEqual(len({id(env.user_tools.default_vpn_details) for env in created}),6)
+  self.assertTrue(all(env.user_tools.default_vpn_details is not o.environment.user_tools.default_vpn_details for env in created))
+  self.assertEqual(e.env_state(o.environment),before);self.assertEqual(e.env_state(neighbor),neighbor_before)
+  self.assertEqual(TelecomUserTools.default_vpn_details.model_dump(),global_before)
+  self.assertIs(telecom.registry.get_env_constructor('telecom'),original)
+
 if __name__=='__main__':
- if len(sys.argv)>1 and sys.argv[1] in ('save','restore','save-write','restore-write','save-init','restore-init','save-history','restore-history'):
+ if len(sys.argv)>1 and sys.argv[1] in ('save','restore','save-write','restore-write','save-init','restore-init','save-history','restore-history','save-vpn','restore-vpn'):
   phase,path=sys.argv[1:];path=Path(path)
   with tempfile.TemporaryDirectory() as tmp:
    c,s,client,task,o=setup_run(tmp,4 if 'write' in phase else 0,'roaming' if 'write' in phase else 'read')
+   if 'vpn' in phase:
+    task=vpn_task();o=e.make(task,client,c)
+    if phase.startswith('save'):write_json(path,e.snapshot(o))
+    else:
+     saved=json.loads(path.read_text());o=e.restore(saved,task,client,c);assert e.env_state(o.environment)==saved['payload']['environment']
+     result=e.outcome(o,task,[],finish_vpn(o,client));assert result['completion']==1
+    print('fresh-process VPN instance isolation passed');raise SystemExit(0)
    if 'history' in phase:
     task=history_task(task);o=e.make(task,client,c)
     if phase.startswith('save'):write_json(path,e.snapshot(o))

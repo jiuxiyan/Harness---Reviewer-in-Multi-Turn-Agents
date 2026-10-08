@@ -44,3 +44,13 @@ Final acceptance additionally exercises actual roaming repair and harm,
 non-idempotent initialization/history, fresh-process restoration, interrupted
 reviewer recovery, and a two-task/four-root/eight-arm fixture. These checks do not
 measure provider compatibility or establish an empirical scientific finding.
+
+## VPN instance-default follow-up
+
+A further review identified the pinned user toolkit's mutable class-level VPN
+object. The integration now creates a pristine instance-owned default for every
+live, restored and official-evaluation environment, retaining within-instance
+semantics and the upstream evaluator algorithm. An independent reviewer checked
+the factory and registry routing, ran four isolation tests plus fresh-process
+save/restore successfully, and found no remaining blocker in this fix. The
+bad_vpn task used by those regressions is recorded as development-exposed.

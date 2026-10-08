@@ -34,6 +34,10 @@ only the new CLI's explicit `--mode live` reads local provider configuration.
   environment and consumed intervention state. Restore constructs an uninitialized
   environment and replays initialization plus history exactly once. READ,
   roaming WRITE and non-idempotent suspension initialization have process tests.
+- Per-instance pristine VPN defaults for make/restore and all official evaluator
+  constructors, preventing the pinned upstream class-level mutable default from
+  crossing branches or tasks. The original upstream files and evaluation algorithm
+  remain unchanged. bad_vpn is now an exposed regression task.
 - Executable `confirmatory-roots` under a locally frozen design/task/source/model
   manifest. Exposed development tasks and near-duplicate fault families are
   excluded; selected confirmation units must share no normalized fault component.

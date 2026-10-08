@@ -1,11 +1,26 @@
 {
   "schema_version": 2,
   "status": "passed",
-  "source_tree_sha256": "9f8b2a62154d5b7d4b59de57e6f89a67fe6a1d43676a86d7cc57cd37a1b10856",
-  "scope": "targeted provider-envelope classification patch and documentation corrections; existing pinned virtual environment, not a repeat of full clean-directory acceptance",
+  "source_tree_sha256": "046bdb8e9cbeaaf65784c1135e563a1254fb5f5cb6de82c65c75cefe63d839ad",
+  "scope": "VPN instance-default isolation follow-up; full unit/integration suite plus natural-pilot fixture and analysis in existing pinned environment; unchanged historical layers retain baseline clean validation",
   "commands": [
     {
       "command": "python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_freeze.py -v",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments run --config configs/natural-pilot.json --output-dir results/vpn-isolation-pilot",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments analyze --input-dir results/vpn-isolation-pilot --output-dir results/vpn-isolation-analysis",
       "exit_code": 0,
       "expected_exit_code": 0
     },
@@ -16,18 +31,35 @@
     }
   ],
   "new_outer_unittest_cases": 42,
-  "guarded_engine_cases": 23,
+  "guarded_engine_cases": 27,
   "formal_model_calls": 0,
-  "received_envelope_regressions": [
-    "choices=[{}] -> provider_envelope_invalid",
-    "choices=[{finish_reason:length}] -> provider_envelope_invalid"
-  ],
+  "vpn_isolation_tests": {
+    "instance_orders": "passed",
+    "prepolluted_class_default": "passed",
+    "task_order_and_restore": "passed",
+    "official_evaluator_six_unique_instances": "passed",
+    "global_and_live_state_unchanged": "passed",
+    "fresh_process_restore": "passed",
+    "independent_review": "four targeted tests and two save/restore processes passed; no blocker"
+  },
+  "natural_pilot_fixture": {
+    "tasks": 2,
+    "roots": 4,
+    "arms": 8,
+    "outcomes": 68,
+    "physical_mock_attempts": 526,
+    "missing_endpoints": 0,
+    "model_outcomes": "not_run",
+    "formal_model_calls": 0
+  },
   "upstream_release_line": "pinned tau2-bench repository, tau3 release line",
   "package_version": "tau2==1.0.1",
   "benchmark_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+  "upstream_files_sha256_verified": 281,
   "validated_platform": "Linux",
   "macos_execution": "not_validated",
   "baseline_commit": "98efe6c9e0b793adb7bc2ca307c6f72cddb5f939",
+  "prior_targeted_patch_commit": "2249093a6c678d81ab31947560b29ff52d1a14db",
   "baseline_full_clean_validation": {
     "schema_version": 1,
     "source_tree_sha256": "dc4fd115c0f7ffa618a53264164969a39f62e7b89cff795da90a4ae54d774830",
@@ -181,5 +213,5 @@
     ],
     "publication_status": "new v2 changes prepared locally for parent review; no new push"
   },
-  "publication_status": "patch prepared locally for parent review; not pushed"
+  "publication_status": "VPN isolation follow-up prepared locally for parent review; not pushed"
 }

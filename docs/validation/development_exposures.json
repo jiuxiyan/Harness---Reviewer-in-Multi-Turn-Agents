@@ -3,6 +3,10 @@
     {
       "task_id": "[service_issue]overdue_bill_suspension[PERSONA:Easy]",
       "reason": "offline non-idempotent initialization restore regression; development exposed"
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_vpn[PERSONA:None]",
+      "reason": "offline VPN default isolation, official evaluation and fresh-process restore regression; development exposed"
     }
   ]
 }

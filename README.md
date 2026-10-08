@@ -96,8 +96,8 @@ The study scope is fixed-goal tasks, with explicit independent-unit assumptions;
 dynamic user goal changes and arbitrary mutations are unsupported. Public call
 closure does not prove repair. See [capabilities](docs/CAPABILITIES.md) and the
 [v2 operational protocol](docs/protocol/local_runner_v2.md) for failure,
-missingness, recovery and statistical limits. All seven original witnesses plus
-the non-idempotent restore regression task are exposed development material.
+missingness, recovery and statistical limits. All seven original witnesses and the additional restore/VPN-isolation regression
+tasks are exposed development material.
 No real model run was performed during preparation.
 
 ## Research and reproducibility
