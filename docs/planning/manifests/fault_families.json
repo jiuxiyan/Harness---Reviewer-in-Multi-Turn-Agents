@@ -1,0 +1,131 @@
+{
+  "schema_version": "planning-manifest-v1",
+  "source_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+  "source_files": [
+    "src/tau2/domains/telecom/tools.py",
+    "src/tau2/domains/telecom/user_tools.py",
+    "data/tau2/domains/telecom/tasks.json"
+  ],
+  "families": [
+    {
+      "family": "staged_connectivity_speed_readiness",
+      "status": "scripted_read_and_restore_only",
+      "goals": "Nested basic connectivity and excellent speed",
+      "agent_intervention_tools": [
+        "get_customer_by_phone",
+        "get_customer_by_id",
+        "get_customer_by_name",
+        "get_details_by_id",
+        "get_bills_for_customer",
+        "get_data_usage"
+      ],
+      "limits": "Only concrete audited arguments/checkpoints; full continuation used one customer lookup. No natural local repair established."
+    },
+    {
+      "family": "carrier_roaming_mutations",
+      "status": "proposed_extension_not_validated",
+      "candidate_agent_tools": [
+        "enable_roaming",
+        "disable_roaming"
+      ],
+      "candidate_task_patterns": [
+        "user_abroad_roaming_disabled_on",
+        "user_abroad_roaming_disabled_off"
+      ],
+      "why": "Validate actual reversible state changes while remaining workflow goals are unfinished.",
+      "required_checks": [
+        "agent WRITE ownership",
+        "both database synchronization",
+        "unchanged/success/error paths",
+        "complete post-mutation snapshot",
+        "native later user events",
+        "fresh-process restore",
+        "official scoring"
+      ],
+      "claim_limit": "Tool presence in source does not establish a natural reviewable root or useful repair."
+    },
+    {
+      "family": "device_connectivity_and_speed_mutations",
+      "status": "proposed_extension_not_validated",
+      "candidate_user_tools": [
+        "toggle_airplane_mode",
+        "toggle_data",
+        "toggle_roaming",
+        "set_network_mode_preference",
+        "toggle_data_saver_mode"
+      ],
+      "why": "Natural continuation can preserve or undo connectivity while pursuing speed.",
+      "required_checks": [
+        "normal actor-to-user instruction routing",
+        "user simulator owns user-tool actions",
+        "no actor impersonation",
+        "device auxiliary state and synchronization",
+        "complete common segment restores"
+      ],
+      "claim_limit": "Direct reviewer intervention in actor dialogue/user calls requires a separately frozen extension beyond single-agent-call scope."
+    },
+    {
+      "family": "device_apn_mms_extension",
+      "status": "proposed_extension_not_validated",
+      "candidate_user_tools": [
+        "set_apn_settings",
+        "reset_apn_settings"
+      ],
+      "why": "Investigate distinct workflow/state interactions if genuine official tasks and publicly grounded goals support them.",
+      "required_checks": [
+        "delayed reset_at_reboot state",
+        "reboot and network search side effects",
+        "official task criteria",
+        "non-nested goal justification",
+        "user-owned tools"
+      ],
+      "claim_limit": "Do not invent a joint MMS-and-connectivity task when the official task only requests one."
+    },
+    {
+      "family": "service_and_billing_or_refuel_goals",
+      "status": "blocked_pending_side_effect_validation",
+      "candidate_agent_tools": [
+        "resume_line",
+        "suspend_line",
+        "refuel_data",
+        "send_payment_request"
+      ],
+      "why": "Potentially more distinct official goal requirements than nested connectivity/speed; source includes billing/service and refuel-amount assertions.",
+      "required_checks": [
+        "UUID/ID creation and registry restoration",
+        "clock/date dependencies",
+        "billing/payment state replay",
+        "all ACTION plus ENV_ASSERTION grading",
+        "public user authorization inside simulated task"
+      ],
+      "claim_limit": "Entirely simulated benchmark tools, never real telecom/payment accounts. Existing UUID-creating paths are not validated."
+    },
+    {
+      "family": "ongoing_scope_negative_controls",
+      "status": "separate_proposed_semantic_extension",
+      "why": "Measure cost of incorrectly closing genuinely ongoing guidance.",
+      "required_checks": [
+        "declared public ongoing scope",
+        "outcome-blind semantic audit",
+        "public close events",
+        "no hidden-label closure",
+        "full still-useful guidance controls"
+      ],
+      "claim_limit": "Current declaration handling is not a semantic scope classifier."
+    },
+    {
+      "family": "currently_unsupported_runtime_paths",
+      "status": "blocked_until_separate_validation",
+      "paths": [
+        "VPN shared-default state",
+        "UUID-creating billing paths",
+        "active wall-clock deadlines",
+        "multi-call proposals",
+        "multi-slot interventions",
+        "audio",
+        "streaming"
+      ],
+      "claim_limit": "Do not suppress naturally reached unsupported paths or classify them as model failure."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+from copy import deepcopy
+
+def system_prompt():
+    return "Use tools to satisfy the user. Preserve exact values. Finish only when complete."
+
+def normalize_arguments(arguments):
+    return deepcopy(arguments)
+
+def prepare_observation(observation):
+    result = deepcopy(observation)
+    if isinstance(result.get("next_cursor"), str):
+        result["next_cursor"] = result["next_cursor"][:8]
+    return result
+
+def retry_arguments(tool, arguments, observation, attempt):
+    if attempt == 0 and observation.get("transient") is True and (tool != "write" or "idempotency_key" in arguments):
+        return deepcopy(arguments)
+    return None
+
+def should_terminate(tool, observation):
+    return False

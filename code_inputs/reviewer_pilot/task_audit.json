@@ -1,0 +1,183 @@
+{
+  "scope": "Static metadata eligibility, not demonstrated replay or natural-prefix frequency. Exclusions are conservative and path-specific. Multiple predicates need not be independent.",
+  "tasks_file_sha256": "37e562e1ae3242577407e1303b1548bc64e7ea68e37d36173e6747990ceaf8a4",
+  "split_file_sha256": "605b488bb9a6acb3c7f4505240a855fdc8681d09aadb16a8f38b2efcfc5c3aec",
+  "all_tasks_initialization_data_null": true,
+  "all_tasks_message_history_null": true,
+  "legacy_small_equal_to_current_small": true,
+  "splits": [
+    {
+      "split": "small",
+      "tasks": 20,
+      "reward_basis_counts": {
+        "ENV_ASSERTION": 18,
+        "ENV_ASSERTION+ACTION": 2
+      },
+      "nonempty_nl_assertions": 0,
+      "assertion_count_histogram": {
+        "2": 11,
+        "3": 1,
+        "1": 8
+      },
+      "pure_env": 18,
+      "pure_env_at_least_two_predicates": 12,
+      "excluding_gold_refuel": 11,
+      "also_excluding_initial_vpn": 10,
+      "staged_connectivity_then_speed_static_candidates": 0,
+      "staged_candidate_ids": []
+    },
+    {
+      "split": "train",
+      "tasks": 74,
+      "reward_basis_counts": {
+        "ENV_ASSERTION": 66,
+        "ENV_ASSERTION+ACTION": 8
+      },
+      "nonempty_nl_assertions": 0,
+      "assertion_count_histogram": {
+        "2": 41,
+        "3": 15,
+        "1": 18
+      },
+      "pure_env": 66,
+      "pure_env_at_least_two_predicates": 56,
+      "excluding_gold_refuel": 18,
+      "also_excluding_initial_vpn": 12,
+      "staged_connectivity_then_speed_static_candidates": 4,
+      "staged_candidate_ids": [
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference[PERSONA:Hard]",
+        "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on[PERSONA:Hard]"
+      ]
+    },
+    {
+      "split": "test",
+      "tasks": 40,
+      "reward_basis_counts": {
+        "ENV_ASSERTION": 28,
+        "ENV_ASSERTION+ACTION": 12
+      },
+      "nonempty_nl_assertions": 0,
+      "assertion_count_histogram": {
+        "2": 14,
+        "3": 5,
+        "1": 21
+      },
+      "pure_env": 28,
+      "pure_env_at_least_two_predicates": 19,
+      "excluding_gold_refuel": 7,
+      "also_excluding_initial_vpn": 6,
+      "staged_connectivity_then_speed_static_candidates": 3,
+      "staged_candidate_ids": [
+        "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on[PERSONA:Hard]"
+      ]
+    },
+    {
+      "split": "full",
+      "tasks": 2285,
+      "reward_basis_counts": {
+        "ENV_ASSERTION": 2253,
+        "ENV_ASSERTION+ACTION": 32
+      },
+      "nonempty_nl_assertions": 0,
+      "assertion_count_histogram": {
+        "2": 1133,
+        "3": 128,
+        "1": 1024
+      },
+      "pure_env": 2253,
+      "pure_env_at_least_two_predicates": 1261,
+      "excluding_gold_refuel": 141,
+      "also_excluding_initial_vpn": 77,
+      "staged_connectivity_then_speed_static_candidates": 45,
+      "staged_candidate_ids": [
+        "[mobile_data_issue]airplane_mode_on|data_saver_mode_on[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference[PERSONA:Hard]",
+        "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+        "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+        "[mobile_data_issue]bad_network_preference|user_abroad_roaming_disabled_on[PERSONA:Hard]",
+        "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]bad_network_preference|user_abroad_roaming_disabled_off[PERSONA:Hard]",
+        "[mobile_data_issue]data_mode_off|data_saver_mode_on[PERSONA:None]",
+        "[mobile_data_issue]bad_network_preference|data_mode_off[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_disabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on[PERSONA:Hard]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on[PERSONA:Easy]",
+        "[mobile_data_issue]data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+        "[mobile_data_issue]bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+        "[mobile_data_issue]data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+        "[mobile_data_issue]bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+        "[mobile_data_issue]bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Hard]",
+        "[mobile_data_issue]data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Hard]",
+        "[mobile_data_issue]bad_network_preference|data_mode_off|user_abroad_roaming_disabled_off[PERSONA:None]",
+        "[mobile_data_issue]bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on[PERSONA:Hard]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Hard]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on[PERSONA:Hard]",
+        "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+        "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+        "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Hard]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Hard]"
+      ]
+    },
+    {
+      "split": "base",
+      "tasks": 114,
+      "reward_basis_counts": {
+        "ENV_ASSERTION": 94,
+        "ENV_ASSERTION+ACTION": 20
+      },
+      "nonempty_nl_assertions": 0,
+      "assertion_count_histogram": {
+        "2": 55,
+        "3": 20,
+        "1": 39
+      },
+      "pure_env": 94,
+      "pure_env_at_least_two_predicates": 75,
+      "excluding_gold_refuel": 25,
+      "also_excluding_initial_vpn": 18,
+      "staged_connectivity_then_speed_static_candidates": 7,
+      "staged_candidate_ids": [
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference[PERSONA:Hard]",
+        "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+        "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on[PERSONA:Hard]",
+        "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on[PERSONA:Hard]"
+      ]
+    }
+  ],
+  "base_candidate_task_hashes": {
+    "[mobile_data_issue]airplane_mode_on|bad_network_preference[PERSONA:Hard]": "d0283876405e929871524eefdd1c72e07db22587ecc98bedc7e19e00cbe5009b",
+    "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]": "fc18c2d140e675a6b8c4b18d101c65bbdc59d664b6fd94d21617ae395819650f",
+    "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]": "68e6999a530548ccce6503568d9ab45e010e15b69ea236352e59cb8fb79764f3",
+    "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Easy]": "0aafc65bebf3b400a7b9b9ea4cf9169e468a10b790433fcf60b2ddf082ae087b",
+    "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]": "bffb4ccceb96ce6173aa336a0452fa4e5032f5bca6b5e419a8ec95f2efbe9044",
+    "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on[PERSONA:Hard]": "c16f03ad8a07c2481bbb43d61c31f58639cae48c8b67a8a2e37f3f9d1a8e0ae1",
+    "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on[PERSONA:Hard]": "f1e96d40e8fd2bc69d17d4336854a04f4d24d5bedc863ee75dec625a8a545468"
+  },
+  "canonical_task_hash_encoding": "UTF-8 json.dumps(sort_keys=True,separators=(comma,colon),ensure_ascii=False)"
+}

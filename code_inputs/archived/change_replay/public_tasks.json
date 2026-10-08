@@ -1,0 +1,195 @@
+[
+  {
+    "id": "A1",
+    "family": "A",
+    "prompt": "Look up the record whose exact ID is AbC-07 and return its label.",
+    "capabilities": [
+      "record-lookup",
+      "text-identifiers"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "A2",
+    "family": "A",
+    "prompt": "Look up the record whose exact ID is Straße-東京 and return its label.",
+    "capabilities": [
+      "record-lookup",
+      "international-text"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "A3",
+    "family": "A",
+    "prompt": "Look up the record matching this complete query and return its label: {\"owner\":{\"name\":\"Zoë\",\"aliases\":[\"Q\",\"ß\"]},\"ids\":[\"X-1\",\"x-2\"]}.",
+    "capabilities": [
+      "record-lookup",
+      "structured-queries",
+      "international-text"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "A4",
+    "family": "A",
+    "prompt": "Look up the record whose exact ID is plain-4 and return its label.",
+    "capabilities": [
+      "record-lookup",
+      "text-identifiers"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "P1",
+    "family": "P",
+    "prompt": "Read all pages of collection P1 and return every item in the order provided.",
+    "capabilities": [
+      "collection-read",
+      "ordered-results",
+      "continuation-links"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "P2",
+    "family": "P",
+    "prompt": "Read collection P2 and return every item in the order provided.",
+    "capabilities": [
+      "collection-read",
+      "ordered-results"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "P3",
+    "family": "P",
+    "prompt": "Read all pages of collection P3 and return every item in the order provided, including international text.",
+    "capabilities": [
+      "collection-read",
+      "ordered-results",
+      "continuation-links",
+      "international-text",
+      "large-observations"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "P4",
+    "family": "P",
+    "prompt": "Read all pages of collection P4 and return every item in the order provided. Follow a continuation even if a page contains no items.",
+    "capabilities": [
+      "collection-read",
+      "ordered-results",
+      "continuation-links",
+      "empty-pages"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "E1",
+    "family": "E",
+    "prompt": "Read record E1 and return its label. Complete the read if the service reports a temporary transport failure.",
+    "capabilities": [
+      "record-read",
+      "reliable-completion"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "E2",
+    "family": "E",
+    "prompt": "Create exactly one entry for operation E2 using the stable operation key op-E2, and return the receipt identifier. If delivery of the response fails temporarily, finish the same operation without creating a second entry.",
+    "capabilities": [
+      "record-write",
+      "operation-receipts",
+      "single-operation",
+      "reliable-completion"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "E3",
+    "family": "E",
+    "prompt": "Submit the supplied read request for record E3. If the service rejects the request as permanently invalid, return its error code without resubmitting it.",
+    "capabilities": [
+      "record-read",
+      "error-reporting"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "E4",
+    "family": "E",
+    "prompt": "Read the primary source for record E4 and return its label; use the backup source if the primary source has no such record.",
+    "capabilities": [
+      "record-read",
+      "alternate-sources"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "R1",
+    "family": "R",
+    "prompt": "Find record R1 and return its label. Try an exact lookup first, then use search if the lookup has no result.",
+    "capabilities": [
+      "record-discovery",
+      "exact-lookup",
+      "search"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "R2",
+    "family": "R",
+    "prompt": "Find record R2 and return its label. Try an exact lookup first, then use search if the lookup has no result.",
+    "capabilities": [
+      "record-discovery",
+      "exact-lookup",
+      "search"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "R3",
+    "family": "R",
+    "prompt": "Find the record matching {\"owner\":{\"name\":\"東京\",\"aliases\":[\"Zoë\",\"ß\"]},\"ids\":[\"R-3\",\"r-3\"]} and return its label. Try an exact lookup first, then search with the same complete query if the lookup has no result.",
+    "capabilities": [
+      "record-discovery",
+      "exact-lookup",
+      "search",
+      "structured-queries",
+      "international-text"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  {
+    "id": "R4",
+    "family": "R",
+    "prompt": "Find all records matching R4 and return their labels in service order. Try an exact lookup first; if it has no results, search and follow every continuation.",
+    "capabilities": [
+      "record-discovery",
+      "exact-lookup",
+      "search",
+      "ordered-results",
+      "continuation-links"
+    ],
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  }
+]

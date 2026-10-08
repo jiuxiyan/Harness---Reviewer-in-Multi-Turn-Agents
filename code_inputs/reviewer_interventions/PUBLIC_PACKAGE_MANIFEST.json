@@ -1,0 +1,30 @@
+[
+  {
+    "path": "SPEC.md",
+    "sha256": "abb530038898d55a56d565e792a85b61509e07203780a4717b8b8846e994846c"
+  },
+  {
+    "path": "interventions.py",
+    "sha256": "de533e8a97b0fa6bd72fbf93878910e6d5fc2a74102b19b0dfb4a41ba4bbe147"
+  },
+  {
+    "path": "launch.py",
+    "sha256": "5a17ae898a25f6e5f65e3c6fc10bbedadbadf0f4de5e3f1b09ffbc2b745c6679"
+  },
+  {
+    "path": "offline_backend.py",
+    "sha256": "47f722c824dfafbfba03a5503d6ac08af85ad7236b2fe407e4ad9a3b946ad0ef"
+  },
+  {
+    "path": "plan_freeze.json",
+    "sha256": "3bd7aab4d4fe295c5eb71eb2d07d962b5c4742d652ad369214d5950e02fe33b6"
+  },
+  {
+    "path": "test_interventions.py",
+    "sha256": "a765203a218516cc04bd23949309b4d6043e60db6f76bbc4afeb834ffe854960"
+  },
+  {
+    "path": "worker.py",
+    "sha256": "a300149f6ad35ab484c37fb7b87a679c047044a3439f614b50251232adc69bbd"
+  }
+]

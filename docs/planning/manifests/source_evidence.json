@@ -1,0 +1,43 @@
+{
+  "schema_version": "planning-manifest-v1",
+  "paper_title": "Reviewer Advice Lifetimes and Goal Preservation in Multi Turn Agents",
+  "paper_pages": 13,
+  "scientific_precedence": "Final manuscript controls arm semantics and primary contrast; later lifetime report updates scripted implementation readiness only.",
+  "sources": [
+    {
+      "path": "harness_research/paper_planning/draft/manuscript.txt",
+      "sha256": "5bbf5cacf9e3a2d211681b7d2f2b2390bf1a1d34c868f949f80467fa8972714c"
+    },
+    {
+      "path": "harness_research/paper_planning/method_blueprint.md",
+      "sha256": "9cbd8f618072d6d883c2edc0950b30991b0c9ce93cbd776cc838b7ba784ceea3"
+    },
+    {
+      "path": "harness_research/paper_planning/novelty_audit.md",
+      "sha256": "b605c3b214e7a476e7537a01d0c49c157bab1b68be1096e5a9edd285e0525182"
+    },
+    {
+      "path": "harness_research/reviewer_pilot/REPORT.md",
+      "sha256": "ff3e7bf17a4320aeabaf31137f11851ce2bd36da16268a0b8505113963c81585"
+    },
+    {
+      "path": "harness_research/reviewer_pilot/task_audit.json",
+      "sha256": "6003d0dd6d478f85e2430235d007455fb9c9618ea4f3f8461d4e776e88da5051"
+    },
+    {
+      "path": "harness_research/controller_receipt_adapter/REPORT.md",
+      "sha256": "0a52de322ad9bb8ca813a5b373682363bb3443f063a54f70ba23886accbe0c6b"
+    },
+    {
+      "path": "harness_research/advice_lifetime_controls/REPORT.md",
+      "sha256": "99eb2a6d84649a27a1bd4aeaf5a42dcd2e4370498ce46537a1432bd493db570e"
+    },
+    {
+      "path": "harness_research/advice_lifetime_controls/PLAN.md",
+      "sha256": "318871028a18aabbb5b474c3c1ad602ce78377a6c9b319ad4da3997490f94ef7"
+    }
+  ],
+  "real_model_calls": 0,
+  "real_experiment_runs": 0,
+  "effectiveness_result": "not_run"
+}

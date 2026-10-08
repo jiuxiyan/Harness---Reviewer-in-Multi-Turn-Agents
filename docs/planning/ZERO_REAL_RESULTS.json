@@ -1,0 +1,10 @@
+{
+  "evidence_kind": "preexperiment_plan",
+  "real_model_calls": 0,
+  "real_experiment_runs": 0,
+  "effectiveness_result": "not_run",
+  "natural_coverage_estimate": "not_run",
+  "causal_estimate": "not_run",
+  "live_runner_implementation_status": "pending_implementation_verification",
+  "source": "Historical reports are scripted software evidence only."
+}

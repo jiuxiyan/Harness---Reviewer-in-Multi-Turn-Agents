@@ -1,0 +1,21 @@
+{
+  "scope": "Transfer validation only; main offline chain not rerun in a fresh environment and formal model experiments not run.",
+  "python_sources_ast_parsed": 54,
+  "pinned_official_files_reverified": 281,
+  "pinned_official_bytes_reverified": 18106301,
+  "official_source_executed_during_pin_check": false,
+  "archived_contract_unit_tests": {
+    "tests": 32,
+    "status": "PASS",
+    "execution": "isolated disposable copy of transferred source"
+  },
+  "archived_change_replay_unit_tests": {
+    "tests": 32,
+    "status": "PASS",
+    "execution": "runner.py regenerated authored synthetic fixtures in an isolated disposable copy, then unittest test_validator",
+    "initial_attempt": "One missing-results dependency exposed; resolved by the documented runner-first sequence."
+  },
+  "formal_model_experiments_run": false,
+  "model_api_calls": 0,
+  "paper_artifacts_byte_identical": true
+}

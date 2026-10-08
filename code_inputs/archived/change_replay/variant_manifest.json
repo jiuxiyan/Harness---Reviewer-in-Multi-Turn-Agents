@@ -1,0 +1,58 @@
+{
+  "files": {
+    "C_GLOBAL_PROMPT.py": "7da14415db3f2d8ff4d65d3e227007747076fe3c892e6848fc03360189c8cb36",
+    "C_NO_OP.py": "f68b94f0fed1954766cb9157aa05ae4f6247620e4d41404f8e77c28142019465",
+    "C_REFACTOR.py": "8adf00fdf9f42bc7c1e71d583391a60882ca5dd97e07901ed35dbd239dc8d3b0",
+    "H0.py": "f68b94f0fed1954766cb9157aa05ae4f6247620e4d41404f8e77c28142019465",
+    "M_ARGUMENT_NORMALIZATION.py": "0b42678fa4e7b878ce836e237338cf564fc4dcfdeb66327057f8f8606a540fc9",
+    "M_CURSOR_TRUNCATION.py": "d2d57994e3abe9007fb446fc32f039ef429f94b03124d1ab458587147b3eed04",
+    "M_PREMATURE_TERMINATION.py": "ee5975df0e1286ae655855bcacf3cc843e6366020ea2278f6bb347062562168b",
+    "M_RETRY_IDEMPOTENCY.py": "f0dac8cdbe2f682a7dd83e906af63a68bc056edac00bdfbbeede20e006e40c53"
+  },
+  "source_kind": "locally_authored_synthetic_edits",
+  "structural_diffs": {
+    "C_GLOBAL_PROMPT": [
+      {
+        "component_id": "component-42e417bd9e4f26cc",
+        "component_name_for_audit_only": "system_prompt",
+        "diff_id": "ast-93405c76802b61408b7c9f81"
+      }
+    ],
+    "C_NO_OP": [],
+    "C_REFACTOR": [
+      {
+        "component_id": "component-0565fc70c9d5c2dd",
+        "component_name_for_audit_only": "normalize_arguments",
+        "diff_id": "ast-c83940bb9cdf2281439b3e6b"
+      }
+    ],
+    "M_ARGUMENT_NORMALIZATION": [
+      {
+        "component_id": "component-0565fc70c9d5c2dd",
+        "component_name_for_audit_only": "normalize_arguments",
+        "diff_id": "ast-c697a090a7a09ba72f420c9f"
+      }
+    ],
+    "M_CURSOR_TRUNCATION": [
+      {
+        "component_id": "component-5ff57612f93c600b",
+        "component_name_for_audit_only": "prepare_observation",
+        "diff_id": "ast-4101c8b46997b2b49dbeeb7c"
+      }
+    ],
+    "M_PREMATURE_TERMINATION": [
+      {
+        "component_id": "component-7f1a294561674edf",
+        "component_name_for_audit_only": "should_terminate",
+        "diff_id": "ast-fa07aeaef62c335787ca2798"
+      }
+    ],
+    "M_RETRY_IDEMPOTENCY": [
+      {
+        "component_id": "component-8a2b4f382304826f",
+        "component_name_for_audit_only": "retry_arguments",
+        "diff_id": "ast-c6c50dec8db94b44331de358"
+      }
+    ]
+  }
+}

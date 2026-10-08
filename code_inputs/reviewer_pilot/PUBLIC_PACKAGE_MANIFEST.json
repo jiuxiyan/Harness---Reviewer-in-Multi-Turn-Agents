@@ -1,0 +1,50 @@
+[
+  {
+    "path": "backend_checks.py",
+    "sha256": "cf3a846cc0f52616ef1ce113c94b5c19e5aaa034634388432a2ae50806fb99c5"
+  },
+  {
+    "path": "backend_worker.py",
+    "sha256": "8edf0d0ed87f8b5d80a08942facd343dac26f879bf16b740bb7bd6535d921efc"
+  },
+  {
+    "path": "checkpoint_contract.json",
+    "sha256": "f8b9ad608f38ea064f571cfad4864edf40c9dfd6bb6714fb646477b4c18f53c9"
+  },
+  {
+    "path": "commit_response.json",
+    "sha256": "b5d755cca6c3409289e7e8dca8a9705524afd0de5395ae30b042d140bf079b75"
+  },
+  {
+    "path": "import_gap_requirements.txt",
+    "sha256": "d3ce6f2a020ed09d749d186216f10e2735f5d5e1e37a717b561f23b452faa6e5"
+  },
+  {
+    "path": "launch_offline.py",
+    "sha256": "722c9d4470c778dee326d10d87c5621904ed452b5c5e789a56047d6b3b80f77b"
+  },
+  {
+    "path": "no_api_guard.py",
+    "sha256": "bb9c5a418bcfc93510f59b083f4d19b40a05d6f9a68a676eed7e44607152f04f"
+  },
+  {
+    "path": "run_suite.py",
+    "sha256": "589f352c1ee8412c83f9d1f7568cb6f2b46ddc6819ed4d3e8bc1d69952ec0386"
+  },
+  {
+    "path": "source_manifest_final.json",
+    "sha256": "c33e80b25e4c060a1c8395287956696a505e7dcae9b215433558ecc98721ea46"
+  },
+  {
+    "path": "static_audit.py",
+    "sha256": "e644bcba87da6d888f850e5ade6045e1488a2709cddd3a251ba73a513f52d68e"
+  },
+  {
+    "path": "task_audit.json",
+    "sha256": "6003d0dd6d478f85e2430235d007455fb9c9618ea4f3f8461d4e776e88da5051"
+  },
+  {
+    "path": "verify_final.py",
+    "sha256": "221a9d79b51a01a566280befcbb555dc614ca220a59f36f57cf3f358716c445a"
+  }
+]

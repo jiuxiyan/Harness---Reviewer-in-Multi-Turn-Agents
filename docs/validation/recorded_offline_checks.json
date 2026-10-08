@@ -1,0 +1,58 @@
+{
+  "scope": "Recorded pre-transfer offline validation; not a new run of the portable public repository. No model efficacy measured.",
+  "reviewer_pilot": {
+    "status": "PASS",
+    "verified_official_files": 281,
+    "verified_source_bytes": 18106301,
+    "all_tau2_source_present": true,
+    "installed_packages_match_lock": 75,
+    "scripted_live_witnesses": 7,
+    "fresh_process_restores": 14,
+    "all_raw_checkpoints_match": true,
+    "all_live_restored_continuations_match": true,
+    "official_finalization_and_rewards_pass": true,
+    "additional_read_tool_pairs": 42,
+    "additional_read_tool_repetitions": 2,
+    "additional_read_tool_outputs_equal_and_state_unchanged": true,
+    "model_calls": 0,
+    "source_modified": false,
+    "scope": "Final recorded suite only; development included additional scripted repeats. No natural or model-generated episodes."
+  },
+  "reviewer_interventions": {
+    "mode": "scripted_fixture",
+    "fixture": true,
+    "actual_api_calls": 0,
+    "tests_run": 36,
+    "failures": 0,
+    "errors": 0,
+    "successful": true,
+    "expected_tests": 36,
+    "provider_format_verified": false,
+    "causal_effect_measured": false
+  },
+  "controller_receipt_adapter": {
+    "mode": "scripted_fixture",
+    "actual_model_calls": 0,
+    "actual_network_calls": 0,
+    "tests_run": 37,
+    "expected_tests": 37,
+    "failures": 0,
+    "errors": 0,
+    "successful": true,
+    "provider_format_verified": false,
+    "causal_effect_measured": false,
+    "aggregate_status": "PASS"
+  },
+  "advice_lifetime_controls": {
+    "mode": "scripted_fixture",
+    "tests_run": 40,
+    "failures": 0,
+    "errors": 0,
+    "successful": true,
+    "actual_model_calls": 0,
+    "actual_network_calls": 0,
+    "provider_format_verified": false,
+    "causal_effect_measured": false,
+    "aggregate_status": "PASS"
+  }
+}

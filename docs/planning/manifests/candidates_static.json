@@ -1,0 +1,338 @@
+{
+  "schema_version": "planning-manifest-v1",
+  "evidence_kind": "static_metadata_inventory",
+  "source_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+  "population_counts": {
+    "small": 20,
+    "train": 74,
+    "test": 40,
+    "full": 2285,
+    "base": 114
+  },
+  "candidate_counts": {
+    "small": 0,
+    "train": 4,
+    "test": 3,
+    "full": 45,
+    "base": 7
+  },
+  "selection_scope": "Static metadata eligibility, not demonstrated replay or natural-prefix frequency. Exclusions are conservative and path-specific. Multiple predicates need not be independent.",
+  "formal_partition_status": "not_frozen",
+  "tasks": [
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_saver_mode_on[PERSONA:Easy]",
+      "family_id": "airplane_mode_on|data_saver_mode_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference[PERSONA:Hard]",
+      "family_id": "airplane_mode_on|bad_network_preference",
+      "exposed_readiness_task": true,
+      "status": "exposed_development_only",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+      "family_id": "data_saver_mode_on|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": true,
+      "status": "exposed_development_only",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "family_id": "bad_network_preference|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": true,
+      "status": "exposed_development_only",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+      "family_id": "data_saver_mode_on|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|user_abroad_roaming_disabled_on[PERSONA:Hard]",
+      "family_id": "bad_network_preference|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Easy]",
+      "family_id": "data_saver_mode_on|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|user_abroad_roaming_disabled_off[PERSONA:Hard]",
+      "family_id": "bad_network_preference|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]data_mode_off|data_saver_mode_on[PERSONA:None]",
+      "family_id": "data_mode_off|data_saver_mode_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off[PERSONA:Easy]",
+      "family_id": "bad_network_preference|data_mode_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+      "family_id": "airplane_mode_on|data_saver_mode_on|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+      "family_id": "airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": true,
+      "status": "exposed_development_only",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+      "family_id": "airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": true,
+      "status": "exposed_development_only",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+      "family_id": "airplane_mode_on|bad_network_preference|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:None]",
+      "family_id": "airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_disabled_off[PERSONA:Easy]",
+      "family_id": "airplane_mode_on|bad_network_preference|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on[PERSONA:Hard]",
+      "family_id": "airplane_mode_on|data_mode_off|data_saver_mode_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off[PERSONA:None]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on[PERSONA:Easy]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_saver_mode_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+      "family_id": "data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "family_id": "bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+      "family_id": "bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+      "family_id": "data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+      "family_id": "bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Hard]",
+      "family_id": "bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Hard]",
+      "family_id": "data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|user_abroad_roaming_disabled_off[PERSONA:None]",
+      "family_id": "bad_network_preference|data_mode_off|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Easy]",
+      "family_id": "bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on[PERSONA:Easy]",
+      "family_id": "bad_network_preference|data_mode_off|data_saver_mode_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "family_id": "airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:None]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+      "family_id": "airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on[PERSONA:Hard]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": true,
+      "status": "exposed_development_only",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:None]",
+      "family_id": "airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_off[PERSONA:Easy]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Hard]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on[PERSONA:Hard]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on",
+      "exposed_readiness_task": true,
+      "status": "exposed_development_only",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+      "family_id": "bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+      "family_id": "bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Hard]",
+      "family_id": "bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:Easy]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_on",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off[PERSONA:Hard]",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_disabled_off",
+      "exposed_readiness_task": false,
+      "status": "metadata_screened_unassigned",
+      "formal_eligibility": false
+    }
+  ]
+}

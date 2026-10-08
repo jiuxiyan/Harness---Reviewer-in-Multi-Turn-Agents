@@ -1,0 +1,65 @@
+{
+  "version": "decision-validity-audit-v1",
+  "frozen_at_utc": "2026-10-07T07:14:32Z",
+  "freeze_status": "Historical analysis plan declared before its own computation; not external preregistration and not blind access to the original corpus. Earlier corpus marginals and related replay analyses had already been inspected.",
+  "scope": "Final bounded offline implementation/calibration audit of constructed no-change pseudo-version contrasts. No real harness edits, model calls, API calls, network retrieval, upstream-code execution, new selector optimization or genuine release error guarantee.",
+  "cohorts": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "history_attempt_indices": [
+    1,
+    2
+  ],
+  "evaluation_attempt_indices": [
+    3,
+    4
+  ],
+  "unused_evaluation_attempt_indices": "5 through cohort N; no pair search or ordering sensitivity analysis",
+  "attempt_order_warning": "Indices are each task's nth retained file-order occurrence, not synchronized rounds or timestamps.",
+  "views": [
+    "full",
+    "hash_uniform",
+    "history_stratified"
+  ],
+  "subset_fraction": "1/10",
+  "subset_size_rule": "max(1, round(n/10)), exact rational nearest-integer rounding with ties to even",
+  "selector_hash_salt": "regression-noop-audit-v1",
+  "selector_hash_rule": "SHA256(salt + ':' + task ID), smallest digests",
+  "history_allocation": "Ordered binary attempts-1-and-2 pattern; proportional allocation with exact integer floor and largest remainder; remainder ties by pattern; smallest hashes within each stratum",
+  "prior_frozen_selections_sha256": "f874e8de750bd76f9e7196b80c923deb02c5d6bffb0e1868b70e8d9ba7a70009",
+  "slice_count": 4,
+  "slice_hash_salt": "harness-decision-validity-v1-slices",
+  "slice_rule": "int(SHA256(slice_hash_salt + ':' + task ID),16) modulo 4; same slices across views; membership uses IDs only, not candidate outcomes",
+  "rng": "Python standard library random.Random, getrandbits(1) for each sorted (cohort, task ID) per replicate",
+  "orientation_seed": 20261007,
+  "replicates": 1000,
+  "orientation_rule": "For each task and replicate, independently draw a fair bit. Bit 0 puts attempt 3 in pseudo-old and 4 in pseudo-new; bit 1 swaps them. Reuse that exact task orientation in every overlapping test. Even concordant tasks consume one bit.",
+  "conditioning": "All retained task memberships, selection history, fixed evaluation outcomes and metadata are conditioned on. The constructed null is independent fair orientation of each task pair, not an asserted real-model or release null.",
+  "drop": "(pseudo-old successes minus pseudo-new successes) / task count; positive means a drop",
+  "rules": {
+    "positive_drop": "strictly greater than zero",
+    "five_pp_drop": "greater than or equal to 1/20 (5 percentage points); illustrative sensitivity threshold, not a scientifically justified harm margin or statistical zero-effect test",
+    "unadjusted_exact": "one-sided paired-binomial/McNemar p <= 1/20; m discordances, L losses, p=sum(comb(m,k),k=L..m)/2**m; m=0 gives p=1",
+    "holm": "exact rational Holm step-down adjusted p values, reject adjusted p <= 1/20"
+  },
+  "per_test_null": "Conditional fair-sign null for the fixed discordant task pairs (or one-sided no-excess-loss null under its necessary independent sign assumptions); not a test of a 5 pp harm margin",
+  "analysis_scopes": {
+    "single_global": "Each of 6 cohorts x 3 views, global test only; 18 global contrasts per replicate",
+    "within_family": "Global plus all four prespecified hash slices for each cohort/view; 18 fixed five-test families, all planned hypotheses retained",
+    "audit_wide": "All 6 x 3 x (1+4)=90 planned tests, with one Holm correction across the full fixed audit family"
+  },
+  "empty_and_no_discordance": "Always retain test with p=1 and zero declarations. Empty-set drop is undefined (null in output), not zero evidence of safety. No-discordance or non-rejection is insufficient evidence, not equivalence or safety.",
+  "target_population": "Every view targets its own fixed task set. Unweighted history-stratified subsets do not estimate a corrected whole-cohort causal effect. No weighted paired-binomial calculation.",
+  "outputs": "Aggregate test definitions and analytical marginal probabilities, per-global and per-family pseudo-version declaration/alarm frequencies, audit-wide frequencies, conditional 95% Wilson Monte Carlo intervals, Monte Carlo-versus-exact marginal diagnostics and checker tests. Do not publish task IDs or raw source inputs.",
+  "monte_carlo_uncertainty": "Intervals concern only repeated constructed fair-sign randomization conditional on this corpus. They are not scientific confidence intervals for real-agent failures, not simultaneous intervals, and not independent across overlapping tests or methods. No method-ranking test.",
+  "analytical_check": "For each fixed test, enumerate the m+1 binomial loss counts with exact Fraction masses and exact thresholds to compute marginal declaration probabilities. Compare to 1000-replicate frequencies descriptively; do not reject or tune the protocol based on deviations.",
+  "checker_fixtures": "Identical-pair negative control; deterministic all-loss positive fixture; boundary and finite-hypothesis Holm tests; empty/no-discordance tests. Fixtures are checker tests only, never empirical evidence of effectiveness.",
+  "source_limitations": "Reported fixed setup, retained/filtered data, unknown sampling seeds and immutable model hash. Actual collection dependence and validity are not authenticated by this synthetic null.",
+  "decision_rule": "Complete one auditable result. If this shows expected conditional noise/calibration only and no genuine real-edit data collection plan exists, recommend ARCHIVE the current regression branch rather than more toy prototypes. Do not claim adding standard statistics is novel.",
+  "cost": "Zero model/API cost; no external calls. Local CPU work only."
+}

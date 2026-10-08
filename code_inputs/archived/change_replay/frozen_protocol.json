@@ -1,0 +1,391 @@
+{
+  "protocol_version": "1.2.0",
+  "title": "Frozen local deterministic replay validation protocol",
+  "scope": {
+    "purpose": "Test a tiny deterministic replay validator using explicit synthetic fixtures; this is not evidence about live-model behavior or production test-selection efficacy.",
+    "execution": "Python standard library and local files only. No API, network, package installation, upload, or live model calls.",
+    "freeze_order": "Freeze public fixtures, hidden goal checker, and this protocol before implementing or evaluating replay, mutations, or selectors.",
+    "frozen_file_policy": "Any modification to a frozen payload invalidates the original freeze and requires a separately named protocol revision and manifest; never silently replace frozen evidence."
+  },
+  "public_task_schema": {
+    "container": "JSON array",
+    "exact_fields": [
+      "id",
+      "family",
+      "prompt",
+      "capabilities",
+      "horizon_model_requests",
+      "tool_dispatch_budget"
+    ],
+    "id": "Unique string from explicit_task_ids.",
+    "family": "One of A, P, E, R; four tasks per family.",
+    "prompt": "User-level goal and operational constraints; no expected answer or mutation label.",
+    "capabilities": "Descriptive public capability tags; never fault labels, outcome labels, or hidden checker values.",
+    "horizon_model_requests": 8,
+    "tool_dispatch_budget": 10
+  },
+  "explicit_task_ids": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "R1",
+    "R2",
+    "R3",
+    "R4"
+  ],
+  "task_count": 16,
+  "family_counts": {
+    "A": 4,
+    "P": 4,
+    "E": 4,
+    "R": 4
+  },
+  "fixture_contract": {
+    "A": "Exact identifier or nested-query fidelity, including case and Unicode.",
+    "P": "Complete ordered collection reads, including single-page, long international-text, and empty-page continuation cases.",
+    "E": "Temporary read recovery; one committed keyed write despite a post-commit timeout; permanent rejection without resubmission; missing primary with backup.",
+    "R": "Exact lookup before conditional search, including direct hit, international nested query, and paginated fallback search.",
+    "E2_operation_key": "op-E2",
+    "goal_answers": "Defined exclusively by hidden_checker.py and excluded from all selector-visible inputs."
+  },
+  "response_tapes": {
+    "source_kind": "HANDSCRIPTED",
+    "per_task": 2,
+    "total": 32,
+    "tapes": [
+      {
+        "task_id": "A1",
+        "tape_ids": [
+          "A1-T1",
+          "A1-T2"
+        ]
+      },
+      {
+        "task_id": "A2",
+        "tape_ids": [
+          "A2-T1",
+          "A2-T2"
+        ]
+      },
+      {
+        "task_id": "A3",
+        "tape_ids": [
+          "A3-T1",
+          "A3-T2"
+        ]
+      },
+      {
+        "task_id": "A4",
+        "tape_ids": [
+          "A4-T1",
+          "A4-T2"
+        ]
+      },
+      {
+        "task_id": "P1",
+        "tape_ids": [
+          "P1-T1",
+          "P1-T2"
+        ]
+      },
+      {
+        "task_id": "P2",
+        "tape_ids": [
+          "P2-T1",
+          "P2-T2"
+        ]
+      },
+      {
+        "task_id": "P3",
+        "tape_ids": [
+          "P3-T1",
+          "P3-T2"
+        ]
+      },
+      {
+        "task_id": "P4",
+        "tape_ids": [
+          "P4-T1",
+          "P4-T2"
+        ]
+      },
+      {
+        "task_id": "E1",
+        "tape_ids": [
+          "E1-T1",
+          "E1-T2"
+        ]
+      },
+      {
+        "task_id": "E2",
+        "tape_ids": [
+          "E2-T1",
+          "E2-T2"
+        ]
+      },
+      {
+        "task_id": "E3",
+        "tape_ids": [
+          "E3-T1",
+          "E3-T2"
+        ]
+      },
+      {
+        "task_id": "E4",
+        "tape_ids": [
+          "E4-T1",
+          "E4-T2"
+        ]
+      },
+      {
+        "task_id": "R1",
+        "tape_ids": [
+          "R1-T1",
+          "R1-T2"
+        ]
+      },
+      {
+        "task_id": "R2",
+        "tape_ids": [
+          "R2-T1",
+          "R2-T2"
+        ]
+      },
+      {
+        "task_id": "R3",
+        "tape_ids": [
+          "R3-T1",
+          "R3-T2"
+        ]
+      },
+      {
+        "task_id": "R4",
+        "tape_ids": [
+          "R4-T1",
+          "R4-T2"
+        ]
+      }
+    ],
+    "interpretation": "Two individually named finite hand-authored response tapes per task, not sampled model trajectories. Count identical or near-identical tapes transparently; they do not establish statistical independence.",
+    "request_binding": "Every scripted response is bound to a complete serialized old model request. The tape entry contains that complete request and response, not just a task identifier or step ordinal.",
+    "sequence": "Freeze each fully authored tape before replay comparisons; keep its content hash with run provenance. No tape edits based on mutation outcomes or selection results.",
+    "nonclaims": [
+      "No live model requests were made.",
+      "No probability, reliability, or empirical generalization claim follows from two scripted tapes."
+    ]
+  },
+  "mutation_matrix": {
+    "local_synthetic_mutations": [
+      {
+        "id": "M_ARGUMENT_NORMALIZATION",
+        "mechanism": "Change argument normalization in the local argument path."
+      },
+      {
+        "id": "M_CURSOR_TRUNCATION",
+        "mechanism": "Change cursor handling or observation truncation in the local pagination path."
+      },
+      {
+        "id": "M_RETRY_IDEMPOTENCY",
+        "mechanism": "Change the local retry or keyed-operation idempotency path."
+      },
+      {
+        "id": "M_PREMATURE_TERMINATION",
+        "mechanism": "End local execution before the task goal is reached."
+      }
+    ],
+    "controls": [
+      {
+        "id": "C_GLOBAL_PROMPT",
+        "mechanism": "A global prompt change that changes the complete next model request."
+      },
+      {
+        "id": "C_NO_OP",
+        "mechanism": "No code or behavior change."
+      },
+      {
+        "id": "C_REFACTOR",
+        "mechanism": "A structural refactor with intentionally equivalent observable behavior."
+      }
+    ],
+    "total_changes": 7,
+    "fully_crossed_units": 224,
+    "unit": "(change_id, task_id, tape_id)",
+    "treatment": "Each change is applied independently to the same frozen baseline; do not compound changes.",
+    "selector_visibility": "Mutation names, mechanisms, failure sets, checker results, and new-run outcomes are never selector inputs."
+  },
+  "boundary_comparison": {
+    "method": "Walk old and new execution together, comparing every complete observable boundary before allowing the next step.",
+    "boundary_kinds": [
+      "complete_model_request",
+      "tool_dispatch",
+      "tool_observation",
+      "termination_or_budget"
+    ],
+    "complete_model_request": "Compare all serialized request fields, including full prompt/messages, tools/schema, options, and all context sent. Do not compare a subset, normalize away distinctions, or use only a digest without preserving auditable serialized content.",
+    "tool_dispatch": "Compare tool name, complete arguments, and stable operation key where applicable before dispatching. Text is case- and code-point-sensitive; nested values and array order are preserved.",
+    "tool_observation": "Compare the complete serialized observation, including empty values, errors, continuation tokens, long text, and Unicode. Never truncate comparison inputs.",
+    "termination_or_budget": "Compare termination reason and answer, model-request count, tool-dispatch count, and exhausted-budget state. Different early stopping or limit exhaustion is a boundary difference.",
+    "first_difference": "Stop at the first differing complete request, tool dispatch/arguments, observation, or termination/budget boundary and report its kind and index.",
+    "response_consumption": "Check request equality before consuming a tape entry. A differing complete model request consumes zero responses for that boundary. No response from the tape is consumed after any divergence.",
+    "exactness": "Use deterministic lossless JSON serialization with sorted object keys for stable ordering; no Unicode normalization, case folding, whitespace stripping inside strings, cursor shortening, or list reordering.",
+    "unsupported_continuation": "A replay that diverges establishes a boundary difference only. Do not fabricate a continuation or claim a final goal failure from an unconsumed tape.",
+    "separate_scripted_runs": "If standalone mutant goal outcomes are evaluated, use separately authored and pre-frozen request-bound scripted fixtures, label them independently, and do not present them as continuation of a divergent replay."
+  },
+  "budgets": {
+    "model_request_horizon_per_run": 8,
+    "tool_dispatch_limit_per_run": 10,
+    "accounting": "Increment counters for actual attempted model-request boundaries and actual tool dispatches. Reaching a limit is recorded explicitly; disallow execution beyond the public limit."
+  },
+  "hidden_goal_checker": {
+    "file": "hidden_checker.py",
+    "interface": "check(task_id, answer, state, transcript) -> {\"passed\": bool, \"reason\": str}",
+    "answer_shape": {
+      "result": "Exact task-specific scalar string or ordered list of strings."
+    },
+    "state_shape": {
+      "committed_writes": "Integer number of committed writes; required by the E2 goal check."
+    },
+    "transcript_dispatch_shape": {
+      "kind": "tool_dispatch",
+      "other_fields": "Preserved execution evidence; exact dispatch counting uses kind."
+    },
+    "goal_rules": "Exact goal result for every task. Only E2 additionally requires exactly one committed write. Only E3 additionally requires exactly one tool_dispatch.",
+    "independence": "No mutation, replay, selector, or evaluation code is imported by the checker. Its expected answers are fixed before those implementations.",
+    "visibility": "The selector must have no callable handle, import, file read, result view, or indirect view of this module or its outcomes. The evaluator invokes the checker only outside selection.",
+    "isolation_claim": "State and verify the actual mechanism used to restrict selector inputs; do not claim operating-system isolation unless it is implemented and tested."
+  },
+  "selector_inputs": {
+    "allowlist": [
+      "structural_diff_ids",
+      "old_exposures",
+      "public_capability_tags",
+      "historical_scripted_costs",
+      "first_valid_divergence_features"
+    ],
+    "structural_diff_ids": "Stable opaque component or structural-change identifiers only; not semantic mutation labels or outcome annotations.",
+    "old_exposures": "Components or boundary categories exercised by the frozen old runs. No new-run coverage or hidden outcome information.",
+    "public_capability_tags": "Only capabilities present in public_tasks.json.",
+    "historical_scripted_costs": "Costs measured from frozen old scripted runs under the synthetic accounting below; no live-model or billed-cost inputs.",
+    "ids": "Task and tape IDs may identify selectable units; they are not additional engineered outcome features.",
+    "forbidden": [
+      "hidden checker module or expected answers",
+      "hidden checker outputs",
+      "mutation labels or descriptions",
+      "new-run goal outcomes",
+      "new-run costs as selector features beyond declared historical scripted costs",
+      "post-divergence tape data",
+      "goal truth derived from hand-authored transcripts",
+      "raw request, argument, observation, or answer payloads in the selector view"
+    ],
+    "output_freeze": "Persist selection sets, ranking, scores, and input-view hashes after deriving only allowed pre-outcome structural evidence, and before any evaluator computes hidden goal outcomes. Structural evidence generation must never invoke or read the hidden goal checker.",
+    "first_valid_divergence_features": "Location/index and kind of the first differing observable boundary, or equivalent-to-termination, from an actual deterministic old/new replay that stops before dispatching different arguments or consuming a response for a different request. May include only the structural comparable-prefix extent, never observation text, answer values, mutation labels, hidden goals, or any post-divergence material.",
+    "construction_accounting": "Record guarded replay work used to build first-valid-divergence features separately from selected-test execution cost. Include feature-construction overhead in any end-to-end synthetic work comparison, so full replay of all candidates is not presented as free selection."
+  },
+  "selection_baselines": [
+    {
+      "id": "cheapest_first",
+      "description": "Ascending historical scripted cost with stable task/tape ID tie-break."
+    },
+    {
+      "id": "changed_component_coverage",
+      "description": "Greedy previously uncovered structural diff IDs intersected with old exposures, per historical scripted cost; stable ID tie-break."
+    },
+    {
+      "id": "diff_plus_capability",
+      "description": "Use structural-diff/old-exposure overlap and public capability coverage with historical scripted cost; declare the exact deterministic scoring rule before outcomes."
+    }
+  ],
+  "candidate_decision": {
+    "requirement": "A candidate needs a unique mechanism signal beyond simple changed-component coverage and public tags. Audited first-valid-divergence location/type may provide such structural signal only if it distinguishes outcomes of the boundary validator beyond those baselines; it is not a hidden goal label. Different ordering, tie-break, score scale, or sorting of otherwise identical evidence is insufficient.",
+    "gate": "If no separately identified and implemented mechanism signal distinguishes structural detection from the simple baselines, record NO-GO for candidate novelty; do not rename a baseline as a candidate.",
+    "evidence": "Compare selected sets and unique structural detections at equal declared synthetic execution budgets, accounting separately and inclusively for replay-feature construction costs. Use legitimate first-valid-divergence evidence only. Preserve no-op/refactor and global-prompt control results. If the optional local-predicate diagnostic is run, explicitly test whether simple label-free changed guards/transforms reproduce the claimed distinguishing signal.",
+    "limits": "No asserted superiority, production readiness, economic return, benchmark win, or generalization from structural fixture counts."
+  },
+  "synthetic_cost": {
+    "unit_name": "scripted_synthetic_units",
+    "definition": "1 synthetic unit per attempted model-request boundary plus 1 synthetic unit per actual tool dispatch; report the two counters separately as well.",
+    "meaning": "Local scripted bookkeeping only. No API call is made and no billed currency is represented.",
+    "comparison": "Use identical declared synthetic budgets and deterministic tie-breaks for candidate and baselines."
+  },
+  "reporting": {
+    "allowed": [
+      "structural counts",
+      "counts of first-divergence boundary kinds",
+      "counts of invariant violations",
+      "counts of hidden goal pass/fail when a complete valid standalone scripted run exists",
+      "raw synthetic model-request and dispatch counts",
+      "synthetic budget accounting",
+      "set overlaps and unique structural detections",
+      "NO-GO decisions with concrete reasons"
+    ],
+    "forbidden_claims": [
+      "billed currency savings",
+      "live-model reliability",
+      "statistical significance",
+      "benchmark efficacy",
+      "production generalization"
+    ],
+    "inconclusive": "Diverged replay without a complete separately valid run has no final goal label. Report the boundary difference and unknown goal outcome.",
+    "minimum_audit": [
+      "frozen input hashes verified",
+      "32 HANDSCRIPTED tapes accounted for",
+      "224 fully crossed change/task/tape units accounted for or explicitly missing",
+      "request-before-response guard",
+      "zero post-divergence tape consumption",
+      "exact Unicode/nested/long/empty-page boundaries",
+      "E2 one-write goal",
+      "E3 one-dispatch goal",
+      "selector input allowlist checked",
+      "selection freeze precedes hidden evaluation",
+      "all three baseline rules declared",
+      "candidate novelty gate recorded",
+      "first-valid-divergence features contain only permitted structural data",
+      "feature construction never invokes hidden goal checker",
+      "replay-feature construction overhead separately and inclusively accounted for"
+    ]
+  },
+  "revision_history": [
+    {
+      "version": "1.1.0",
+      "change": "Clarification received before implementation: allow audited first-valid-divergence structural evidence as a candidate input, excluding hidden outcomes and all invalid continuation.",
+      "supersedes_protocol_sha256": "f509ac3ec2a944126038177eb388e1fb1be99f5af2157f350a532c2f534d9b4d",
+      "supersedes_manifest_sha256": "2996372171ed3fa013a836f1a97ebb911d868cffa2f6c7cfaf1c9a3d6b97672b"
+    },
+    {
+      "version": "1.2.0",
+      "change": "Clarification received before implementation: add optional label-free local-predicate diagnostic to test whether simple changed transforms/guards reproduce apparent replay signal.",
+      "supersedes_protocol_sha256": "8ecb475c7e21364bb4afec10df619e19c1d2707ff391aaadc60eab07eed69d4f",
+      "supersedes_manifest_sha256": "83a261f27fd56977e85c0979dad349458aaecb559baa6ddfa62d50b5908ce766"
+    }
+  ],
+  "optional_local_predicate_diagnostic": {
+    "purpose": "Check whether signal apparently gained from first-valid-divergence replay is already available from executing simple changed local transforms or guards against recorded old-run contexts.",
+    "procedure": "For each of the four local synthetic edits, evaluate the actual old and changed transform/guard on the same already recorded H0 boundary context. Compare their outputs or control decision without executing a model continuation or calling the goal checker. Preserve enough structural provenance to match the local diagnostic to the corresponding replay boundary.",
+    "permitted_evidence": [
+      "actual changed transform or guard",
+      "already recorded H0 boundary context",
+      "exact equality/difference of local transform output or guard decision",
+      "structural boundary identity"
+    ],
+    "excluded": [
+      "hidden checker or outcomes",
+      "expected goal answers",
+      "intended failure tags",
+      "hand-coded affected task lists",
+      "post-divergence model responses",
+      "inferring unseen continuation outcomes"
+    ],
+    "reporting": "Report structural agreement/disagreement counts and local-predicate work, not effectiveness or goal-failure claims. Raw contexts and output payloads stay outside the selector view.",
+    "interpretation": "If the local predicate reproduces the distinguishing structural signal, do not present that signal as uniquely requiring full replay. Sorting differences remain insufficient; report the simpler explanation and NO-GO for a claimed full-replay-specific mechanism.",
+    "status": "Optional diagnostic; cheapest-first, changed-component coverage, and diff+capability remain the three required baselines."
+  }
+}

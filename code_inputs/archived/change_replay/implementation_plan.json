@@ -1,0 +1,18 @@
+{
+  "all_methods": "full 16-task ranking, no dropping unexposed or equivalent-path tasks; zero marginal gain falls back to cheapest/hash",
+  "candidate_replay": "greedy new (actual AST diff ID, first old/new boundary kind, frozen public capability) tuples / historical cost; absent divergence contributes no detection feature; unknown remains unknown",
+  "changed_component_coverage": "greedy new (actual AST diff ID) exposure count / historical cost",
+  "cheapest_first": "ascending historical cost, then hash",
+  "comparison_budgets": "0, 5, 10, 20, 40, 80, and total historical task cost; stop at first unaffordable ranked task",
+  "decision": "Any structural distinction vs coarse coverage/tags is explicitly reported. If all replay distinctions are reproduced by the direct-local-predicate control, report NO-GO for unique replay-selector advantage; ranking changes do not override this gate.",
+  "diff_plus_capability": "greedy new (actual AST diff ID, frozen public capability) pairs / historical cost",
+  "hidden_evaluation_order": "all selector outputs and hashes persisted before importing the independent hidden checker",
+  "historical_cost": "maximum of the two old tape request-boundary-plus-actual-dispatch counts",
+  "inclusive_accounting": "candidate first-divergence feature acquisition is charged its attempted request boundaries plus actual dispatches for both tapes/all tasks; baseline metadata processing and local-predicate hook evaluations reported in their own deterministic work counters, never converted to currency",
+  "not_preregistration": "local content-hash freeze, no independent timestamp service",
+  "predicate_diagnostic": "iterate old hook calls in order; only evaluate changed pure hook functions on old arguments, stop at first return difference; unexposed changed hook is unknown",
+  "predicate_limit": "valid only for these small immediate-boundary pure hooks, not arbitrary harness code",
+  "selector_view": "only opaque diff/component IDs, old exposure categories, public capabilities, old scripted costs, first valid divergence kind/index; no raw requests, tool payloads, answers, edit names, checker results",
+  "stage": "implementation_rules_before_first_replay_comparison",
+  "tie_rule": "sha256('change-replay-tie-v1:' + task_id), ascending"
+}

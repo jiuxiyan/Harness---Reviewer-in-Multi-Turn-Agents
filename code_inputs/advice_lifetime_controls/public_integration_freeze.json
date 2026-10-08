@@ -1,0 +1,9 @@
+{
+  "version": "public-integration-v1",
+  "not_preregistration": true,
+  "plan_sha256": "331be783642e70b1eed4b2ff6b1f56a80accb6eefb61eb43a692d89be5fb495b",
+  "inputs": {
+    "paper/manuscript.txt": "5bbf5cacf9e3a2d211681b7d2f2b2390bf1a1d34c868f949f80467fa8972714c",
+    "docs/protocol/current_protocol.md": "2c8085ff045c94feaa85016224771dba795c9f1566211d1bbaa908bb3d23d2bf"
+  }
+}

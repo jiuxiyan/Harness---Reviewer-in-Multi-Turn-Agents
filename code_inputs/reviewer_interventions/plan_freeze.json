@@ -1,0 +1,8 @@
+{
+  "schema": "plan-freeze-v1",
+  "spec_sha256": "abb530038898d55a56d565e792a85b61509e07203780a4717b8b8846e994846c",
+  "stage": "PRE_IMPLEMENTATION_PRE_TEST",
+  "mode": "scripted_fixture",
+  "actual_api_calls": 0,
+  "planned_scope": "one checkpoint; internal event schema and isolated environment READ transitions; provider continuation blocked"
+}

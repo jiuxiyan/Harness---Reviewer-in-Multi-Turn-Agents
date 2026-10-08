@@ -1,0 +1,20 @@
+{
+  "frozen_at_utc": "2026-10-07T06:32:30Z",
+  "question": "How much no-change pass/fail churn and subset-estimation error is observable in the published fixed-setup label matrix?",
+  "scope": "Offline outcome replay only; no agent runs, no edits, no inference, no repository scripts.",
+  "groups": [5, 6, 7, 8, 9, 10],
+  "training_runs": [1, 2],
+  "held_out_runs": "3 through N inclusive in each group; file-order indices, NOT timestamps",
+  "subset_fraction": 0.1,
+  "subset_size": "round(0.1 * number of tasks), minimum 1",
+  "hash_salt": "regression-noop-audit-v1",
+  "selection": [
+    "hash_uniform: choose the k task IDs with smallest SHA256(salt + ':' + task ID)",
+    "history_stratified: partition tasks by the ordered two-label training pattern, allocate k proportionally using floor + largest remainder (tie by pattern), choose smallest hashes within each stratum"
+  ],
+  "estimators": ["unweighted selected-task pass rate", "for history_stratified also population-stratum weighted pass rate"],
+  "metrics": ["per-group all-pairs and adjacent-pair label churn", "full-pass-rate variability", "per-held-out-run estimation error", "RMSE", "maximum absolute error", "false no-change alarm rate for absolute estimated delta > 0.05 vs training-run mean"],
+  "comparisons": "Descriptive single frozen draw only; no winner, statistical superiority, causal regression-detection, or actual token savings claim.",
+  "leakage_caveat": "Cohort membership and file availability come from the complete published archive. No held-out labels influence subset or weights. Group file order is arbitrary.",
+  "resource_constraint": "Download only small manifests/maps and optional small cost summaries; no traces, embeddings, weights, new installs, or downloaded-code execution."
+}

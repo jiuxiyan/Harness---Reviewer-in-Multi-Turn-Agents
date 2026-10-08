@@ -1,0 +1,15 @@
+{
+  "status": "planning_artifacts_validated",
+  "verification_kind": "static_document_and_manifest_checks_only",
+  "json_files_parsed": 9,
+  "source_hashes_checked": 8,
+  "official_task_hashes_checked": 7,
+  "relative_markdown_links_checked": true,
+  "generic_configuration_only": true,
+  "private_absolute_paths_absent": true,
+  "real_provider_calls": 0,
+  "new_installs": 0,
+  "frozen_source_edits": 0,
+  "cli_status": "accepted_for_implementation_not_executed_here",
+  "note": "This receipt validates planning content and source identities, not a live runner or scientific experiment."
+}

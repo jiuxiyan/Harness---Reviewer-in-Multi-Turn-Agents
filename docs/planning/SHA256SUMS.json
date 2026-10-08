@@ -1,0 +1,20 @@
+{
+  ".env.example": "3d3f358a308cfb98d20478ccd067ec1f879ec5f61cebc1ed098a18d46bb09d42",
+  ".gitignore.example": "6a5c83bf2118a2fe0097ea68a1c01779a5133032062413be3833946294064ffd",
+  "EXPERIMENT_PLAN.md": "5f98348f34008117856a5b6ae45ce6e5b518dd43e1becf65e6940366799c189a",
+  "IMPLEMENTATION_CHECKLIST.md": "f67a8a1b8fb758e93e93bf937f9fc67d7109cbfd014a34f3e0f6f54b60ecacc8",
+  "LOCAL_RUNBOOK.md": "e1da909e365ae8d237f846d8b5e2214eef282f85be6cf86edf9a75c30f6efbb1",
+  "README.md": "b17fcce1dc979dc2d352cab0604c376c260772a5a3b33f53687238a224583bbe",
+  "RESULTS_RETURN.md": "08453851c449a79bc6112e54daf72f655132c6645e7d47d8fb5f28e3f2d2a195",
+  "RUNNER_CONTRACT.md": "48cb7a09d184b9d4501d728ddfc5082a35ae3bb63ef26a441c1682817ed490f3",
+  "VALIDATION.json": "fdd9e7b0b508b161dfba16da3b48f361f31db60d296d8fb330c0bfa8663bba36",
+  "ZERO_REAL_RESULTS.json": "7ef774d9a0f890d4ad7beb16b60d4af5d0c914558daf707193033d50f5df24b9",
+  "configs/confirmatory-roots.json": "549cb55f50de35226e0b5fd1c0670cc967f57ac2687bd9958181f7fce8d596bf",
+  "configs/end-to-end.json": "0505b32514bc3547cc95d22089661ec86580dac37d7640a79208d28faf8b2732",
+  "configs/natural-pilot.json": "3f80e72a9e5d689239c1949bc4bb12dd23cd4d7b6c6662b330d8217f081c4f3d",
+  "configs/wire-smoke.json": "79be657208659fb1673be7cecfe339ab4a5c6551ae719f469b55c1aa17a8ac11",
+  "manifests/candidates_static.json": "1d32ae42973cc3bb46e7e37a6b74889a19a28e95afbe6be348d3b45a90171f6b",
+  "manifests/fault_families.json": "fa645fed7f861653016a5e2d5408a22f36ed910e0c6b04c8e7ff6e29617d9436",
+  "manifests/source_evidence.json": "39fd25eecf28c6fa9c7a294ffe7e634e2b6fa07f7631bdeb63427f2348e119dd",
+  "manifests/tasks_readiness.json": "2c672bef77f867dbdad4349fe57e537309dfef1c6749d59310d02bd62d17351e"
+}

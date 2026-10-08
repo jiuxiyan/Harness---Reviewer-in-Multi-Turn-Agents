@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "source_tree_sha256": "3f76597260e726338d83e2f6ce24f7d082f5f861acbd101944537162e2d6a83d",
+  "commands": [
+    {
+      "command": "python3 tools/public_manifest.py --check",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 code_inputs/reviewer_pilot/install_locked.py",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 code_inputs/reviewer_pilot/install_locked.py gap",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 tools/offline_checks.py",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments validate --config configs/wire-smoke.json",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments run --config configs/wire-smoke.json --output-dir results/wire-smoke",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments analyze --input-dir results/wire-smoke --output-dir results/wire-smoke-analysis",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments export --input-dir results/wire-smoke-analysis --output-dir exports/wire-smoke",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments run --config configs/natural-pilot.json --output-dir results/pilot",
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "command": "python3 -m local_experiments validate --config configs/confirmatory-roots.json",
+      "exit_code": 2,
+      "expected_exit_code": 2
+    },
+    {
+      "command": "python3 -m local_experiments validate --config configs/end-to-end.json",
+      "exit_code": 2,
+      "expected_exit_code": 2
+    }
+  ],
+  "formal_model_calls": 0,
+  "status": "passed",
+  "scope": "new source directory and fresh pinned virtual environment; all executions offline/mock after dependency setup",
+  "date": "2026-10-08",
+  "tested_python": "3.12.14",
+  "base_commit": "815809e8f304d3a22425c197ecd001754db3733d",
+  "input_commit": "87d665519223aa97c2a52ed9fa3ce9c59545cdd0",
+  "independent_review": "passed_for_bounded_READ_development_release",
+  "new_outer_unittest_cases": 28,
+  "guarded_engine_cases": 11,
+  "fresh_process_new_runner_restore": "passed",
+  "four_layer_checks": {
+    "evidence_kind": "scripted_fixture",
+    "formal_model_calls": 0,
+    "backend_tasks": 7,
+    "fresh_process_restores": 14,
+    "layers": {
+      "reviewer_interventions": {
+        "tests_run": 36,
+        "failures": 0,
+        "errors": 0,
+        "successful": true
+      },
+      "controller_receipt_adapter": {
+        "tests_run": 37,
+        "failures": 0,
+        "errors": 0,
+        "successful": true
+      },
+      "advice_lifetime_controls": {
+        "tests_run": 40,
+        "failures": 0,
+        "errors": 0,
+        "successful": true
+      }
+    }
+  },
+  "upstream_files_sha256_verified": 281,
+  "manuscript_docx_png_svg_preserved_exactly": true,
+  "public_text_and_docx_key_pattern_scan": "passed",
+  "real_provider_compatibility": "not_run",
+  "confirmatory_experiments": "not_run",
+  "unsupported": [
+    "S",
+    "confirmatory-roots",
+    "end-to-end",
+    "assistant WRITE interventions",
+    "streaming or multi-call",
+    "automatic partial-provider-run resume",
+    "currency caps and logical cost attribution"
+  ],
+  "no_push_performed": true
+}

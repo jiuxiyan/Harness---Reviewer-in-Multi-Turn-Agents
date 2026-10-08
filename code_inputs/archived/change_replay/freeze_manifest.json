@@ -1,0 +1,30 @@
+{
+  "manifest_version": "1.2.0",
+  "freeze_stage": "before_replay_mutation_selector_and_evaluation_implementation",
+  "hash_algorithm": "sha256",
+  "frozen_payloads": [
+    {
+      "path": "public_tasks.json",
+      "bytes": 5616,
+      "sha256": "441643302b81a6b9fafca9f3ae0913eb3a768460d7fbf71a9cde3d534da7c19f"
+    },
+    {
+      "path": "hidden_checker.py",
+      "bytes": 2327,
+      "sha256": "8868446f80ebeef74299397f9be7a9dfb29f60839c4b3625ec53672cc00194f5"
+    },
+    {
+      "path": "frozen_protocol.json",
+      "bytes": 19229,
+      "sha256": "6018eaaaf2fd39624a44096b933b530c72e7152c45d5dee73e11eb99675a5841"
+    }
+  ],
+  "task_count": 16,
+  "planned_HANDSCRIPTED_tapes": 32,
+  "planned_change_task_tape_units": 224,
+  "manifest_self_hash": "Excluded to avoid self-reference; report SHA-256 of this file separately.",
+  "immutability": "Content-addressed freeze, not an operating-system write restriction. Validate payload hashes before every evaluation.",
+  "excluded": "No evaluation, replay engine, mutation, selector, or response-tape implementation is part of this freeze.",
+  "supersedes_manifest_sha256": "83a261f27fd56977e85c0979dad349458aaecb559baa6ddfa62d50b5908ce766",
+  "freeze_revision_reason": "Optional label-free local-predicate diagnostic clarification received before any replay, mutation, selector, or evaluation implementation."
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "path": "PLAN.md",
+    "sha256": "f6ec7b2f22a5f13d4187cb15a3d418760e59bbcf20afc90ab94e07e4edb0c63e"
+  },
+  {
+    "path": "adapter.py",
+    "sha256": "2c20639e9d67f15ea3015ddfc74aec910c22dd3811bfcf0a18a95ec349d0d34c"
+  },
+  {
+    "path": "launch.py",
+    "sha256": "ca68286733a0bf9c16461eada904953499467b7f4a198bebe1defa9f03d51159"
+  },
+  {
+    "path": "renderer.py",
+    "sha256": "0bbb6b31fea4d36126c67392aa38228a30029b11da83f24668484c2776e5639d"
+  },
+  {
+    "path": "test_adapter.py",
+    "sha256": "744e686f0598ea5c804888471781393ff83a7fd3729e46aa000c5243741ba144"
+  },
+  {
+    "path": "worker.py",
+    "sha256": "a7bd3ea7cb03a59edb1bc28bab4532890f2ea29ec1b83f231b49de69cde9f722"
+  }
+]

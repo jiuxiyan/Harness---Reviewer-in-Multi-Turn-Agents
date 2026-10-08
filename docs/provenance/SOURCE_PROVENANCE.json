@@ -1,0 +1,590 @@
+{
+  "schema_version": 1,
+  "meaning": "Original implementation/artifact hash and any public-transfer changes. Source filenames are logical component names, never machine paths.",
+  "files": [
+    {
+      "path": "code_inputs/reviewer_pilot/backend_checks.py",
+      "source_component": "reviewer_pilot",
+      "source_filename": "backend_checks.py",
+      "source_sha256": "cf3a846cc0f52616ef1ce113c94b5c19e5aaa034634388432a2ae50806fb99c5",
+      "sha256": "cf3a846cc0f52616ef1ce113c94b5c19e5aaa034634388432a2ae50806fb99c5",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/backend_worker.py",
+      "source_component": "reviewer_pilot",
+      "source_filename": "backend_worker.py",
+      "source_sha256": "8edf0d0ed87f8b5d80a08942facd343dac26f879bf16b740bb7bd6535d921efc",
+      "sha256": "8edf0d0ed87f8b5d80a08942facd343dac26f879bf16b740bb7bd6535d921efc",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/install_locked.py",
+      "source_component": "reviewer_pilot",
+      "source_filename": "install_locked.py",
+      "source_sha256": "aff99b6304f13d91db01ca27f5b3460c8096f4ebcc156af3859126275f0293ae",
+      "sha256": "6e0d3964b91e17918606a77d01a2985d60a4e297d6e201eec0928cf80e6e1595",
+      "modified_for_public_transfer": true
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/launch_offline.py",
+      "source_component": "reviewer_pilot",
+      "source_filename": "launch_offline.py",
+      "source_sha256": "722c9d4470c778dee326d10d87c5621904ed452b5c5e789a56047d6b3b80f77b",
+      "sha256": "722c9d4470c778dee326d10d87c5621904ed452b5c5e789a56047d6b3b80f77b",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/no_api_guard.py",
+      "source_component": "reviewer_pilot",
+      "source_filename": "no_api_guard.py",
+      "source_sha256": "bb9c5a418bcfc93510f59b083f4d19b40a05d6f9a68a676eed7e44607152f04f",
+      "sha256": "bb9c5a418bcfc93510f59b083f4d19b40a05d6f9a68a676eed7e44607152f04f",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/run_suite.py",
+      "source_component": "reviewer_pilot",
+      "source_filename": "run_suite.py",
+      "source_sha256": "589f352c1ee8412c83f9d1f7568cb6f2b46ddc6819ed4d3e8bc1d69952ec0386",
+      "sha256": "589f352c1ee8412c83f9d1f7568cb6f2b46ddc6819ed4d3e8bc1d69952ec0386",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/static_audit.py",
+      "source_component": "reviewer_pilot",
+      "source_filename": "static_audit.py",
+      "source_sha256": "e644bcba87da6d888f850e5ade6045e1488a2709cddd3a251ba73a513f52d68e",
+      "sha256": "e644bcba87da6d888f850e5ade6045e1488a2709cddd3a251ba73a513f52d68e",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/verify_final.py",
+      "source_component": "reviewer_pilot",
+      "source_filename": "verify_final.py",
+      "source_sha256": "221a9d79b51a01a566280befcbb555dc614ca220a59f36f57cf3f358716c445a",
+      "sha256": "221a9d79b51a01a566280befcbb555dc614ca220a59f36f57cf3f358716c445a",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_interventions/interventions.py",
+      "source_component": "reviewer_interventions",
+      "source_filename": "interventions.py",
+      "source_sha256": "de533e8a97b0fa6bd72fbf93878910e6d5fc2a74102b19b0dfb4a41ba4bbe147",
+      "sha256": "de533e8a97b0fa6bd72fbf93878910e6d5fc2a74102b19b0dfb4a41ba4bbe147",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_interventions/launch.py",
+      "source_component": "reviewer_interventions",
+      "source_filename": "launch.py",
+      "source_sha256": "5a17ae898a25f6e5f65e3c6fc10bbedadbadf0f4de5e3f1b09ffbc2b745c6679",
+      "sha256": "5a17ae898a25f6e5f65e3c6fc10bbedadbadf0f4de5e3f1b09ffbc2b745c6679",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_interventions/offline_backend.py",
+      "source_component": "reviewer_interventions",
+      "source_filename": "offline_backend.py",
+      "source_sha256": "47f722c824dfafbfba03a5503d6ac08af85ad7236b2fe407e4ad9a3b946ad0ef",
+      "sha256": "47f722c824dfafbfba03a5503d6ac08af85ad7236b2fe407e4ad9a3b946ad0ef",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_interventions/test_interventions.py",
+      "source_component": "reviewer_interventions",
+      "source_filename": "test_interventions.py",
+      "source_sha256": "a765203a218516cc04bd23949309b4d6043e60db6f76bbc4afeb834ffe854960",
+      "sha256": "a765203a218516cc04bd23949309b4d6043e60db6f76bbc4afeb834ffe854960",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_interventions/worker.py",
+      "source_component": "reviewer_interventions",
+      "source_filename": "worker.py",
+      "source_sha256": "a300149f6ad35ab484c37fb7b87a679c047044a3439f614b50251232adc69bbd",
+      "sha256": "a300149f6ad35ab484c37fb7b87a679c047044a3439f614b50251232adc69bbd",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/controller_receipt_adapter/adapter.py",
+      "source_component": "controller_receipt_adapter",
+      "source_filename": "adapter.py",
+      "source_sha256": "2c20639e9d67f15ea3015ddfc74aec910c22dd3811bfcf0a18a95ec349d0d34c",
+      "sha256": "2c20639e9d67f15ea3015ddfc74aec910c22dd3811bfcf0a18a95ec349d0d34c",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/controller_receipt_adapter/launch.py",
+      "source_component": "controller_receipt_adapter",
+      "source_filename": "launch.py",
+      "source_sha256": "e5387dfc499bf2286da478094928b80fb3f5a71569c3fbb7e12f619fbdea352a",
+      "sha256": "e5387dfc499bf2286da478094928b80fb3f5a71569c3fbb7e12f619fbdea352a",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/controller_receipt_adapter/renderer.py",
+      "source_component": "controller_receipt_adapter",
+      "source_filename": "renderer.py",
+      "source_sha256": "0bbb6b31fea4d36126c67392aa38228a30029b11da83f24668484c2776e5639d",
+      "sha256": "0bbb6b31fea4d36126c67392aa38228a30029b11da83f24668484c2776e5639d",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/controller_receipt_adapter/test_adapter.py",
+      "source_component": "controller_receipt_adapter",
+      "source_filename": "test_adapter.py",
+      "source_sha256": "744e686f0598ea5c804888471781393ff83a7fd3729e46aa000c5243741ba144",
+      "sha256": "744e686f0598ea5c804888471781393ff83a7fd3729e46aa000c5243741ba144",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/controller_receipt_adapter/worker.py",
+      "source_component": "controller_receipt_adapter",
+      "source_filename": "worker.py",
+      "source_sha256": "a7bd3ea7cb03a59edb1bc28bab4532890f2ea29ec1b83f231b49de69cde9f722",
+      "sha256": "a7bd3ea7cb03a59edb1bc28bab4532890f2ea29ec1b83f231b49de69cde9f722",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/advice_lifetime_controls/launch.py",
+      "source_component": "advice_lifetime_controls",
+      "source_filename": "launch.py",
+      "source_sha256": "37a46a1c900e27a5e9b174f9955c309e7f10720b289a65df54d1b1b362817bfd",
+      "sha256": "37a46a1c900e27a5e9b174f9955c309e7f10720b289a65df54d1b1b362817bfd",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/advice_lifetime_controls/lifetime.py",
+      "source_component": "advice_lifetime_controls",
+      "source_filename": "lifetime.py",
+      "source_sha256": "7e6c62071b5c96e6bcdb3a8505f533ee424a5b35b9ce064447a6bf27bc024bfd",
+      "sha256": "7e6c62071b5c96e6bcdb3a8505f533ee424a5b35b9ce064447a6bf27bc024bfd",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/advice_lifetime_controls/test_lifetime.py",
+      "source_component": "advice_lifetime_controls",
+      "source_filename": "test_lifetime.py",
+      "source_sha256": "8169b0f6d35829409153e3ed4aed861babafa44419d19b94bf2658feda682718",
+      "sha256": "8169b0f6d35829409153e3ed4aed861babafa44419d19b94bf2658feda682718",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/advice_lifetime_controls/worker.py",
+      "source_component": "advice_lifetime_controls",
+      "source_filename": "worker.py",
+      "source_sha256": "203cf2682faf214f3b68ab0874ae22db4abf56c362a55cc5daf3e7680f6a5947",
+      "sha256": "203cf2682faf214f3b68ab0874ae22db4abf56c362a55cc5daf3e7680f6a5947",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/source_manifest_final.json",
+      "source_component": "reviewer_pilot",
+      "source_filename": "source_manifest_final.json",
+      "source_sha256": "c33e80b25e4c060a1c8395287956696a505e7dcae9b215433558ecc98721ea46",
+      "sha256": "c33e80b25e4c060a1c8395287956696a505e7dcae9b215433558ecc98721ea46",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/task_audit.json",
+      "source_component": "reviewer_pilot",
+      "source_filename": "task_audit.json",
+      "source_sha256": "6003d0dd6d478f85e2430235d007455fb9c9618ea4f3f8461d4e776e88da5051",
+      "sha256": "6003d0dd6d478f85e2430235d007455fb9c9618ea4f3f8461d4e776e88da5051",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/checkpoint_contract.json",
+      "source_component": "reviewer_pilot",
+      "source_filename": "checkpoint_contract.json",
+      "source_sha256": "f8b9ad608f38ea064f571cfad4864edf40c9dfd6bb6714fb646477b4c18f53c9",
+      "sha256": "f8b9ad608f38ea064f571cfad4864edf40c9dfd6bb6714fb646477b4c18f53c9",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_pilot/import_gap_requirements.txt",
+      "source_component": "reviewer_pilot",
+      "source_filename": "import_gap_requirements.txt",
+      "source_sha256": "d3ce6f2a020ed09d749d186216f10e2735f5d5e1e37a717b561f23b452faa6e5",
+      "sha256": "d3ce6f2a020ed09d749d186216f10e2735f5d5e1e37a717b561f23b452faa6e5",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_interventions/SPEC.md",
+      "source_component": "reviewer_interventions",
+      "source_filename": "SPEC.md",
+      "source_sha256": "abb530038898d55a56d565e792a85b61509e07203780a4717b8b8846e994846c",
+      "sha256": "abb530038898d55a56d565e792a85b61509e07203780a4717b8b8846e994846c",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/reviewer_interventions/plan_freeze.json",
+      "source_component": "reviewer_interventions",
+      "source_filename": "plan_freeze.json",
+      "source_sha256": "3bd7aab4d4fe295c5eb71eb2d07d962b5c4742d652ad369214d5950e02fe33b6",
+      "sha256": "3bd7aab4d4fe295c5eb71eb2d07d962b5c4742d652ad369214d5950e02fe33b6",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/controller_receipt_adapter/PLAN.md",
+      "source_component": "controller_receipt_adapter",
+      "source_filename": "PLAN.md",
+      "source_sha256": "f6ec7b2f22a5f13d4187cb15a3d418760e59bbcf20afc90ab94e07e4edb0c63e",
+      "sha256": "f6ec7b2f22a5f13d4187cb15a3d418760e59bbcf20afc90ab94e07e4edb0c63e",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/advice_lifetime_controls/PLAN.md",
+      "source_component": "advice_lifetime_controls",
+      "source_filename": "PLAN.md",
+      "source_sha256": "318871028a18aabbb5b474c3c1ad602ce78377a6c9b319ad4da3997490f94ef7",
+      "sha256": "331be783642e70b1eed4b2ff6b1f56a80accb6eefb61eb43a692d89be5fb495b",
+      "modified_for_public_transfer": true
+    },
+    {
+      "path": "docs/research/design_blueprint_historical.md",
+      "source_component": "paper_planning",
+      "source_filename": "method_blueprint.md",
+      "source_sha256": "9cbd8f618072d6d883c2edc0950b30991b0c9ce93cbd776cc838b7ba784ceea3",
+      "sha256": "9cbd8f618072d6d883c2edc0950b30991b0c9ce93cbd776cc838b7ba784ceea3",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "docs/research/related_work_audit.md",
+      "source_component": "paper_planning",
+      "source_filename": "novelty_audit.md",
+      "source_sha256": "b605c3b214e7a476e7537a01d0c49c157bab1b68be1096e5a9edd285e0525182",
+      "sha256": "596338b9a39619c8fa45a5b20c254a7fa03a85bc790923a54f7933ceaa49cf5a",
+      "modified_for_public_transfer": true
+    },
+    {
+      "path": "docs/research/correction_prior_art.md",
+      "source_component": "paper_planning",
+      "source_filename": "correction_prior_art.md",
+      "source_sha256": "66430c07093e984eec34ae0ccc71eb1bd67deafd8d4ef410bef471298b65f0cc",
+      "sha256": "91f7e03330643b444740397f04c3fadfd2cb0b623adc4b958f292cae6a55b31f",
+      "modified_for_public_transfer": true
+    },
+    {
+      "path": "docs/research/diagram_spec_historical.md",
+      "source_component": "paper_planning",
+      "source_filename": "diagram_spec.md",
+      "source_sha256": "558f7a5852b3526e6dba45813ff8710374b83a539b5f3a945f0a16c2ad7966e9",
+      "sha256": "558f7a5852b3526e6dba45813ff8710374b83a539b5f3a945f0a16c2ad7966e9",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "paper/manuscript.txt",
+      "source_component": "paper_planning",
+      "source_filename": "draft/manuscript.txt",
+      "source_sha256": "5bbf5cacf9e3a2d211681b7d2f2b2390bf1a1d34c868f949f80467fa8972714c",
+      "sha256": "5bbf5cacf9e3a2d211681b7d2f2b2390bf1a1d34c868f949f80467fa8972714c",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "paper/reviewer_advice_lifetimes_preexperiment.docx",
+      "source_component": "paper_planning",
+      "source_filename": "draft/reviewer_advice_lifetimes_preexperiment.docx",
+      "source_sha256": "ceceeeae259303bbc1ffe5a519a6dc103fa98285762304954698ddcb690a60d9",
+      "sha256": "ceceeeae259303bbc1ffe5a519a6dc103fa98285762304954698ddcb690a60d9",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "paper/reviewer_advice_overview.svg",
+      "source_component": "paper_planning",
+      "source_filename": "draft/reviewer_advice_overview.svg",
+      "source_sha256": "05e5fbc21d763ea241d193f14b4e68d371682a0c09f969ac9881281fc808b66e",
+      "sha256": "05e5fbc21d763ea241d193f14b4e68d371682a0c09f969ac9881281fc808b66e",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "paper/reviewer_advice_overview.png",
+      "source_component": "paper_planning",
+      "source_filename": "draft/reviewer_advice_overview.png",
+      "source_sha256": "0dfc3ae9e037b23de4c1564b0dcff76ac4b6600f4ae08bc92ed27f9ad74e09be",
+      "sha256": "0dfc3ae9e037b23de4c1564b0dcff76ac4b6600f4ae08bc92ed27f9ad74e09be",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "paper/build_docx.py",
+      "source_component": "paper_planning",
+      "source_filename": "draft/build_docx.py",
+      "source_sha256": "cf64e4aecc8ab2a77f81f5e21f30f138723ad5a12ded689df35e1e20999ff0cf",
+      "sha256": "cf64e4aecc8ab2a77f81f5e21f30f138723ad5a12ded689df35e1e20999ff0cf",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "paper/make_figure.py",
+      "source_component": "paper_planning",
+      "source_filename": "draft/make_figure.py",
+      "source_sha256": "3869549002e65410fdfee5592ec60008c514392faf889297ca08d8db85c5da6f",
+      "sha256": "3869549002e65410fdfee5592ec60008c514392faf889297ca08d8db85c5da6f",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "third_party/tau2-bench-LICENSE.txt",
+      "source_component": "reviewer_pilot",
+      "source_filename": "upstream/LICENSE",
+      "source_sha256": "e67c5aa0074dfcaefd3c3a1aedb94cb539234aecd15d5a972574e3200e6252fe",
+      "sha256": "e67c5aa0074dfcaefd3c3a1aedb94cb539234aecd15d5a972574e3200e6252fe",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/contract_evidence/contract_sandbox/__init__.py",
+      "source_component": "contract_evidence",
+      "source_filename": "contract_sandbox/__init__.py",
+      "source_sha256": "00474c4e2632fb07c5884b22f4d841d0ecff3fb7444f3561e9cd25556907a50d",
+      "sha256": "00474c4e2632fb07c5884b22f4d841d0ecff3fb7444f3561e9cd25556907a50d",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/contract_evidence/contract_sandbox/diagnostic.py",
+      "source_component": "contract_evidence",
+      "source_filename": "contract_sandbox/diagnostic.py",
+      "source_sha256": "617bc649a4c20758918168d6603bb4cdc94ec819a93e5bcd0efc5f1949eff7ee",
+      "sha256": "617bc649a4c20758918168d6603bb4cdc94ec819a93e5bcd0efc5f1949eff7ee",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/contract_evidence/contract_sandbox/evaluation.py",
+      "source_component": "contract_evidence",
+      "source_filename": "contract_sandbox/evaluation.py",
+      "source_sha256": "96c08a32adf2a8cc36c1fad6df3eb1ce2a8feb401ad8bfd5de3640ce3e0e9c23",
+      "sha256": "96c08a32adf2a8cc36c1fad6df3eb1ce2a8feb401ad8bfd5de3640ce3e0e9c23",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/contract_evidence/contract_sandbox/evidence.py",
+      "source_component": "contract_evidence",
+      "source_filename": "contract_sandbox/evidence.py",
+      "source_sha256": "02556d38efc477dadaa16baa3880effc0d70109fe28113c2a50037ff39b52fff",
+      "sha256": "02556d38efc477dadaa16baa3880effc0d70109fe28113c2a50037ff39b52fff",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/contract_evidence/contract_sandbox/policies.py",
+      "source_component": "contract_evidence",
+      "source_filename": "contract_sandbox/policies.py",
+      "source_sha256": "1dacdfe3326356fe8e44f7d2d4094ad87f10c74b1221d56259c892c9b4d258cc",
+      "sha256": "1dacdfe3326356fe8e44f7d2d4094ad87f10c74b1221d56259c892c9b4d258cc",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/contract_evidence/contract_sandbox/public.py",
+      "source_component": "contract_evidence",
+      "source_filename": "contract_sandbox/public.py",
+      "source_sha256": "0e91a3f8cb05432596e02eab5d772bdeb38498b2a34ab7639e26a7d1bc6165af",
+      "sha256": "0e91a3f8cb05432596e02eab5d772bdeb38498b2a34ab7639e26a7d1bc6165af",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/contract_evidence/contract_sandbox/run.py",
+      "source_component": "contract_evidence",
+      "source_filename": "contract_sandbox/run.py",
+      "source_sha256": "eda2c83936b563c7d0636eeaad785901bf65e863717a62581b5eb6502ba15bd8",
+      "sha256": "eda2c83936b563c7d0636eeaad785901bf65e863717a62581b5eb6502ba15bd8",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/contract_evidence/contract_sandbox/world.py",
+      "source_component": "contract_evidence",
+      "source_filename": "contract_sandbox/world.py",
+      "source_sha256": "c24a2f8989b4366e478cfb718075f4c7b50b243fa039f06bdfa56751f3e8d23c",
+      "sha256": "c24a2f8989b4366e478cfb718075f4c7b50b243fa039f06bdfa56751f3e8d23c",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/contract_evidence/tests/test_sandbox.py",
+      "source_component": "contract_evidence",
+      "source_filename": "tests/test_sandbox.py",
+      "source_sha256": "0be66d0e5528beade16f4f71d17593005f45bc5cf0a29736572dfce19eefe942",
+      "sha256": "0be66d0e5528beade16f4f71d17593005f45bc5cf0a29736572dfce19eefe942",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/regression_data_audit/audit_labels.py",
+      "source_component": "regression_data_audit",
+      "source_filename": "audit_labels.py",
+      "source_sha256": "fc583f0d86eed402594960f22900914fdebd1e2e61269ecc3e9a03b215cbdcef",
+      "sha256": "fc583f0d86eed402594960f22900914fdebd1e2e61269ecc3e9a03b215cbdcef",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/common.py",
+      "source_component": "change_replay",
+      "source_filename": "common.py",
+      "source_sha256": "755640bbbb04120cd5201d3976c87799e932a4757773a555d34701ad52c93c0b",
+      "sha256": "755640bbbb04120cd5201d3976c87799e932a4757773a555d34701ad52c93c0b",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/fixtures.py",
+      "source_component": "change_replay",
+      "source_filename": "fixtures.py",
+      "source_sha256": "49ab017e222187939e6207eb2fe32d637b8aedddcb4a0cc70c1780e8d83574ce",
+      "sha256": "49ab017e222187939e6207eb2fe32d637b8aedddcb4a0cc70c1780e8d83574ce",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/hidden_checker.py",
+      "source_component": "change_replay",
+      "source_filename": "hidden_checker.py",
+      "source_sha256": "8868446f80ebeef74299397f9be7a9dfb29f60839c4b3625ec53672cc00194f5",
+      "sha256": "8868446f80ebeef74299397f9be7a9dfb29f60839c4b3625ec53672cc00194f5",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/replay.py",
+      "source_component": "change_replay",
+      "source_filename": "replay.py",
+      "source_sha256": "c1fa226de4550424a502d400eac2dab530ef863580b1ea494076cda1251a8fb7",
+      "sha256": "c1fa226de4550424a502d400eac2dab530ef863580b1ea494076cda1251a8fb7",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/runner.py",
+      "source_component": "change_replay",
+      "source_filename": "runner.py",
+      "source_sha256": "0919f278d2c43d07ddaeec008cb00b7c0798095a70054309163083ba1fbcfed3",
+      "sha256": "0919f278d2c43d07ddaeec008cb00b7c0798095a70054309163083ba1fbcfed3",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/selection_probe.py",
+      "source_component": "change_replay",
+      "source_filename": "selection_probe.py",
+      "source_sha256": "fccfe530eda66b95fbb42e63708d446311766836fbcd36582b38f9250a22c424",
+      "sha256": "fccfe530eda66b95fbb42e63708d446311766836fbcd36582b38f9250a22c424",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/test_validator.py",
+      "source_component": "change_replay",
+      "source_filename": "test_validator.py",
+      "source_sha256": "5637e9a1e8e81cb3ad1c39430ef0215cb05a264928f7cc9ab42b13ac6b0586b6",
+      "sha256": "5637e9a1e8e81cb3ad1c39430ef0215cb05a264928f7cc9ab42b13ac6b0586b6",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variant_source.py",
+      "source_component": "change_replay",
+      "source_filename": "variant_source.py",
+      "source_sha256": "c58a1348b24bd3c96878b53e0ea4b9e4c83f10f973e5a7222023b36cf9f8668f",
+      "sha256": "c58a1348b24bd3c96878b53e0ea4b9e4c83f10f973e5a7222023b36cf9f8668f",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/decision_validity_audit/audit_decisions.py",
+      "source_component": "decision_validity_audit",
+      "source_filename": "audit_decisions.py",
+      "source_sha256": "fea895ac1542d87a461331b626c4b5aa638d8caed9737acdaaf84346b672e18f",
+      "sha256": "fea895ac1542d87a461331b626c4b5aa638d8caed9737acdaaf84346b672e18f",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/decision_validity_audit/verify_independently.py",
+      "source_component": "decision_validity_audit",
+      "source_filename": "verify_independently.py",
+      "source_sha256": "7e92d54496d6695eb3de6c7566974d121f4efc4e4918ed4bc44fce569fe36b44",
+      "sha256": "7e92d54496d6695eb3de6c7566974d121f4efc4e4918ed4bc44fce569fe36b44",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variants/C_GLOBAL_PROMPT.py",
+      "source_component": "change_replay",
+      "source_filename": "variants/C_GLOBAL_PROMPT.py",
+      "source_sha256": "7da14415db3f2d8ff4d65d3e227007747076fe3c892e6848fc03360189c8cb36",
+      "sha256": "7da14415db3f2d8ff4d65d3e227007747076fe3c892e6848fc03360189c8cb36",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variants/C_NO_OP.py",
+      "source_component": "change_replay",
+      "source_filename": "variants/C_NO_OP.py",
+      "source_sha256": "f68b94f0fed1954766cb9157aa05ae4f6247620e4d41404f8e77c28142019465",
+      "sha256": "f68b94f0fed1954766cb9157aa05ae4f6247620e4d41404f8e77c28142019465",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variants/C_REFACTOR.py",
+      "source_component": "change_replay",
+      "source_filename": "variants/C_REFACTOR.py",
+      "source_sha256": "8adf00fdf9f42bc7c1e71d583391a60882ca5dd97e07901ed35dbd239dc8d3b0",
+      "sha256": "8adf00fdf9f42bc7c1e71d583391a60882ca5dd97e07901ed35dbd239dc8d3b0",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variants/H0.py",
+      "source_component": "change_replay",
+      "source_filename": "variants/H0.py",
+      "source_sha256": "f68b94f0fed1954766cb9157aa05ae4f6247620e4d41404f8e77c28142019465",
+      "sha256": "f68b94f0fed1954766cb9157aa05ae4f6247620e4d41404f8e77c28142019465",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variants/M_ARGUMENT_NORMALIZATION.py",
+      "source_component": "change_replay",
+      "source_filename": "variants/M_ARGUMENT_NORMALIZATION.py",
+      "source_sha256": "0b42678fa4e7b878ce836e237338cf564fc4dcfdeb66327057f8f8606a540fc9",
+      "sha256": "0b42678fa4e7b878ce836e237338cf564fc4dcfdeb66327057f8f8606a540fc9",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variants/M_CURSOR_TRUNCATION.py",
+      "source_component": "change_replay",
+      "source_filename": "variants/M_CURSOR_TRUNCATION.py",
+      "source_sha256": "d2d57994e3abe9007fb446fc32f039ef429f94b03124d1ab458587147b3eed04",
+      "sha256": "d2d57994e3abe9007fb446fc32f039ef429f94b03124d1ab458587147b3eed04",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variants/M_PREMATURE_TERMINATION.py",
+      "source_component": "change_replay",
+      "source_filename": "variants/M_PREMATURE_TERMINATION.py",
+      "source_sha256": "ee5975df0e1286ae655855bcacf3cc843e6366020ea2278f6bb347062562168b",
+      "sha256": "ee5975df0e1286ae655855bcacf3cc843e6366020ea2278f6bb347062562168b",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variants/M_RETRY_IDEMPOTENCY.py",
+      "source_component": "change_replay",
+      "source_filename": "variants/M_RETRY_IDEMPOTENCY.py",
+      "source_sha256": "f0dac8cdbe2f682a7dd83e906af63a68bc056edac00bdfbbeede20e006e40c53",
+      "sha256": "f0dac8cdbe2f682a7dd83e906af63a68bc056edac00bdfbbeede20e006e40c53",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/regression_data_audit/audit_plan.json",
+      "source_component": "regression_data_audit",
+      "source_filename": "audit_plan.json",
+      "source_sha256": "3e018b6c9037eb188a927759006835e42d667e09767a29aaac0ad8d8e26f8e94",
+      "sha256": "3e018b6c9037eb188a927759006835e42d667e09767a29aaac0ad8d8e26f8e94",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/frozen_protocol.json",
+      "source_component": "change_replay",
+      "source_filename": "frozen_protocol.json",
+      "source_sha256": "6018eaaaf2fd39624a44096b933b530c72e7152c45d5dee73e11eb99675a5841",
+      "sha256": "6018eaaaf2fd39624a44096b933b530c72e7152c45d5dee73e11eb99675a5841",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/public_tasks.json",
+      "source_component": "change_replay",
+      "source_filename": "public_tasks.json",
+      "source_sha256": "441643302b81a6b9fafca9f3ae0913eb3a768460d7fbf71a9cde3d534da7c19f",
+      "sha256": "441643302b81a6b9fafca9f3ae0913eb3a768460d7fbf71a9cde3d534da7c19f",
+      "modified_for_public_transfer": false
+    },
+    {
+      "path": "code_inputs/archived/change_replay/variant_manifest.json",
+      "source_component": "change_replay",
+      "source_filename": "variant_manifest.json",
+      "source_sha256": "989ece633f405194c4269c1038be28fa0cd3357611ca18e22f29600fd9698c48",
+      "sha256": "989ece633f405194c4269c1038be28fa0cd3357611ca18e22f29600fd9698c48",
+      "modified_for_public_transfer": false
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "schema_version": "planning-manifest-v1",
+  "evidence_kind": "scripted_readiness_inventory",
+  "source_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+  "tasks_file_sha256": "37e562e1ae3242577407e1303b1548bc64e7ea68e37d36173e6747990ceaf8a4",
+  "split_file_sha256": "605b488bb9a6acb3c7f4505240a855fdc8681d09aadb16a8f38b2efcfc5c3aec",
+  "task_hash_encoding": "UTF-8 json.dumps(sort_keys=True,separators=(comma,colon),ensure_ascii=False)",
+  "notes": [
+    "All seven tasks have been inspected and used in development, including three upstream test tasks.",
+    "This manifest supplies identities, not natural observations or a formal sample.",
+    "Nested goal predicates are not independent units."
+  ],
+  "tasks": [
+    {
+      "readiness_index": 0,
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference[PERSONA:Hard]",
+      "original_split": "train",
+      "research_partition": "exposed_development_only",
+      "task_sha256": "d0283876405e929871524eefdd1c72e07db22587ecc98bedc7e19e00cbe5009b",
+      "family_id": "airplane_mode_on|bad_network_preference",
+      "faults": [
+        "airplane_mode_on",
+        "bad_network_preference"
+      ],
+      "state_goals": "connectivity_then_excellent_speed_nested",
+      "pending_intervention_scope": "single_agent_read",
+      "natural_trajectory_available": false,
+      "formal_eligibility": false
+    },
+    {
+      "readiness_index": 1,
+      "task_id": "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+      "original_split": "test",
+      "research_partition": "exposed_development_only",
+      "task_sha256": "fc18c2d140e675a6b8c4b18d101c65bbdc59d664b6fd94d21617ae395819650f",
+      "family_id": "data_saver_mode_on|user_abroad_roaming_enabled_off",
+      "faults": [
+        "data_saver_mode_on",
+        "user_abroad_roaming_enabled_off"
+      ],
+      "state_goals": "connectivity_then_excellent_speed_nested",
+      "pending_intervention_scope": "single_agent_read",
+      "natural_trajectory_available": false,
+      "formal_eligibility": false
+    },
+    {
+      "readiness_index": 2,
+      "task_id": "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "original_split": "train",
+      "research_partition": "exposed_development_only",
+      "task_sha256": "68e6999a530548ccce6503568d9ab45e010e15b69ea236352e59cb8fb79764f3",
+      "family_id": "bad_network_preference|user_abroad_roaming_enabled_off",
+      "faults": [
+        "bad_network_preference",
+        "user_abroad_roaming_enabled_off"
+      ],
+      "state_goals": "connectivity_then_excellent_speed_nested",
+      "pending_intervention_scope": "single_agent_read",
+      "natural_trajectory_available": false,
+      "formal_eligibility": false
+    },
+    {
+      "readiness_index": 3,
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+      "original_split": "train",
+      "research_partition": "exposed_development_only",
+      "task_sha256": "0aafc65bebf3b400a7b9b9ea4cf9169e468a10b790433fcf60b2ddf082ae087b",
+      "family_id": "airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off",
+      "faults": [
+        "airplane_mode_on",
+        "bad_network_preference",
+        "user_abroad_roaming_enabled_off"
+      ],
+      "state_goals": "connectivity_then_excellent_speed_nested",
+      "pending_intervention_scope": "single_agent_read",
+      "natural_trajectory_available": false,
+      "formal_eligibility": false
+    },
+    {
+      "readiness_index": 4,
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+      "original_split": "test",
+      "research_partition": "exposed_development_only",
+      "task_sha256": "bffb4ccceb96ce6173aa336a0452fa4e5032f5bca6b5e419a8ec95f2efbe9044",
+      "family_id": "airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on",
+      "faults": [
+        "airplane_mode_on",
+        "data_saver_mode_on",
+        "user_abroad_roaming_disabled_on"
+      ],
+      "state_goals": "connectivity_then_excellent_speed_nested",
+      "pending_intervention_scope": "single_agent_read",
+      "natural_trajectory_available": false,
+      "formal_eligibility": false
+    },
+    {
+      "readiness_index": 5,
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on[PERSONA:Hard]",
+      "original_split": "train",
+      "research_partition": "exposed_development_only",
+      "task_sha256": "c16f03ad8a07c2481bbb43d61c31f58639cae48c8b67a8a2e37f3f9d1a8e0ae1",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on",
+      "faults": [
+        "airplane_mode_on",
+        "bad_network_preference",
+        "data_mode_off",
+        "user_abroad_roaming_disabled_on"
+      ],
+      "state_goals": "connectivity_then_excellent_speed_nested",
+      "pending_intervention_scope": "single_agent_read",
+      "natural_trajectory_available": false,
+      "formal_eligibility": false
+    },
+    {
+      "readiness_index": 6,
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on[PERSONA:Hard]",
+      "original_split": "test",
+      "research_partition": "exposed_development_only",
+      "task_sha256": "f1e96d40e8fd2bc69d17d4336854a04f4d24d5bedc863ee75dec625a8a545468",
+      "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on",
+      "faults": [
+        "airplane_mode_on",
+        "bad_network_preference",
+        "data_mode_off",
+        "data_saver_mode_on"
+      ],
+      "state_goals": "connectivity_then_excellent_speed_nested",
+      "pending_intervention_scope": "single_agent_read",
+      "natural_trajectory_available": false,
+      "formal_eligibility": false
+    }
+  ]
+}

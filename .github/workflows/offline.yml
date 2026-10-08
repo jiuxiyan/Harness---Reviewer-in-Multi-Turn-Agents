@@ -1,0 +1,23 @@
+name: Offline validation
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@v6
+      - run: python3 tools/public_manifest.py --check
+      - run: python3 code_inputs/reviewer_pilot/install_locked.py
+      - run: python3 code_inputs/reviewer_pilot/install_locked.py gap
+      - run: python3 -m unittest discover -s tests -v
+      - run: python3 tools/offline_checks.py
+      - run: python3 -m local_experiments validate --config configs/wire-smoke.json
+      - run: python3 -m local_experiments run --config configs/wire-smoke.json --output-dir results/ci-wire
+      - run: python3 -m local_experiments analyze --input-dir results/ci-wire --output-dir results/ci-analysis
+      - run: python3 -m local_experiments export --input-dir results/ci-analysis --output-dir exports/ci-wire

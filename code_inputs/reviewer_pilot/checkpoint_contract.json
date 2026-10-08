@@ -1,0 +1,83 @@
+{
+  "status": "IMPLEMENTED AND TESTED ONLY FOR the narrow scripted single-pending-read half-duplex slice in REPORT.md; broader items remain future requirements",
+  "schema_version": "reviewer-prefix-contract-v0.1",
+  "provenance": [
+    "exact commit and Git tree",
+    "source file hashes",
+    "task JSON hash and split",
+    "both database fixture hashes",
+    "policy and tool-schema hashes",
+    "evaluator hashes",
+    "Python and complete installed dependency lock"
+  ],
+  "environment": [
+    "fresh-process identity",
+    "full agent TelecomDB model_dump",
+    "full user TelecomUserDB model_dump",
+    "environment domain/policy/solo-mode",
+    "TelecomTools id_generator counter",
+    "TelecomUserTools class-level default_vpn_details",
+    "TelecomUserTools network_mode_preference",
+    "synchronization state and any partial mutations on errors"
+  ],
+  "history": [
+    "raw full completed message history",
+    "actor-visible history projection",
+    "user-visible history projection",
+    "agent state",
+    "user state",
+    "pending agent proposal saved separately before execution",
+    "tool-call IDs and requestors",
+    "all results including error flags",
+    "routing from_role/to_role/message",
+    "done and termination reason"
+  ],
+  "budget": [
+    "consumed and remaining actor/user/tool steps",
+    "consumed and remaining model-call/token/dollar budgets for future inference",
+    "reviewer/revision budget separately",
+    "retry/error counts",
+    "wallclock timeout policy and remaining deadline"
+  ],
+  "randomness": [
+    "Python random state",
+    "NumPy state if imported/used",
+    "per-component explicit seeds",
+    "OS UUID entropy path declared unsupported in first witness",
+    "API seed, model version and provider metadata later, without claiming determinism"
+  ],
+  "hashing": {
+    "raw": "preserve the exact recorded manifest before normalization",
+    "canonical": "stable sorted JSON for model dumps; reject nonfinite numbers; preserve list/order-sensitive histories; declared normalization only for semantically irrelevant timestamps/IDs",
+    "upstream_db_hash": "retain separately; it does not cover every field above"
+  },
+  "privacy_boundary": [
+    "private task oracle and evaluation_criteria never sent to actor/reviewer",
+    "user instructions only in user simulator view",
+    "actor sees authorized policy/tools and its normal history",
+    "reviewer sees frozen authorized review projection, not oracle"
+  ],
+  "restore_gate": [
+    "same completed prefix restored in two fresh processes",
+    "compare both DBs and auxiliary state",
+    "compare effective actor/user histories and routing",
+    "compare same pending proposal and budgets",
+    "run same allowed next action and compare content/errors/poststate",
+    "evaluate private vector in an isolated evaluator; do not mutate live branch",
+    "unexplained mismatch marks infrastructure invalid; no model spending"
+  ],
+  "selection": [
+    "online using prefix-only information",
+    "a previously false still-required goal just became true",
+    "at least one other goal remains false",
+    "stop after same pending agent proposal before execution",
+    "never use future baseline or branch outcome to select"
+  ],
+  "outcomes": [
+    "full official terminal reward with valid termination",
+    "per-goal terminal predicate vector",
+    "unrecovered terminal loss of earlier achieved still-required goal",
+    "temporary reset separate",
+    "collateral DB differences diagnostic, not replacement reward"
+  ]
+}

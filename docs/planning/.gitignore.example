@@ -1,0 +1,23 @@
+# Apply at repository root. Review tracked files separately: ignore is not deletion.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.uv-cache/
+.cache/
+.runtime/
+results/
+runs/
+private/
+raw_requests/
+raw_responses/
+checkpoints/
+exports/
+*.log
+# Copy only reviewed, allowlisted summaries to a separate tracked location.
