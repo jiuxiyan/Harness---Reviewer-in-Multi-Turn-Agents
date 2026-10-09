@@ -2,8 +2,13 @@
 
 The v2 runner uses official Telecom tools and evaluation from the pinned
 `tau2-bench` repository, τ³ release line (`tau2==1.0.1`, commit
-`4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699`). Linux execution is validated;
-macOS execution has not been validated. Preparation has
+`4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699`). Offline execution is validated on Linux and native macOS 15.7.9, both arm64
+(Apple M1 Virtual) and x86_64 (Intel i7-8700B), with Python 3.12. Mac verification
+covered locked dependency installation, 42 outer tests including 27 guarded
+engine cases and fresh-process restores, all four historical layers, READ/WRITE
+smoke, the two-task/four-root pilot, analysis/export and interrupted/durable
+response recovery. See the [exact CI evidence](validation/current_release.json).
+User-owned computers, other OS versions and live providers remain untested. Preparation has
 made **zero real model calls**. Historical guarded launchers remain offline;
 only the new CLI's explicit `--mode live` reads local provider configuration.
 

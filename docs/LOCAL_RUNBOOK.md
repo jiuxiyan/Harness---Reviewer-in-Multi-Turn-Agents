@@ -1,7 +1,8 @@
 # Local execution and recovery
 
-Use the root README setup on Linux/Python 3.12 with official `uv`. Run from a
-checkout. Linux is validated; macOS execution has not been validated. The pinned
+Use the root README setup with Python 3.12 and official `uv`. Run from a
+checkout. Offline execution is validated on Linux and native macOS 15.7.9
+(Apple Silicon arm64 and Intel x86_64). The pinned
 `tau2-bench` repository is the τ³ release line, package `tau2==1.0.1`, commit
 `4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699`; it is not the earlier τ² paper snapshot.
 All supplied dry-runs and tests are offline after dependency setup.
@@ -26,6 +27,44 @@ through your normal secret manager, then add `--mode live`. No dotenv loader
 runs. Configure sampling and request/time/output limits before execution. HTTPS,
 nonstreaming Chat Completions is the only supported wire format. Redirects are
 rejected. No real-provider compatibility test was performed during preparation.
+
+## Native macOS setup
+
+GitHub standard hosted runners passed the complete offline workflow on both
+architectures: macOS 15.7.9 / Darwin 24.6.0 / Python 3.12.10, Apple M1
+(Virtual) arm64 and Intel i7-8700B x86_64. The [validation receipt](validation/current_release.json)
+records the tested commit, run and job IDs. Linux remains in the same CI matrix.
+No compatibility patch or Rosetta translation was required. Other macOS/Python
+versions and your individual machine remain unverified.
+
+Use a native Python 3.12 installation and an official `uv` installation on PATH.
+Run from the repository root. Do not use the macOS system Python or mix an
+Intel virtual environment with an Apple Silicon interpreter. A pre-existing
+`.venv` from another architecture should be preserved elsewhere before setup.
+The installer selects the interpreter running it and installs locked wheels.
+
+```sh
+python3.12 --version
+python3.12 -c 'import platform; print(platform.system(), platform.machine())'
+uv --version
+python3.12 tools/public_manifest.py --check
+python3.12 code_inputs/reviewer_pilot/install_locked.py
+python3.12 code_inputs/reviewer_pilot/install_locked.py gap
+python3.12 -m unittest discover -s tests -v
+python3.12 tools/offline_checks.py
+python3.12 -m local_experiments run --config configs/wire-smoke.json --output-dir results/mac-read-001
+python3.12 -m local_experiments run --config configs/write-smoke.json --output-dir results/mac-write-001
+python3.12 -m local_experiments run --config configs/natural-pilot.json --output-dir results/mac-pilot-001
+python3.12 -m local_experiments analyze --input-dir results/mac-pilot-001 --output-dir results/mac-analysis-001
+python3.12 -m local_experiments export --input-dir results/mac-analysis-001 --output-dir exports/mac-pilot-001
+python3.12 -m local_experiments recovery-plan --input-dir results/mac-read-001 --output-file results/mac-decisions-001.json
+python3.12 -m local_experiments resume --config configs/wire-smoke.json --input-dir results/mac-read-001 --decisions results/mac-decisions-001.json --output-dir results/mac-resumed-001
+```
+
+These commands use only mock responses and require no provider credentials.
+Dependency setup needs network access. Choose new output names on subsequent
+runs. GitHub-hosted macOS validation does not test your private computer or a
+real model provider; perform this dry-run before your own live smoke test.
 
 ## Frozen confirmation
 

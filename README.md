@@ -14,7 +14,9 @@ valid actor response. Earlier persistent feedback is called P0.
 
 ## Run locally
 
-Tested on Linux with Python 3.12. **macOS execution has not been validated.**
+Offline-tested on Linux and native **macOS 15.7.9, Apple Silicon (arm64) and
+Intel (x86_64)** with Python 3.12. See the [Mac commands](docs/LOCAL_RUNBOOK.md#native-macos-setup)
+and [platform evidence](docs/validation/current_release.json).
 Python 3.12–3.13 is the upstream-supported
 range; Windows is not supported by these POSIX launchers. No GPU is needed.
 Use a checkout and an existing official installation of `uv` on PATH. Setup

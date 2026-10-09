@@ -1,7 +1,7 @@
 {
   "schema_version": "public-release-v1",
   "not_preregistration": true,
-  "source_tree_sha256": "f084cee95242492bbcddef4eb3b65ceb15de8afe661e777f8f71c9eaa0f629e0",
+  "source_tree_sha256": "3cedfa73e37893bcdd4971cf8e9a9f8b975ce3680f88e1a7e8b856f46255da25",
   "files": [
     {
       "path": ".env.example",
@@ -20,8 +20,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 6836,
-      "sha256": "10f2d36045ebd65fe7d4b023538d416d586226f1f41f20f5ceacbbf6dfd3d556"
+      "bytes": 6998,
+      "sha256": "92d8a267503b86facd3d26d83b960a820235a38182733aba857e8a4a496265bd"
     },
     {
       "path": "code_inputs/advice_lifetime_controls/PLAN.md",
@@ -1805,13 +1805,13 @@
     },
     {
       "path": "docs/CAPABILITIES.md",
-      "bytes": 5708,
-      "sha256": "e3194a01ceea9c259987d398a6801ab98ab2cacc9d60940ef2d8172913650576"
+      "bytes": 6187,
+      "sha256": "c95d1a1053bd1d9669391ecc904588fd6645243127b2c3fc49b5e673c02c9001"
     },
     {
       "path": "docs/LOCAL_RUNBOOK.md",
-      "bytes": 6068,
-      "sha256": "27babacb8ec0235107d12257e1b7844831cab4684fec6c7ddbb8d7b3b6dbec2a"
+      "bytes": 8499,
+      "sha256": "36e494603dbaecba419a5f6e6830d49206de48c6081183c70ff354c544f6be11"
     },
     {
       "path": "docs/components/advice_lifetime_controls.md",
@@ -2010,8 +2010,8 @@
     },
     {
       "path": "docs/validation/current_release.json",
-      "bytes": 7995,
-      "sha256": "ee88263d74ec357553bfd0a5f256313af8f07c05299baeb2f3d139e9040c1017"
+      "bytes": 11984,
+      "sha256": "b69d6c0253cf76f729aa2ef4c2b27d76fec0ce1bf3d1ad48417464e4671606b8"
     },
     {
       "path": "docs/validation/development_exposures.json",
