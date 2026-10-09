@@ -1,7 +1,7 @@
 {
   "schema_version": "public-release-v1",
   "not_preregistration": true,
-  "source_tree_sha256": "046bdb8e9cbeaaf65784c1135e563a1254fb5f5cb6de82c65c75cefe63d839ad",
+  "source_tree_sha256": "f084cee95242492bbcddef4eb3b65ceb15de8afe661e777f8f71c9eaa0f629e0",
   "files": [
     {
       "path": ".env.example",
@@ -10,8 +10,8 @@
     },
     {
       "path": ".github/workflows/offline.yml",
-      "bytes": 1561,
-      "sha256": "971da7d1abc0e575543f7ab6a3cdbd951e138bf35ca03fc03cb0ec9739905923"
+      "bytes": 2518,
+      "sha256": "67860d0191d29cb5012960dcc09b9ad9f4be36cd4a106945b5ff72ebf263bf19"
     },
     {
       "path": ".gitignore",
@@ -2184,6 +2184,11 @@
       "sha256": "e67c5aa0074dfcaefd3c3a1aedb94cb539234aecd15d5a972574e3200e6252fe"
     },
     {
+      "path": "tools/check_ci_outputs.py",
+      "bytes": 1603,
+      "sha256": "9e82455eefa5770da53ab17b68c199b4a70ed0a785581882ffc8465ed3cd66c1"
+    },
+    {
       "path": "tools/clean_acceptance.py",
       "bytes": 4148,
       "sha256": "bedea61536c0c0aeeb7e9496b84ea075f279dd6b168e53188b9501476f54a012"
@@ -2197,6 +2202,11 @@
       "path": "tools/offline_checks.py",
       "bytes": 2333,
       "sha256": "8f7ab279d3e11fd4123ead38400aaec2d7c05571ad1708dc59bb305e5ba32cf7"
+    },
+    {
+      "path": "tools/platform_report.py",
+      "bytes": 1169,
+      "sha256": "470047b2a5928e3230426e5b1350a64fc131f9e2d1bbc60a909d7b5208fe0280"
     },
     {
       "path": "tools/public_manifest.py",

@@ -4,14 +4,31 @@ permissions:
   contents: read
 jobs:
   offline:
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
+    name: offline (${{ matrix.runner }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            system: Linux
+            arch: x86_64
+          - runner: macos-15
+            system: Darwin
+            arch: arm64
+          - runner: macos-15-intel
+            system: Darwin
+            arch: x86_64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          architecture: ${{ matrix.arch == 'arm64' && 'arm64' || 'x64' }}
       - uses: astral-sh/setup-uv@v6
+      - name: Record actual OS, CPU architecture and Python
+        run: python3 tools/platform_report.py --os '${{ matrix.system }}' --arch '${{ matrix.arch }}'
       - run: python3 tools/public_manifest.py --check
       - run: python3 code_inputs/reviewer_pilot/install_locked.py
       - run: python3 code_inputs/reviewer_pilot/install_locked.py gap
@@ -25,3 +42,7 @@ jobs:
       - run: python3 -m local_experiments run --config configs/natural-pilot.json --output-dir results/ci-pilot
       - run: python3 -m local_experiments recovery-plan --input-dir results/ci-wire --output-file results/ci-decisions.json
       - run: python3 -m local_experiments resume --config configs/wire-smoke.json --input-dir results/ci-wire --decisions results/ci-decisions.json --output-dir results/ci-resumed
+      - run: python3 -m local_experiments analyze --input-dir results/ci-pilot --output-dir results/ci-pilot-analysis
+      - run: python3 -m local_experiments analyze --input-dir results/ci-resumed --output-dir results/ci-resumed-analysis
+      - name: Verify offline results and report platform evidence
+        run: python3 tools/check_ci_outputs.py
