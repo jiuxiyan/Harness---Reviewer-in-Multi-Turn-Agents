@@ -18,3 +18,7 @@ private_*/
 .cache/
 install*_stdout.txt
 install*_result.json
+# Operator handoff/instruction document is kept out of the shareable public tree:
+# tools/public_manifest.py collects untracked non-ignored files (handoff line 133),
+# and user instruction documents must not be packaged into shareable output.
+Harness_Workbench_*.md

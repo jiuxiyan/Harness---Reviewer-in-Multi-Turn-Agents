@@ -8,8 +8,11 @@ ROOT = Path(__file__).resolve().parents[1]
 PIN = '4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699'
 STAGES = ('wire-smoke', 'natural-pilot', 'confirmatory-roots', 'end-to-end')
 ARMS = ('B_bare', 'B', 'S', 'A', 'P0', 'P', 'R', 'C')
+# Enumerated, not open-ended: each supported WRITE carries its own restore/official-evaluation proofs.
+WRITE_SCOPES = ([], ['enable_roaming', 'disable_roaming'],
+                ['enable_roaming', 'disable_roaming', 'refuel_data'])
 DEFAULT = {
- 'schema_version': 2, 'protocol_id': 'advice-lifetimes-local-v2',
+ 'schema_version': 2, 'protocol_id': 'advice-lifetimes-local-v3',
  'stage': 'wire-smoke', 'evidence_kind': 'not_run', 'study_label': 'exploratory',
  'source': {'benchmark_commit': PIN},
  'dataset': {'manifest': 'docs/planning/manifests/tasks_readiness.json',
@@ -23,7 +26,8 @@ DEFAULT = {
  'endpoint_policy': 'fixed_task_goals_native_model_errors_v1',
  'independence_policy': 'one_task_per_disjoint_fault_component_v1',
  'review': {'max_slots': 1, 'draws_per_root': 1,
-            'public_trigger_version': 'public_single_call_after_two_tools_v2',
+            'public_trigger_version': 'public_single_call_after_depth_v3',
+            'min_completed_assistant_tools': 2, 'min_user_text_events': 1,
             'fallback': 'original_action_no_packet', 'projection_version': 'local-receipt-v2', 'allowed_writes': ['enable_roaming','disable_roaming'], 'fixture_scenario': 'read'},
  'sampling': {'max_roots_per_trajectory': 1, 'starts_per_task': 1, 'common_prefix_repeats': 1, 'suffix_repeats': 1,
               'independent_control_continuations': 1, 'allocation_seed': 20261008},
@@ -89,7 +93,9 @@ def validate(value, require_freeze=True):
   if k=='fixture_scenario':
    if v not in ('read','roaming'): errors.append('review.fixture_scenario: unsupported')
   elif k=='allowed_writes':
-   if v not in ([],['enable_roaming','disable_roaming']): errors.append('review.allowed_writes: unsupported WRITE scope')
+   if v not in WRITE_SCOPES: errors.append('review.allowed_writes: unsupported WRITE scope')
+  elif k in ('min_completed_assistant_tools','min_user_text_events'):
+   if not integer(v,1,1000): errors.append('review.'+k+': invalid public trigger depth')
   elif v!=DEFAULT['review'][k]: errors.append('review.'+k+': unsupported')
  for k,v in c['sampling'].items():
   if not integer(v,0 if k=='allocation_seed' else 1,2**31-1 if k=='allocation_seed' else 1000): errors.append('sampling.'+k+': invalid integer')

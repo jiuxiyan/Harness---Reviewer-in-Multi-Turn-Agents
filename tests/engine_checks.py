@@ -46,6 +46,80 @@ def finish_vpn(o,client):
  with patch.object(client,'transport',side_effect=lambda payload:responses.pop(0)):
   return e.advance(o,[],o.task)
 
+REFUEL_TASK='[mobile_data_issue]airplane_mode_on|data_usage_exceeded[PERSONA:Easy]'
+REFUEL_SCOPE=['enable_roaming','disable_roaming','refuel_data']
+REFUEL_GOAL=2 # index of assert_data_refueling_amount in this task's env_assertions
+
+def _reply(content=None,calls=None):
+ return {'choices':[{'finish_reason':'tool_calls' if calls else 'stop',
+   'message':{'role':'assistant','content':content,'tool_calls':calls or []}}]}
+
+def _call(name,args,tag):
+ return [{'id':'fixture-'+tag,'type':'function','function':{'name':name,'arguments':json.dumps(args)}}]
+
+def refuel_config():
+ c=copy.deepcopy(DEFAULT);c['review']['allowed_writes']=list(REFUEL_SCOPE)
+ c['dataset']['manifest']='docs/planning/manifests/tasks_development_refuel.json';c['dataset']['task_indices']=[0]
+ c['sampling']['max_roots_per_trajectory']=2
+ return c
+
+def refuel_task():
+ return next(t for t in get_tasks(None) if t.id==REFUEL_TASK)
+
+def refuel_script():
+ # Authored deterministic episode: two READs, the official refuel, then a verification READ.
+ # No model or API call is made; this is a fixture, never evidence about model behaviour.
+ actor=[_reply(calls=_call('get_customer_by_phone',{'phone_number':'555-123-2002'},'read1')),
+        _reply(calls=_call('get_data_usage',{'customer_id':'C1001','line_id':'L1002'},'read2')),
+        _reply(calls=_call('refuel_data',{'customer_id':'C1001','line_id':'L1002','gb_amount':2.0},'refuel')),
+        _reply(calls=_call('get_details_by_id',{'id':'L1002'},'read3')),
+        _reply(content='The data refuel is complete.')]
+ user=[_reply(content='My mobile data is not working and I want excellent speed. I am John Smith, phone 555-123-2002.'),
+       _reply(calls=[{'id':'fixture-toggle','type':'function','function':{'name':'toggle_airplane_mode','arguments':'{}'}}]),
+       _reply(content='Airplane mode is off now; please continue.'),
+       _reply(content='###STOP###')]
+ return actor,user
+
+def refuel_run(directory,reviewer=None):
+ c=refuel_config();store=Store(Path(directory)/'run',c,'dry-run');actor,user=refuel_script()
+ state={'actor':actor,'user':user,'reviewer':list(reviewer or []),'self':[]}
+ def transport(payload):
+  role=payload['model'].split('-',1)[1]
+  if not state[role]: raise AssertionError('authored fixture exhausted for role '+role)
+  return state[role].pop(0)
+ client=Client(c,store,transport,{r:'mock-'+r for r in ('actor','user','reviewer','self')})
+ return c,store,client,refuel_task(),e.make(refuel_task(),client,c)
+
+def refuel_roots(o,task,want=2,limit=40):
+ """Public trigger points of the authored episode, stopping like max_roots_per_trajectory."""
+ trace=[e.vector(o.environment,task)];roots=[]
+ for step in range(limit):
+  if o.done: break
+  if e.trigger(o):
+   roots.append({'step':step,'pending':e.pending_supported_call(o),'depth':e.depth(o),
+                 'vector':list(trace[-1]),'protected':[i for i,x in enumerate(trace[-1]) if x and not trace[0][i]]})
+   if len(roots)>=want: break # leave the orchestrator parked on the pending root call
+  o.step();o._check_termination();trace.append(e.vector(o.environment,task))
+ return roots,trace
+
+def refuel_draw(o,gb_amount=2.0,line_id='L1002',scope='action_local'):
+ return {'selected_action':{'name':'refuel_data','arguments':{'customer_id':'C1001','line_id':line_id,'gb_amount':gb_amount}},
+         'packet':'Refuel exactly the requested amount for this line.','raw_q':'fixture','raw_q_digest':'fixture',
+         'classification':'valid_changed','semantic_audit':'not_audited','resamples':0,'logical_request_ids':[],
+         'declaration':{'target_action_id':e.target_id(o.message,{}),'scope':scope,
+                        'instruction':'execute_target_call','close_condition':'normal_tool_return'}}
+
+def refuel_tail(client):
+  # Authored continuation from the protected root to USER_STOP, so official evaluation runs on a
+  # settled episode. Replaces the fixture transport; still no model or API call.
+  state={'actor':[ _reply(content='I have added 2 GB of data to the line.'),_reply(content='All set now.')],
+         'user':[_reply(calls=[{'id':'fixture-speed','type':'function','function':{'name':'run_speed_test','arguments':'{}'}}]),
+                 _reply(content='###STOP###')]}
+  def transport(payload):
+   role=payload['model'].split('-',1)[1]
+   return state[role].pop(0) if state.get(role) else _reply(content='###STOP###')
+  client.transport=transport
+
 class EngineChecks(unittest.TestCase):
  def setUp(self):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
@@ -111,6 +185,24 @@ class EngineChecks(unittest.TestCase):
   self.assertFalse(b.done);self.assertNotEqual(a.step_count,b.step_count)
   result=e.outcome(a,self.task,[0],future);self.assertEqual(result['completion'],1)
   self.assertEqual(result['loss'],0)
+ def test_fork_restore_trims_pending_user_tool_call(self):
+  # A shared-segment fork can be snapshotted at a user->env boundary: the user simulator
+  # proposed a mutating tool call whose ToolMessage is not yet recorded. restore() must drop
+  # that trailing pending proposal from replay just as it does for an agent->env root, or tau2
+  # set_state hits the dangling tool call and the whole fork is lost as restore_mismatch.
+  root=e.snapshot(self.o)
+  o=e.restore(root,self.task,self.client,self.c)
+  self.assertEqual((o.from_role.value,o.to_role.value),('agent','env'))
+  call=e.ToolCall(id='pending-user-toggle',requestor='user',name='toggle_airplane_mode',arguments={})
+  o.message=e.UserMessage(role='user',tool_calls=[call],timestamp=None)
+  o.trajectory[-1]=o.message;o.from_role=e.Role('user');o.to_role=e.Role('env')
+  fork=e.snapshot(o)
+  self.assertEqual((fork['payload']['routing']['from'],fork['payload']['routing']['to']),('user','env'))
+  restored=e.restore(fork,self.task,self.client,self.c)
+  self.assertEqual(e.env_state(restored.environment),fork['payload']['environment'])
+  self.assertEqual((restored.from_role.value,restored.to_role.value),('user','env'))
+  self.assertEqual(restored.message.tool_calls[0].name,'toggle_airplane_mode')
+  self.assertEqual(len(restored.trajectory),len(fork['payload']['history']))
  def test_terminal_common_block_is_not_padded_after_later_failure(self):
   self.c['sampling']['common_prefix_repeats']=2
   self.c['sampling']['suffix_repeats']=2
@@ -175,11 +267,102 @@ class EngineChecks(unittest.TestCase):
    self.assertTrue(o.agent.record['state_change_observed']);self.assertFalse(o.agent.record['closable'])
    o=e.restore(saved,task,client,c);q['declaration']['scope']='action_local';q['selected_action']['arguments']['line_id']='missing-line'
    e.execute(o,q,'C');self.assertTrue(o.agent.record['receipt']['result']['error']);self.assertFalse(o.agent.record['closable'])
+ def test_refuel_write_scope_reaches_a_nonempty_protection_set(self):
+  # The whole point of the refuel WRITE: an assistant-side goal is acquired mid-episode, so a
+  # later structural root carries protected goals instead of the vacuous empty set.
+  with tempfile.TemporaryDirectory() as directory:
+   c,store,client,task,o=refuel_run(directory)
+   self.assertIn('refuel_data',o.agent.allowed_names)
+   roots,trace=refuel_roots(o,task)
+   self.assertEqual([r['pending'] for r in roots],['refuel_data','get_details_by_id'])
+   self.assertEqual(roots[0]['protected'],[])
+   self.assertEqual(roots[1]['protected'],[REFUEL_GOAL])
+   self.assertTrue(roots[1]['vector'][REFUEL_GOAL]);self.assertFalse(trace[0][REFUEL_GOAL])
+   self.assertGreaterEqual(roots[1]['depth'][0],c['review']['min_completed_assistant_tools'])
+ def test_refuel_goal_is_regressible_so_loss_is_not_degenerate(self):
+  with tempfile.TemporaryDirectory() as directory:
+   c,store,client,task,o=refuel_run(directory)
+   roots,_=refuel_roots(o,task);self.assertEqual(roots[-1]['protected'],[REFUEL_GOAL])
+   saved=e.snapshot(o);protected=roots[-1]['protected']
+   e.execute(o,refuel_draw(o),'P') # a second refuel overshoots the exact expected amount
+   lost=e.vector(o.environment,task)
+   self.assertEqual(lost[REFUEL_GOAL],False)
+   self.assertEqual(int(any(not lost[i] for i in protected)),1)
+   o=e.restore(saved,task,client,c)
+   self.assertEqual(e.vector(o.environment,task)[REFUEL_GOAL],True)
+ def test_refuel_receipt_identity_error_and_ongoing_scope(self):
+  with tempfile.TemporaryDirectory() as directory:
+   c,store,client,task,o=refuel_run(directory)
+   while not o.done and not e.trigger(o): o.step();o._check_termination()
+   before=e.env_state(o.environment);saved=e.snapshot(o)
+   q=refuel_draw(o);call_id=e.target_id(o.message,q['selected_action'])
+   e.execute(o,q,'C');record=o.agent.record
+   self.assertEqual(record['call_id'],call_id);self.assertEqual(record['receipt']['result']['error'],False)
+   self.assertTrue(record['state_change_observed']);self.assertNotEqual(before,e.env_state(o.environment))
+   self.assertTrue(record['closable']);self.assertEqual(record['receipt']['selected_action'],q['selected_action'])
+   self.assertEqual(e.vector(o.environment,task)[REFUEL_GOAL],True)
+   o=e.restore(saved,task,client,c);q['declaration']['scope']='ongoing';e.execute(o,q,'C')
+   self.assertFalse(o.agent.record['closable'])
+   o=e.restore(saved,task,client,c);q=refuel_draw(o,line_id='missing-line')
+   e.execute(o,q,'C')
+   self.assertTrue(o.agent.record['receipt']['result']['error']);self.assertFalse(o.agent.record['closable'])
+   self.assertEqual(e.env_state(o.environment),before)
+ def test_refuel_intervention_slot_is_single_use(self):
+  with tempfile.TemporaryDirectory() as directory:
+   c,store,client,task,o=refuel_run(directory)
+   while not o.done and not e.trigger(o): o.step();o._check_termination()
+   q=refuel_draw(o);e.execute(o,q,'C')
+   amount=o.environment.tools.db.lines[1].data_refueling_gb
+   with self.assertRaises(RunFailure): e.execute(o,q,'C')
+   with self.assertRaises(RunFailure): e.capture(o,client)
+   self.assertEqual(o.environment.tools.db.lines[1].data_refueling_gb,amount)
+ def test_refuel_state_is_isolated_across_task_instances(self):
+  with tempfile.TemporaryDirectory() as directory:
+   c,store,client,task,o=refuel_run(directory)
+   other=e.make(refuel_task(),client,c)
+   while not o.done and not e.trigger(o): o.step();o._check_termination()
+   other_amount=other.environment.tools.db.lines[1].data_refueling_gb
+   e.execute(o,refuel_draw(o),'C')
+   self.assertEqual(other.environment.tools.db.lines[1].data_refueling_gb,other_amount)
+   self.assertEqual(e.vector(other.environment,task)[REFUEL_GOAL],False)
+   self.assertNotEqual(e.env_state(o.environment),e.env_state(other.environment))
  def test_s_reconsiders_once_without_extra_packet(self):
   self.client.models['self']='mock-actor'
   q=e.capture(self.o,self.client,True);e.execute(self.o,q,'S')
   self.assertEqual(self.o.agent.record['packet'],'')
   self.assertEqual(self.client.records[-1]['role'],'self')
+
+ def test_public_trigger_depth_is_structural_and_configurable(self):
+  # Roots must be selectable on trajectory shape alone; depth is the only lever, never goal state.
+  self.assertTrue(e.trigger(self.o))
+  completed,users=e.depth(self.o)
+  self.assertEqual(e.pending_supported_call(self.o),e.action(self.o.message)['name'])
+  for rule in ((completed+1,users),(completed,users+1)):
+   self.o.trigger_rule=rule;self.assertFalse(e.trigger(self.o),rule)
+  self.o.trigger_rule=(completed,users);self.assertTrue(e.trigger(self.o))
+  deep=copy.deepcopy(self.c);deep['review']['min_completed_assistant_tools']=7;deep['review']['min_user_text_events']=3
+  self.assertEqual(e.make(self.task,self.client,deep,initialize=False).trigger_rule,(7,3))
+
+ def test_review_prompt_demands_text_reply_and_closable_literals(self):
+  # execute() only closes C on exact literal matches, so a prompt that leaves the declaration
+  # vocabulary implicit makes C indistinguishable from P against any live model.
+  saved=e.snapshot(self.o)
+  def prompt_for(self_review):
+   seen=[];inner=self.client.transport
+   def spy(payload):
+    seen.append(payload['messages'][-1]['content']);return inner(payload)
+   with patch.object(self.client,'transport',side_effect=spy):
+    if self_review: self.client.models['self']='mock-actor'
+    e.capture(self.o,self.client,self_review)
+   return seen[0]
+  reviewer=prompt_for(False)
+  self.o=e.restore(saved,self.task,self.client,self.c)
+  self_review=prompt_for(True)
+  for prompt in (reviewer,self_review):
+   self.assertTrue(prompt.startswith(e.TEXT_ONLY),prompt[:120])
+   for literal in ('"action_local"','"ongoing"','"execute_target_call"','"normal_tool_return"'):
+    self.assertIn(literal,prompt)
+  self.assertIn('Reconsider your own pending action',self_review)
 
  def test_actor_and_user_received_invalid_endpoints(self):
   cases=[{'finish_reason':'stop','message':{'role':'assistant','content':''}},
@@ -297,6 +480,28 @@ class EngineChecks(unittest.TestCase):
   self.assertIs(telecom.registry.get_env_constructor('telecom'),original)
 
 if __name__=='__main__':
+ if len(sys.argv)>1 and sys.argv[1] in ('save-refuel','restore-refuel'):
+  phase,path=sys.argv[1:];path=Path(path)
+  with tempfile.TemporaryDirectory() as tmp:
+   c,s,client,task,o=refuel_run(tmp)
+   if phase=='save-refuel':
+    roots,_=refuel_roots(o,task);assert roots[-1]['protected']==[REFUEL_GOAL],roots
+    assert o.environment.tools.db.lines[1].data_refueling_gb==2.0
+    write_json(path,e.snapshot(o))
+   else:
+    saved=json.loads(path.read_text());o=e.restore(saved,task,client,c)
+    assert e.env_state(o.environment)==saved['payload']['environment']
+    assert o.agent.record is None and o.agent.draw_consumed==saved['payload']['draw_consumed']
+    # The non-idempotent official refuel must replay exactly once, not accumulate again.
+    assert o.environment.tools.db.lines[1].data_refueling_gb==2.0,o.environment.tools.db.lines[1].data_refueling_gb
+    assert e.vector(o.environment,task)[REFUEL_GOAL] is True
+    refuel_tail(client);result=e.outcome(o,task,[REFUEL_GOAL],e.advance(o,[],task))
+    assert result['termination']=='user_stop',result
+    assert result['protected_count']==1 and result['structural_zero'] is False,result
+    assert result['loss']==0,result
+    assert o.environment.tools.db.lines[1].data_refueling_gb==2.0 # official evaluation replay did not mutate the live env
+   print('fresh-process '+phase+' passed')
+   raise SystemExit(0)
  if len(sys.argv)>1 and sys.argv[1] in ('save','restore','save-write','restore-write','save-init','restore-init','save-history','restore-history','save-vpn','restore-vpn'):
   phase,path=sys.argv[1:];path=Path(path)
   with tempfile.TemporaryDirectory() as tmp:

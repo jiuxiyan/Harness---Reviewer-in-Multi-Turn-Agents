@@ -1,0 +1,84 @@
+{
+  "schema_version": "planning-manifest-v1",
+  "evidence_kind": "not_run",
+  "source_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+  "tasks_file_sha256": "5a948fad69753a9d04668ba6a74a3b457a04bed62da6f2b6f49a956cbb90df46",
+  "task_hash_encoding": "freeze.sha over canonical pinned task object",
+  "population": "heldout_confirmatory",
+  "notes": "Maximum pairwise token-disjoint confirmatory packing (8 units) over the 1026-task eligible pool, computed after excluding the 7 readiness tasks, the 2 recorded development exposures and the 3 development refuel tasks above plus their near-families. Exactly one unit (data_saver_mode_on|data_usage_exceeded) carries a regressible assistant-side protected goal; the primary endpoint L therefore has one independent unit under independence_policy one_task_per_disjoint_fault_component_v1.",
+  "selection_rule": "exact token-level dynamic program over the 13 residual normalized fault components; ties broken by fewest reference actions then lowest tasks.json index",
+  "tasks": [
+    {
+      "task_id": "[mobile_data_issue]data_saver_mode_on|data_usage_exceeded[PERSONA:Easy]",
+      "task_sha256": "cad5aca518d193e4c5186036eaa27c16849941a3a1a4e25632f1cf264b5a888a",
+      "family_id": "data_saver_mode|data_usage_exceeded",
+      "research_partition": "heldout_confirmatory",
+      "tasks_json_index": 37,
+      "assistant_side_env_assertion": true,
+      "regressible_protected_goal": true
+    },
+    {
+      "task_id": "[service_issue]unseat_sim_card[PERSONA:Easy]",
+      "task_sha256": "a946ef7c7f9a3b478fdd576dcb71839944dc52f6aa1808cbf5b91624f7e86bea",
+      "family_id": "unseat_sim_card",
+      "research_partition": "heldout_confirmatory",
+      "tasks_json_index": 255,
+      "assistant_side_env_assertion": true,
+      "regressible_protected_goal": false
+    },
+    {
+      "task_id": "[service_issue]break_apn_settings[PERSONA:None]",
+      "task_sha256": "88e260b5cbe5d60761e3670e71b29fc02bdeba8278558a49311d3c057c360fcf",
+      "family_id": "break_apn_settings",
+      "research_partition": "heldout_confirmatory",
+      "tasks_json_index": 257,
+      "assistant_side_env_assertion": true,
+      "regressible_protected_goal": false
+    },
+    {
+      "task_id": "[mms_issue]bad_wifi_calling[PERSONA:Easy]",
+      "task_sha256": "32d9c0fb43bf080343d6a49ac5eb66553569c7169f7362afe43dd4fe7c1d3b29",
+      "family_id": "bad_wifi_calling",
+      "research_partition": "heldout_confirmatory",
+      "tasks_json_index": 302,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": false
+    },
+    {
+      "task_id": "[mms_issue]break_apn_mms_setting[PERSONA:Hard]",
+      "task_sha256": "4608171e3cb495eb1ee448e9a359d48df2a5780ea6a7bc3ff973b891b6b7b3b5",
+      "family_id": "break_apn_mms_setting",
+      "research_partition": "heldout_confirmatory",
+      "tasks_json_index": 303,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": false
+    },
+    {
+      "task_id": "[mms_issue]break_app_sms_permission[PERSONA:None]",
+      "task_sha256": "17073e4bd1b00df31b9d8bb66b75123eb3a87ef7d1b5fd58cc7e5b94fe23478e",
+      "family_id": "break_app_sms_permission",
+      "research_partition": "heldout_confirmatory",
+      "tasks_json_index": 304,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": false
+    },
+    {
+      "task_id": "[mms_issue]break_app_storage_permission[PERSONA:Easy]",
+      "task_sha256": "1c4bc76e2da134056847669e3dd09c31cef0bffef99c9768e10df83a67b5b8c3",
+      "family_id": "break_app_storage_permission",
+      "research_partition": "heldout_confirmatory",
+      "tasks_json_index": 305,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": false
+    },
+    {
+      "task_id": "[mms_issue]break_app_both_permissions[PERSONA:Hard]",
+      "task_sha256": "6cc5d24a46d49a43795e2f48dc85c35e6847ad961ee84ae4ba9f0cbf8ddbdb7e",
+      "family_id": "break_app_both_permissions",
+      "research_partition": "heldout_confirmatory",
+      "tasks_json_index": 306,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": false
+    }
+  ]
+}

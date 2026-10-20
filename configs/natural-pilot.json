@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "protocol_id": "advice-lifetimes-local-v2",
+  "protocol_id": "advice-lifetimes-local-v3",
   "stage": "natural-pilot",
   "evidence_kind": "not_run",
   "study_label": "exploratory",
@@ -45,7 +45,9 @@
   "review": {
     "max_slots": 1,
     "draws_per_root": 1,
-    "public_trigger_version": "public_single_call_after_two_tools_v2",
+    "public_trigger_version": "public_single_call_after_depth_v3",
+    "min_completed_assistant_tools": 2,
+    "min_user_text_events": 1,
     "fallback": "original_action_no_packet",
     "projection_version": "local-receipt-v2",
     "allowed_writes": [

@@ -27,7 +27,13 @@ HEADERS = {'neutral': 'Applicability status unchanged; retain the original advic
            'consumed': 'Target call requirement fulfilled; retain advice as history only.'}
 WIDTH=max(map(len,HEADERS.values())); HEADERS={k:v.ljust(WIDTH) for k,v in HEADERS.items()}
 RECEIPT_PREFIX='Controller execution record (not an actor generation):\n'
-REVIEW_INSTRUCTION='Return exactly one JSON object with selected_action {name,arguments}, packet (nonempty string), declaration {target_action_id,scope,instruction,close_condition}. Select one available assistant tool in the declared READ/roaming-WRITE scope. Public action-local scope is action_local / execute_target_call / normal_tool_return. target_action_id must equal the target ID supplied for the selected action. Do not claim task completion from a tool return. No tools will execute during this review.'
+# The declaration literals are load-bearing: execute() marks C closable only on exact matches, and live
+# models emit free text unless the vocabulary is stated as an enumerated choice. The text-only directive
+# must lead the prompt; otherwise models answer the review with a tool call, which carries no packet.
+TEXT_ONLY='You are answering in TEXT ONLY. Do not emit any tool call or function call. Your entire reply must be exactly one JSON object as plain assistant text, with no markdown fences and no commentary.\n'
+SELF_PREAMBLE='Reconsider your own pending action once under the same public history and fixed response budget. '
+SELF_POSTSCRIPT=' For this self-control the packet will never be displayed.'
+REVIEW_INSTRUCTION='Return exactly one JSON object with these three keys and no others: "selected_action" {"name","arguments"}, "packet" (nonempty string), "declaration" {"target_action_id","scope","instruction","close_condition"}. Select one available assistant tool in the declared READ/roaming-WRITE scope. Each declaration value must be a nonempty string. "target_action_id" must be exactly the target ID supplied for the selected action. "scope" must be exactly "action_local" when your packet is fully discharged by executing the selected call and should stop applying once that call returns normally, or exactly "ongoing" when your packet states a requirement that must keep applying after that call returns. When scope is "action_local", "instruction" must be exactly "execute_target_call" and "close_condition" must be exactly "normal_tool_return". Do not claim task completion from a tool return. No tools will execute during this review.'
 
 def plain(x): return x.model_dump(mode='json') if hasattr(x,'model_dump') else x
 
@@ -142,16 +148,25 @@ def make(task,client,config,initialize=True):
  limits=config['limits']
  o=LocalOrchestrator(domain='telecom',agent=actor,user=user,environment=env,task=task,max_steps=limits['max_native_steps'],max_errors=limits['max_native_errors'],seed=config['sampling']['allocation_seed'],simulation_id='local-'+digest(task.id)[:16],timeout=None,validate_communication=True)
  o._run_start_time=get_now();o._run_start_perf=time.perf_counter();o.run_config_hash=digest(config)
+ o.trigger_rule=(config['review']['min_completed_assistant_tools'],config['review']['min_user_text_events'])
  if initialize: o.initialize()
  return o
 
-def trigger(o):
- if o.done or o.from_role!=Role.AGENT or o.to_role!=Role.ENV: return False
+def depth(o):
+ return (sum(isinstance(m,ToolMessage) and m.requestor=='assistant' for m in o.trajectory),
+         sum(isinstance(m,UserMessage) and not m.is_tool_call() for m in o.trajectory))
+
+def pending_supported_call(o):
+ if o.done or o.from_role!=Role.AGENT or o.to_role!=Role.ENV: return None
  try: a=action(o.message)
- except RunFailure: return False
- completed=sum(isinstance(m,ToolMessage) and m.requestor=='assistant' for m in o.trajectory)
- users=sum(isinstance(m,UserMessage) and not m.is_tool_call() for m in o.trajectory)
- return a['name'] in o.agent.allowed_names and completed>=2 and users>=1
+ except RunFailure: return None
+ return a['name'] if a['name'] in o.agent.allowed_names else None
+
+def trigger(o):
+ # Structural and outcome-blind: trajectory shape only, never hidden goal state.
+ if pending_supported_call(o) is None: return False
+ completed,users=depth(o);min_tools,min_users=o.trigger_rule
+ return completed>=min_tools and users>=min_users
 
 def snapshot(o):
  from .provenance import source_hashes
@@ -174,8 +189,8 @@ def restore(saved,task,client,config):
  from .provenance import source_hashes
  if s['task_sha256']!=digest(plain(task)) or s['config_hash']!=digest(config) or s['source_hashes']!=source_hashes(): raise RunFailure('restore_mismatch')
  o=make(task,client,config,initialize=False);o.agent.draw_consumed=s['draw_consumed'];o.agent.intervention_executed=s['intervention_executed'];history=[native(m) for m in s['history']]
- # At root the last assistant proposal is pending, so do not replay it.
- replay=history[:-1] if s['routing']['from']=='agent' and s['routing']['to']=='env' else history
+ # When routing targets env the trailing proposal (an agent OR user tool call) is still pending, so it has no recorded ToolMessage and must be excluded from replay.
+ replay=history[:-1] if s['routing']['to']=='env' else history
  initial=task.initial_state
  try: o.environment.set_state(initial.initialization_data if initial else None,initial.initialization_actions if initial else None,replay,strict=True)
  except (ValueError,AssertionError): raise RunFailure('restore_mismatch') from None
@@ -198,8 +213,8 @@ def capture(o,client,self_review=False):
  messages=to_litellm_messages(o.agent_state.system_messages+o.agent_state.messages[:-1])
  catalog={t.name:t for t in o.agent.tools if t.name in o.agent.allowed_names}
  # Hash binding is specified algorithmically since action arguments are chosen by reviewer.
- instruction=REVIEW_INSTRUCTION+' Target call ID: '+target_id(original,a0)+'\nAvailable intervention tools: '+canonical([t.openai_schema for t in catalog.values()])
- if self_review: instruction='Reconsider your own pending action once under the same public history and fixed response budget. '+instruction+' For this self-control the packet will never be displayed.'
+ instruction=TEXT_ONLY+(SELF_PREAMBLE if self_review else '')+REVIEW_INSTRUCTION+' Target call ID: '+target_id(original,a0)+'\nAvailable intervention tools: '+canonical([t.openai_schema for t in catalog.values()])
+ if self_review: instruction+=SELF_POSTSCRIPT
  messages.append({'role':'system','content':instruction+'\nPending action: '+canonical(a0)})
  logical_begin=client.logical+1
  try:
@@ -286,6 +301,8 @@ def run(config,store,client):
    o=make(task,client,config);o.agent.context=o.user.context={'trajectory_id':trajectory,'phase':'reference'}
    store.event('start_assigned',trajectory_id=trajectory)
    trace=[vector(o.environment,task)];reference_requests=[];root_count=0
+   def probe(i,o=o,trace=trace): return {'step':i,'completed':depth(o)[0],'users':depth(o)[1],'pending_supported_call':pending_supported_call(o),'vector':trace[i]}
+   reference_trace=[probe(0)]
    try:
     while not o.done and root_count<config['sampling']['max_roots_per_trajectory']:
      if trigger(o):
@@ -299,6 +316,8 @@ def run(config,store,client):
       store.event('root_assigned',root_id=root,reference_logical_requests=reference_requests)
      if root_count>=config['sampling']['max_roots_per_trajectory']: break
      begin=client.logical;o.step();o._check_termination();reference_requests.extend(range(begin+1,client.logical+1));trace.append(vector(o.environment,task))
+     reference_trace.append(probe(len(trace)-1))
+    store.save('private/evaluation/'+trajectory+'-reference-trace.json',{'trajectory_id':trajectory,'task_id':meta['task_id'],'family_id':meta['family_id'],'roots_fired':root_count,'termination':o.termination_reason.value if o.termination_reason else None,'native_steps':o.step_count,'steps':reference_trace})
     if root_count==0:coverage['no_public_trigger']+=1;store.event('no_public_trigger',trajectory_id=trajectory)
    except RunFailure as exc:
     coverage['reference_failures']+=1;store.event('reference_incomplete',trajectory_id=trajectory,status=str(exc))

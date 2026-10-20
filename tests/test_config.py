@@ -19,6 +19,24 @@ class ConfigTests(unittest.TestCase):
   for key,value in [('max_physical_requests',True),('max_native_steps',0),('max_retries_per_request',-1),('request_timeout_seconds',float('nan')),('request_timeout_seconds',10**1000),('monetary_cap',1)]:
    c=copy.deepcopy(DEFAULT);c['limits'][key]=value
    with self.subTest(key=key),self.assertRaises(ConfigError): validate(c)
+ def test_public_trigger_depth_bounds(self):
+  for key in ('min_completed_assistant_tools','min_user_text_events'):
+   for value in (0,-1,1001,'2',None):
+    c=copy.deepcopy(DEFAULT);c['review'][key]=value
+    with self.subTest(key=key,value=value),self.assertRaises(ConfigError): validate(c)
+   c=copy.deepcopy(DEFAULT);c['review'][key]=1000
+   self.assertEqual(validate(c)['review'][key],1000)
+ def test_write_scope_is_enumerated_not_open_ended(self):
+  from local_experiments.config import WRITE_SCOPES
+  self.assertEqual(WRITE_SCOPES,([],['enable_roaming','disable_roaming'],['enable_roaming','disable_roaming','refuel_data']))
+  for scope in WRITE_SCOPES:
+   c=copy.deepcopy(DEFAULT);c['review']['allowed_writes']=list(scope)
+   with self.subTest(scope=scope): self.assertEqual(validate(c)['review']['allowed_writes'],list(scope))
+  for scope in (['refuel_data'],['enable_roaming'],['enable_roaming','disable_roaming','refuel_data','suspend_line_for_overdue_bill'],
+                ['disable_roaming','enable_roaming'],'enable_roaming',None,['*']):
+   c=copy.deepcopy(DEFAULT);c['review']['allowed_writes']=scope
+   with self.subTest(scope=scope),self.assertRaises(ConfigError) as caught: validate(c)
+   self.assertIn('unsupported WRITE scope',str(caught.exception))
  def test_confirmatory_and_unsupported_arms(self):
   c=copy.deepcopy(DEFAULT);c['stage']='confirmatory-roots'
   with self.assertRaises(ConfigError) as caught: validate(c)

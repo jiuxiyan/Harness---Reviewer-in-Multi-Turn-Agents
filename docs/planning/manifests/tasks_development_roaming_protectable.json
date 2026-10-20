@@ -1,0 +1,332 @@
+{
+ "schema_version": "planning-manifest-v1",
+ "evidence_kind": "not_run",
+ "source_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+ "tasks_file_sha256": "5a948fad69753a9d04668ba6a74a3b457a04bed62da6f2b6f49a956cbb90df46",
+ "task_hash_encoding": "freeze.sha over canonical pinned task object",
+ "population": "exposed_development_only",
+ "notes": "Exploratory development-only population for measuring whether the primary endpoint L (terminal loss of a protected goal) is ever non-degenerate under the outcome-blind public trigger v3. These 32 tasks are the complete subset of the 2285 pinned telecom tasks that (a) carry a user-side coupled mobile-data goal (assert_mobile_data_status / assert_internet_speed), (b) are abroad with carrier roaming pre-enabled at initialization (assistant enable_roaming in initialization_actions) and device roaming turned off, and (c) have NO assistant WRITE in their reference solution (purely user-fixable via device toggles). This is the only task structure in the domain where a coupled goal can be FALSE initially yet TRUE at root capture via user-only prefix actions (hence protectable), so that a reviewer-selected disable_roaming could regress it via environment.py roaming_allowed coupling. Selection used task metadata only (env_assertion func_name/env_type, initialization_actions, reference-solution requestor/name); no model calls and no outcome labels.",
+ "selection_rule": "exhaustive scan of pinned tasks.json; include iff user-side coupled mobile-data assertion present AND set_user_location(abroad=true) AND assistant enable_roaming in initialization_actions AND turn_roaming_off in initialization_actions AND zero assistant WRITE actions in evaluation_criteria.actions",
+ "tasks": [
+  {
+   "task_id": "[mobile_data_issue]user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "c3a6b399afea620c7ba3f43c02d93a24ff3fa6029be8a82a488194095f5ede64",
+   "family_id": "user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 0,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "823f44269a5a611c2d0bc5d0243b7edcdd1505128c13a0769c3274d87d9976b8",
+   "family_id": "airplane_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 8,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]data_mode_off|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "03b72bb2c42bc95a99ea005accc695880eebfcee2e848c9563b65017cd39a9a1",
+   "family_id": "data_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 16,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "fc18c2d140e675a6b8c4b18d101c65bbdc59d664b6fd94d21617ae395819650f",
+   "family_id": "data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 17,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+   "task_sha256": "68e6999a530548ccce6503568d9ab45e010e15b69ea236352e59cb8fb79764f3",
+   "family_id": "bad_network_preference|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 18,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_vpn|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "99bc6eac394ac1f6c83d2ead25954e4de73ecd672fd45467c96a34daa019413b",
+   "family_id": "bad_vpn|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 19,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+   "task_sha256": "070de23507af8447ebbf6c8fa1be8245b52d8882b91e3c38cc14df9bf315a500",
+   "family_id": "airplane_mode|data_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 41,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "103c6007da9d58d5de4776833e824c47f06378d546f87355f88f412e707185db",
+   "family_id": "airplane_mode|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 42,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "0aafc65bebf3b400a7b9b9ea4cf9169e468a10b790433fcf60b2ddf082ae087b",
+   "family_id": "airplane_mode|bad_network_preference|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 43,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+   "task_sha256": "4e7ed8ebee4deee0ea86a022e7c18d4434d1a1b21e84d99c93527a4b8d5bbcde",
+   "family_id": "airplane_mode|bad_vpn|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 44,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "b1877e85a3770d7491ba19f97482046f0855c1aafdbf8987118129df7dae3ff6",
+   "family_id": "data_mode|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 66,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+   "task_sha256": "fb92b3edc60c2a641746f15573845f4c5c09d102b7620818af78e8c0baf09731",
+   "family_id": "bad_network_preference|data_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 67,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "43544bd815eec0b9b6961fd9445f8bb708abdbcee88520208458bbcd6c084662",
+   "family_id": "bad_vpn|data_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 68,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "b7ceaf929416c9af88f5954e401c625a4fa0b91f99da6ddbc86b7115ce6b93d7",
+   "family_id": "bad_network_preference|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 70,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "5c475bfec6c70b8c731e702740a8a55bb8bdf52d0080e137878a07f029e0cec6",
+   "family_id": "bad_vpn|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 71,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_network_preference|bad_vpn|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "31d00f128a5fe5e2c5528dea1f8c8ea241ba04323155d095cf7a975f6941bbfc",
+   "family_id": "bad_network_preference|bad_vpn|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 73,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+   "task_sha256": "027d4e45483bcb4ee4995320133ea36352454e9a42c9fab33494122aa14c34ef",
+   "family_id": "airplane_mode|data_mode|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 106,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "c463aeb8855d68b3036ef59605e6d786437c54095878ae0a7cc8b954e9042ce5",
+   "family_id": "airplane_mode|bad_network_preference|data_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 107,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "a24aeda088c63de73f1e61db8daeb2c3b73e8bc44e210e4ce62fd83af168c137",
+   "family_id": "airplane_mode|bad_vpn|data_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 108,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "c0ac0a926cc85f342303ee72093e1960b13f1ca995b8e4ad0c35dbf306b62bba",
+   "family_id": "airplane_mode|bad_network_preference|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 110,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+   "task_sha256": "2e7d11ee01fb439264bcd30bea2a8257d69ac875bf6f41793b99c002ca8d1145",
+   "family_id": "airplane_mode|bad_vpn|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 111,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+   "task_sha256": "ce13bdea0828bfc00b4a49ea0baa60b5f7fde7f14375ca622dadace9224c24c3",
+   "family_id": "airplane_mode|bad_network_preference|bad_vpn|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 113,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "92397a5feb6aa7be854d567a007a758d33c96bdc0c8f71a9756a8a8034f1435c",
+   "family_id": "bad_network_preference|data_mode|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 146,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "59f38c0397df7dfe56fea33c53b4c4bfaa4562e2395f2cbf400408b0a12cc3e8",
+   "family_id": "bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 147,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_network_preference|bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "4eb9f0c9e06ed0a9f1f9510b17faf85c2fcf90db115b3af9bad81749611ad2f3",
+   "family_id": "bad_network_preference|bad_vpn|data_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 149,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_network_preference|bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "918f353b36fa5a3e57f257e61153bb70e4d851cfb80efe93b2df128e9e027453",
+   "family_id": "bad_network_preference|bad_vpn|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 152,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "06482b67fea407a440068f5608b3217067de2fb789e8ab6332178649db209c34",
+   "family_id": "airplane_mode|bad_network_preference|data_mode|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 181,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "5b5f1f34dedc1dfd8fba6f3e53ecf26ccadb13e8556928be9427a4a97e8daa3b",
+   "family_id": "airplane_mode|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 182,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+   "task_sha256": "77a120e6ee60a46b14e6d5bc4c24c11cb91bd26f611e5ec144ac231e1515de24",
+   "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 184,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "1efd238febf95acbcf99a3bd743c2dd6b5a247ca58d1f5af1c31b13562713c5a",
+   "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 187,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]bad_network_preference|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+   "task_sha256": "2c1faf164270a4ba27fa2d4f8efd3c7aa3f873403a788c5a56d0fbb45b5fe5e3",
+   "family_id": "bad_network_preference|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 216,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  },
+  {
+   "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+   "task_sha256": "ad42b95cb93ab860bfd7f8ecd705c2d9e08999cabefa6ec890a910304d369b57",
+   "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+   "research_partition": "exposed_development_only",
+   "tasks_json_index": 232,
+   "assistant_side_env_assertion": false,
+   "regressible_protected_goal": true,
+   "protectable_coupled_user_goal": true
+  }
+ ]
+}

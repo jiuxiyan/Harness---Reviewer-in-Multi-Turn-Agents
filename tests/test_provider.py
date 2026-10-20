@@ -98,3 +98,22 @@ class ProviderTests(unittest.TestCase):
     with self.assertRaisesRegex(RunFailure,'^provider_envelope_invalid$') as caught:
      parse_response(response)
     self.assertNotIsInstance(caught.exception,ModelOutputError)
+
+ def test_reported_model_accepts_only_a_stripped_routing_prefix(self):
+  from local_experiments.provider import reported_model_matches
+  accepted=(('sophnet/qwen3.6-plus','qwen3.6-plus'),('qwen3.6-plus','qwen3.6-plus'),('a/b/c','b/c'))
+  rejected=(('sophnet/qwen3.6-plus','qwen3.5-flash'),('sophnet/qwen3.6-plus','sophnet/qwen3.6-plus-x'),
+            ('qwen3.6-plus','sophnet/qwen3.6-plus'),('a/b/c','c'),('sophnet/qwen3.6-plus',''),('sophnet/qwen3.6-plus',None))
+  for configured,reported in accepted:
+   with self.subTest(configured=configured,reported=reported): self.assertTrue(reported_model_matches(configured,reported))
+  for configured,reported in rejected:
+   with self.subTest(configured=configured,reported=reported): self.assertFalse(reported_model_matches(configured,reported))
+
+ def test_gateway_prefix_stripping_satisfies_reported_model_identity(self):
+  self.c['models']['require_reported_model']=True
+  def client(name,reported,configured='sophnet/qwen3.6-plus'):
+   store=Store(Path(self.temp.name)/name,self.c,'dry-run')
+   return Client(self.c,store,lambda p:{**RESPONSE,'model':reported},{'actor':configured})
+  self.assertEqual(client('match','qwen3.6-plus').call('actor',[{'role':'user','content':'test'}])['content'],'hello')
+  with self.assertRaisesRegex(RunFailure,'reported_model_identity_mismatch'):
+   client('mismatch','other-model').call('actor',[{'role':'user','content':'test'}])

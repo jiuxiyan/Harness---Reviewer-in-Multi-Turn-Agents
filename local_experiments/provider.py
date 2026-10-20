@@ -55,6 +55,17 @@ def validate_wire(messages):
    seen.add(key);pending.add(key)
  if pending: raise RunFailure('pending_tool_call_in_request')
 
+def reported_model_matches(configured,reported):
+ """Identity check for require_reported_model.
+
+ The gateway routes on a '<prefix>/<name>' identifier but reports only '<name>'; accepting exactly one
+ stripped routing prefix keeps the check strict while matching observed wire behaviour.
+ """
+ if not isinstance(configured,str) or not isinstance(reported,str) or not reported: return False
+ if reported==configured: return True
+ _,separator,name=configured.partition('/')
+ return bool(separator) and name==reported
+
 def parse_response(response):
  try:
   if not isinstance(response,dict): raise ValueError()
@@ -103,7 +114,7 @@ class Client:
   if self.recovery:
    cached,response=self.recovery.replay(logical,payload)
    if cached:
-    if m['require_reported_model'] and (not isinstance(response,dict) or response.get('model')!=self.models[role]):raise RunFailure('reported_model_identity_mismatch')
+    if m['require_reported_model'] and (not isinstance(response,dict) or not reported_model_matches(self.models[role],response.get('model'))):raise RunFailure('reported_model_identity_mismatch')
     return parse_response(response)
    start_attempt=len(self.recovery.groups.get(logical,[]))
   for attempt in range(start_attempt,limits['max_retries_per_request']+1):
@@ -129,7 +140,7 @@ class Client:
     raise RunFailure('provider_result_unknown') from None
    self.records[-1].update(status='response_saved',usage=usage_fields(response))
    self.store.event('response_saved',**common,received_response_digest=digest(response),stored_response_digest=digest(self.store.sanitize(response)),usage=usage_fields(response),cost=None,cost_status='unknown',latency_seconds=time.monotonic()-start)
-   if m['require_reported_model'] and (not isinstance(response,dict) or response.get('model')!=self.models[role]): raise RunFailure('reported_model_identity_mismatch')
+   if m['require_reported_model'] and (not isinstance(response,dict) or not reported_model_matches(self.models[role],response.get('model'))): raise RunFailure('reported_model_identity_mismatch')
    return parse_response(self.store.sanitize(response))
   raise RunFailure('provider_error_exhausted')
 

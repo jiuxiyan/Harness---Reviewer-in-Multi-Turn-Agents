@@ -1,0 +1,39 @@
+{
+  "schema_version": "planning-manifest-v1",
+  "evidence_kind": "not_run",
+  "source_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+  "tasks_file_sha256": "5a948fad69753a9d04668ba6a74a3b457a04bed62da6f2b6f49a956cbb90df46",
+  "task_hash_encoding": "freeze.sha over canonical pinned task object",
+  "population": "exposed_development_only",
+  "notes": "Development-only refuel-family tasks selected so that the confirmatory token-disjoint packing keeps size 8 including one regressible-goal unit. Selection used task metadata only (env_assertion func_name/env_type and frozen lexical fault tokens); no model calls and no outcome labels. Each of these carries assert_data_refueling_amount, the only regressible assistant-side env assertion in the pinned telecom task file.",
+  "selection_rule": "cheapest reference-action representative per distinct normalized fault token-set; 2-token refuel sets only; verified by exhaustive search that the residual confirmatory packing remains 8 with >=1 refuel unit",
+  "tasks": [
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_usage_exceeded[PERSONA:Easy]",
+      "task_sha256": "8d966b657bf07b96477e735da07b839f37e3d44db219e2924269eafffeb3c3fd",
+      "family_id": "airplane_mode|data_usage_exceeded",
+      "research_partition": "exposed_development_only",
+      "tasks_json_index": 15,
+      "assistant_side_env_assertion": true,
+      "regressible_protected_goal": true
+    },
+    {
+      "task_id": "[mobile_data_issue]data_usage_exceeded|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+      "task_sha256": "4fdcf8bc45591eb42124d60b4b8c1fe6cfb95b93a959ca2f1df64e859feadf44",
+      "family_id": "data_usage_exceeded|user_abroad_roaming_state",
+      "research_partition": "exposed_development_only",
+      "tasks_json_index": 20,
+      "assistant_side_env_assertion": true,
+      "regressible_protected_goal": true
+    },
+    {
+      "task_id": "[mobile_data_issue]data_mode_off|data_usage_exceeded[PERSONA:None]",
+      "task_sha256": "f957625ede7b287573c4a292f1c199871f8cecc3dbf0d600e325630c0111b435",
+      "family_id": "data_mode|data_usage_exceeded",
+      "research_partition": "exposed_development_only",
+      "tasks_json_index": 34,
+      "assistant_side_env_assertion": true,
+      "regressible_protected_goal": true
+    }
+  ]
+}
