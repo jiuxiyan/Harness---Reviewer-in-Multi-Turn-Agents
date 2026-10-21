@@ -63,3 +63,48 @@ class ConfigTests(unittest.TestCase):
    self.assertEqual(launch_mock.call_args.args[1],'dry-run')
  def test_configuration_does_not_mutate(self):
   before=copy.deepcopy(DEFAULT);validate(DEFAULT);self.assertEqual(before,DEFAULT)
+ def _v4_roots(self):
+  c=copy.deepcopy(DEFAULT)
+  c['protocol_id']='advice-lifetimes-local-v4';c['stage']='confirmatory-roots';c['study_label']='confirmatory'
+  c['dataset']['population']='prospective_fixed_benchmark';c['dataset']['operator_attests_unseen']=False
+  c['dataset']['exposure_manifests']=['docs/validation/development_exposures.json']
+  c['models']['require_reported_model']=True
+  c['models']['actor_model']='sophnet/qwen3.6-plus';c['models']['reviewer_model']='sophnet/DeepSeek-V4-Pro-0813';c['models']['user_model']='sophnet/qwen3.5-flash'
+  c['analysis']['delta']=0.1;c['analysis']['epsilon']=0.05
+  c['analysis']['confirmatory_sample_size']=len(c['dataset']['task_indices'])*c['sampling']['starts_per_task']
+  return c
+ def test_v4_identity_rejects_unseen_claim(self):
+  c=self._v4_roots();c['dataset']['operator_attests_unseen']=True
+  with self.assertRaises(ConfigError) as e: validate(c,require_freeze=False)
+  self.assertIn('must not claim unseen',str(e.exception))
+ def test_v4_identity_requires_exposure_ledger(self):
+  c=self._v4_roots();c['dataset']['exposure_manifests']=[]
+  with self.assertRaises(ConfigError) as e: validate(c,require_freeze=False)
+  self.assertIn('exposure ledger binding required',str(e.exception))
+ def test_v4_identity_requires_fixed_benchmark_population(self):
+  c=self._v4_roots();c['dataset']['population']='heldout_confirmatory'
+  with self.assertRaises(ConfigError) as e: validate(c,require_freeze=False)
+  self.assertIn('population must be prospective_fixed_benchmark',str(e.exception))
+ def test_v3_heldout_identity_unchanged(self):
+  # The v3 strict-heldout route must still demand unseen attestation and heldout population.
+  c=copy.deepcopy(DEFAULT);c['stage']='confirmatory-roots';c['study_label']='confirmatory'
+  c['dataset']['population']='heldout_confirmatory';c['dataset']['operator_attests_unseen']=False
+  c['analysis']['delta']=0.1;c['analysis']['epsilon']=0.05;c['analysis']['confirmatory_sample_size']=1
+  c['models']['require_reported_model']=True
+  c['models']['actor_model']='a';c['models']['reviewer_model']='r';c['models']['user_model']='u'
+  with self.assertRaises(ConfigError) as e: validate(c,require_freeze=False)
+  self.assertIn('operator_attests_unseen: required',str(e.exception))
+ def test_end_to_end_requires_v4_and_limited_arms(self):
+  c=self._v4_roots();c['stage']='end-to-end';c['study_label']='exploratory';c['arms']=['P','C']
+  c['dataset']['population']='exposed_development_only';c['dataset']['exposure_manifests']=[]
+  self.assertEqual(validate(copy.deepcopy(c),require_freeze=False)['stage'],'end-to-end')
+  c['arms']=['P','C','S']
+  with self.assertRaises(ConfigError) as e: validate(c,require_freeze=False)
+  self.assertIn('arms limited to B,R,P,C',str(e.exception))
+  c2=self._v4_roots();c2['protocol_id']='advice-lifetimes-local-v3';c2['stage']='end-to-end';c2['study_label']='exploratory';c2['arms']=['P','C']
+  with self.assertRaises(ConfigError) as e: validate(c2,require_freeze=False)
+  self.assertIn('requires advice-lifetimes-local-v4',str(e.exception))
+ def test_unsupported_protocol_id_rejected(self):
+  c=copy.deepcopy(DEFAULT);c['protocol_id']='advice-lifetimes-local-v9'
+  with self.assertRaises(ConfigError) as e: validate(c)
+  self.assertIn('unsupported research identity',str(e.exception))

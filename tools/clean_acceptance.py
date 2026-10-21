@@ -43,7 +43,9 @@ def main():
   for i,args in enumerate(commands):
    p=subprocess.run([sys.executable,*args],cwd=dest,capture_output=True,text=True)
    (logs/f'{i}.log').write_text(p.stdout+p.stderr)
-   expected=2 if any(x in args for x in ('configs/confirmatory-roots.json','configs/end-to-end.json')) else 0
+   # confirmatory-roots.json is the negative control (incomplete confirmatory gates must exit 2).
+   # end-to-end.json is a valid exploratory v4 config, so validate must succeed (exit 0).
+   expected=2 if 'configs/confirmatory-roots.json' in args else 0
    receipt={'command':'python3 '+' '.join(args),'exit_code':p.returncode,'expected_exit_code':expected}
    receipts.append(receipt);print(json.dumps(receipt),flush=True)
    if p.returncode!=expected: raise SystemExit('Clean acceptance failed; see ignored logs')

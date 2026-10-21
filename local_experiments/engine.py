@@ -27,6 +27,23 @@ HEADERS = {'neutral': 'Applicability status unchanged; retain the original advic
            'consumed': 'Target call requirement fulfilled; retain advice as history only.'}
 WIDTH=max(map(len,HEADERS.values())); HEADERS={k:v.ljust(WIDTH) for k,v in HEADERS.items()}
 RECEIPT_PREFIX='Controller execution record (not an actor generation):\n'
+# Versioned user-simulator single-channel communication protocol (continuation doc §5). The convention
+# is appended to the user simulator guidelines for both versions; only the adapter version additionally
+# reroutes a residual mixed reply. The adapter is a documented communication protocol, not impact-free
+# cleaning: the global guidelines already state tool-call text is never displayed to the agent, so the
+# suppressed preamble is retained in provenance and the single call enters the native state machine.
+USER_COMM_CONVENTION_VERSIONS=('user_single_channel_prompt_v1','user_single_channel_adapter_v1')
+USER_COMM_ADAPTER_VERSIONS=('user_single_channel_adapter_v1',)
+USER_COMM_CONVENTION=(
+ '\n\n## Communication protocol (single channel, strictly enforced)\n'
+ 'Every reply you produce must use exactly one channel, never both at once:\n'
+ '- Either a natural-language text message with no tool call, or exactly one tool call with no text content.\n'
+ '- When you need to inspect your device, first reply with the single tool call only and no text at all; '
+ 'after the tool result returns, explain it to the agent in a separate text-only reply.\n'
+ '- Never attach a preamble such as "let me check first" or "my phone number is ..." to a tool-call reply; '
+ 'a tool-call reply carries no text whatsoever.\n'
+ '- Emit a termination marker (###STOP###, ###TRANSFER###, ###OUT-OF-SCOPE###) only as a text-only reply with no tool call.\n'
+)
 # The declaration literals are load-bearing: execute() marks C closable only on exact matches, and live
 # models emit free text unless the vocabulary is stated as an enumerated choice. The text-only directive
 # must lead the prompt; otherwise models answer the review with a tool call, which carries no packet.
@@ -118,7 +135,12 @@ class Actor(LLMAgent):
   return msg,state
 
 class User(UserSimulator):
- def __init__(self,client,**kwargs): super().__init__(**kwargs);self.client=client;self.context={}
+ def __init__(self,client,comm_protocol='user_single_channel_adapter_v1',**kwargs):
+  super().__init__(**kwargs);self.client=client;self.context={};self.comm_protocol=comm_protocol
+ @property
+ def global_simulation_guidelines(self):
+  base=super().global_simulation_guidelines
+  return base+USER_COMM_CONVENTION if self.comm_protocol in USER_COMM_CONVENTION_VERSIONS else base
  def generate_next_message(self,message,state):
   state=state.model_copy(deep=True)
   if isinstance(message,MultiToolMessage): state.messages.extend(message.tool_messages)
@@ -127,9 +149,17 @@ class User(UserSimulator):
   except ModelOutputError:
    response={'content':None,'tool_calls':[]} # Native USER_ERROR endpoint.
   msg=decode_model(response,'user')
-  if msg.is_tool_call() and (len(msg.tool_calls)!=1 or any(c.name not in {t.name for t in self.tools} for c in msg.tool_calls)):
-   self.client.store.event('received_model_protocol_error',role='user',reason='multiple_or_unknown_tool',context=self.context)
-   msg=UserMessage(role='user',content=None,timestamp=get_now())
+  if msg.is_tool_call():
+   known={t.name for t in self.tools}
+   if len(msg.tool_calls)!=1 or any(c.name not in known for c in msg.tool_calls):
+    self.client.store.event('received_model_protocol_error',role='user',reason='multiple_or_unknown_tool',context=self.context)
+    msg=UserMessage(role='user',content=None,timestamp=get_now())
+   elif msg.has_text_content() and self.comm_protocol in USER_COMM_ADAPTER_VERSIONS:
+    # Single-channel adapter: preamble text plus one valid tool call. Realize the documented guideline
+    # that tool-call text is never displayed; retain the suppressed text in provenance, route the call.
+    self.client.store.event('user_mixed_message_adapted',role='user',reason='text_with_single_tool_call',
+                            suppressed_text=msg.content,tool_name=msg.tool_calls[0].name,comm_protocol=self.comm_protocol,context=self.context)
+    msg=UserMessage(role='user',content=None,tool_calls=msg.tool_calls,timestamp=get_now())
   state.messages.append(msg)
   if not msg.has_content() and not msg.is_tool_call():raise NativeModelFailure(msg,state,'user')
   return msg,state
@@ -144,7 +174,7 @@ def make(task,client,config,initialize=True):
  actor=Actor(client,tools=env.get_tools(),domain_policy=env.get_policy(),llm='explicit-local-transport',llm_args={})
  actor.read_names={k for k,v in get_tool_types(env.tools).items() if v==ToolType.READ}
  actor.allowed_names=actor.read_names|set(config['review']['allowed_writes'])
- user=User(client,tools=env.get_user_tools(),instructions=str(task.user_scenario),llm='explicit-local-transport',llm_args={})
+ user=User(client,comm_protocol=config['models']['user_comm_protocol'],tools=env.get_user_tools(),instructions=str(task.user_scenario),llm='explicit-local-transport',llm_args={})
  limits=config['limits']
  o=LocalOrchestrator(domain='telecom',agent=actor,user=user,environment=env,task=task,max_steps=limits['max_native_steps'],max_errors=limits['max_native_errors'],seed=config['sampling']['allocation_seed'],simulation_id='local-'+digest(task.id)[:16],timeout=None,validate_communication=True)
  o._run_start_time=get_now();o._run_start_perf=time.perf_counter();o.run_config_hash=digest(config)
@@ -389,3 +419,250 @@ def run(config,store,client):
  store.event('run_settled',assigned_rows=len(rows),assigned_roots=len(root_catalog))
  store.save('status.json',{'status':'completed_with_missing' if any(r['loss'] is None for r in rows) or coverage['reference_failures'] else 'completed','evidence_kind':store.evidence,'real_model_calls':0 if store.mode=='dry-run' else client.calls,'physical_attempts':client.calls,'outcomes':len(rows),'coverage':coverage})
  return rows
+
+def run_episode(config,store,client):
+ """End-to-end episode runner (continuation doc §11.1). Each (task,start,arm) runs a FULL episode from
+ the official initial state to natural termination under that arm's advice-lifetime policy. The reviewer
+ intervenes at most once, at the first structural outcome-blind trigger; if no trigger fires the episode is
+ a pure natural run and STILL enters the arm denominator (trigger is arm-independent, so this is unbiased).
+ Estimand is official task completion J(arm); the primary contrast is dJ=J(C)-J(P). No pre-registered
+ protected set, no root quota, and no use of hidden goal state to steer the intervention."""
+ from .freeze import check_dataset
+ from .costs import summarize_costs
+ inventory=check_dataset(config);tasks={t.id:t for t in get_tasks(None)}
+ arms=[a for a in config['arms'] if a in ('B','R','P','C')]
+ if not arms: raise RunFailure('no_end_to_end_arms')
+ rows=[];coverage={'episodes':0,'triggered':0,'no_trigger':0,'episode_failures':0,'review_unavailable':0}
+ comm={'user_tool_turns':0,'user_text_turns':0,'user_mixed_adapted':0,'user_protocol_errors':0}
+ def erow(base,o,task,trace,requests,arm,triggered,status='completed'):
+  value={**base,'arm':arm,'triggered':triggered,'status':status,'completion':None,
+         'evidence_kind':store.evidence,'logical_request_ids':sorted(set(requests))}
+  if o is not None and o.done:
+   basis={str(x.value if hasattr(x,'value') else x) for x in task.evaluation_criteria.reward_basis}
+   if basis!={'ENV_ASSERTION'}: raise RunFailure('unsupported_evaluator_basis')
+   simulation=o._finalize();reward=evaluate_official(simulation,task)
+   v=vector(o.environment,task)
+   ever=[i for i in range(len(v)) if any(x[i] for x in trace)]
+   value.update({'completion':int(reward.reward==1.0),'official_reward':plain(reward),
+    'termination':o.termination_reason.value,'native_steps':o.step_count,'terminal_vector':v,
+    'goal_count':len(v),'initial_vector':trace[0] if trace else [],'ever_achieved_indices':ever,
+    'ever_achieved_then_lost_indices':[i for i in ever if not v[i]],'steps':len(trace)-1})
+   value['status']='completed' if value['termination'] in ('user_stop','agent_stop') else 'native_'+value['termination']
+  rows.append(value);store.append('derived/episode_outcomes.jsonl',value)
+ for task_index,meta in enumerate(inventory):
+  task=tasks[meta['task_id']]
+  for start in range(config['sampling']['starts_per_task']):
+   for arm in arms:
+    trajectory=f't{task_index}-s{start}';episode=f'{trajectory}-{arm}'
+    base={'task_id':meta['task_id'],'family_id':meta['family_id'],'trajectory_id':trajectory,'episode_id':episode}
+    coverage['episodes']+=1
+    o=make(task,client,config);o.agent.arm=arm
+    o.agent.context=o.user.context={'episode_id':episode,'trajectory_id':trajectory,'phase':'episode','arm':arm}
+    store.event('start_assigned',trajectory_id=trajectory,episode_id=episode,arm=arm)
+    initial=vector(o.environment,task);trace=[initial];requests=[];triggered=False
+    try:
+     while not o.done:
+      if not triggered and trigger(o):
+       saved=snapshot(o);pc=pending_supported_call(o);begin=client.logical
+       if arm in ('P','R','C'):
+        reviewer=restore(saved,task,client,config);reviewer.agent.context={**o.agent.context,'phase':'review'}
+        q=None
+        try:q=capture(reviewer,client)
+        except RunFailure as exc:store.event('review_unavailable',episode_id=episode,arm=arm,status=str(exc));coverage['review_unavailable']+=1
+        if q is None:
+         q={'selected_action':action(native(saved['payload']['routing']['message'])),'packet':'','declaration':None,'classification':'review_unavailable_fallback'}
+       else:
+        q={'selected_action':action(native(saved['payload']['routing']['message'])),'packet':'','declaration':None,'classification':'original'}
+       requests.extend(range(begin+1,client.logical+1))
+       execute(o,q,arm);triggered=True;coverage['triggered']+=1
+       store.event('episode_trigger',episode_id=episode,arm=arm,pending_call=pc,classification=q['classification'])
+       trace.append(vector(o.environment,task))
+       begin=client.logical;advance(o,trace,task);requests.extend(range(begin+1,client.logical+1))
+       break
+      begin=client.logical;o.step();o._check_termination();requests.extend(range(begin+1,client.logical+1));trace.append(vector(o.environment,task))
+     if not triggered:coverage['no_trigger']+=1;store.event('episode_no_trigger',episode_id=episode,arm=arm)
+     erow(base,o,task,trace,requests,arm,triggered)
+    except RunFailure as exc:
+     coverage['episode_failures']+=1;store.event('episode_incomplete',episode_id=episode,arm=arm,status=str(exc))
+     erow(base,o,task,trace,requests,arm,triggered,str(exc))
+    for m in o.trajectory:
+     if isinstance(m,UserMessage):
+      if m.is_tool_call():comm['user_tool_turns']+=1
+      elif m.has_text_content():comm['user_text_turns']+=1
+ events=[json.loads(l) for l in (store.root/'journal/events.jsonl').read_text().splitlines()] if (store.root/'journal/events.jsonl').exists() else []
+ comm['user_mixed_adapted']=sum(1 for x in events if x['kind']=='user_mixed_message_adapted')
+ comm['user_protocol_errors']=sum(1 for x in events if x['kind']=='received_model_protocol_error' and x.get('role')=='user')
+ comm['user_tool_call_turns_total']=comm['user_tool_turns']
+ comm['mixed_output_rate']=(comm['user_mixed_adapted']/comm['user_tool_turns']) if comm['user_tool_turns'] else None
+ comm['user_comm_protocol']=config['models']['user_comm_protocol']
+ # Per-arm completion estimate J and the primary end-to-end contrast dJ=J(C)-J(P).
+ byarm={}
+ for arm in arms:
+  sub=[r for r in rows if r['arm']==arm and r['completion'] is not None]
+  arm_req=set()
+  for r in rows:
+   if r['arm']==arm: arm_req.update(r['logical_request_ids'])
+  byarm[arm]={'episodes':sum(1 for r in rows if r['arm']==arm),'scored':len(sub),
+   'J':(sum(r['completion'] for r in sub)/len(sub)) if sub else None,
+   'triggered':sum(1 for r in rows if r['arm']==arm and r['triggered']),
+   'logical_requests':len(arm_req),
+   'natural_terminations':sum(1 for r in sub if r.get('termination') in ('user_stop','agent_stop'))}
+ dJ=(byarm['C']['J']-byarm['P']['J']) if byarm.get('C',{}).get('J') is not None and byarm.get('P',{}).get('J') is not None else None
+ summary={'arms':byarm,'dJ_C_minus_P':dJ,'primary_contrast':'dJ=J(C)-J(P); positive means closing the advice lifetime after one fulfilled call raises completion relative to persistent advice'}
+ store.save('derived/episode_summary.json',summary)
+ store.save('derived/coverage.json',coverage)
+ store.save('derived/exposure_manifest.json',{'source_commit':config['source']['benchmark_commit'],'tasks':inventory,'evidence_kind':store.evidence,'use':'include this file in subsequent confirmation exclusion manifests'})
+ store.save('derived/costs.json',summarize_costs(client,[]))
+ if client.recovery:client.recovery.assert_complete()
+ store.event('episode_run_settled',episodes=coverage['episodes'],triggered=coverage['triggered'],no_trigger=coverage['no_trigger'],episode_failures=coverage['episode_failures'])
+ store.save('status.json',{'status':'completed_with_missing' if any(r['completion'] is None for r in rows) or coverage['episode_failures'] else 'completed',
+  'evidence_kind':store.evidence,'stage':'end-to-end',
+  'real_model_calls':0 if store.mode=='dry-run' else client.calls,'physical_attempts':client.calls,
+  'episodes':coverage['episodes'],'coverage':coverage,'comm':comm,'summary':summary})
+ return {'coverage':coverage,'comm':comm,'summary':summary,'episodes':rows}
+
+def write_success_positions(trajectory,write_names):
+ """Offline scan: (index,name) of each assistant WRITE tool call whose result returned normally."""
+ id_to_name={};out=[]
+ for idx,m in enumerate(trajectory):
+  for c in (getattr(m,'tool_calls',None) or []): id_to_name[c.id]=c.name
+  results=m.tool_messages if isinstance(m,MultiToolMessage) else ([m] if isinstance(m,ToolMessage) else [])
+  for tm in results:
+   if tm.requestor=='assistant' and tm.error is False and id_to_name.get(tm.id) in write_names: out.append((idx,id_to_name[tm.id]))
+ return out
+
+def run_reference(config,store,client):
+ """Reference-only development entry: run the original Actor/User to the natural end, recording every
+ supported pending actor call as a candidate boundary plus the offline private goal vectors. No reviewer
+ is invoked and no root quota stops the trajectory; trigger-rule choice is deferred to offline analysis."""
+ from .freeze import check_dataset
+ from .costs import summarize_costs
+ inventory=check_dataset(config);tasks={t.id:t for t in get_tasks(None)}
+ write_names=set(config['review']['allowed_writes'])
+ candidates=[];trajectory_rows=[];reference_failures=0
+ comm={'user_tool_turns':0,'user_text_turns':0,'user_mixed_adapted':0,'user_protocol_errors':0}
+ for task_index,meta in enumerate(inventory):
+  task=tasks[meta['task_id']]
+  for start in range(config['sampling']['starts_per_task']):
+   trajectory=f't{task_index}-s{start}'
+   o=make(task,client,config);o.agent.context=o.user.context={'trajectory_id':trajectory,'phase':'reference_only'}
+   store.event('start_assigned',trajectory_id=trajectory)
+   initial=vector(o.environment,task)
+   trace=[initial];steps=[{'step':0,'completed':0,'users':0,'pending_supported_call':None,'from':o.from_role.value if o.from_role else None,'to':o.to_role.value if o.to_role else None,'vector':initial}]
+   traj_candidates=[]
+   try:
+    while not o.done:
+     pending=pending_supported_call(o)
+     if pending is not None:
+      completed,users=depth(o);now=trace[-1]
+      protected=[i for i,x in enumerate(now) if x and not initial[i]]
+      unmet=[i for i,x in enumerate(now) if not x]
+      ws=write_success_positions(o.trajectory,write_names)
+      cid=f'{trajectory}-c{len(traj_candidates)}'
+      saved=snapshot(o);store.save(f'private/checkpoints/{cid}.json',saved)
+      rec={'candidate_id':cid,'trajectory_id':trajectory,'task_id':meta['task_id'],'family_id':meta['family_id'],
+           'step':o.step_count,'completed_assistant_tools':completed,'user_text_events':users,
+           'pending_call':pending,'pending_class':'READ' if pending in o.agent.read_names else 'WRITE',
+           'last_public_write':({'name':ws[-1][1],'traj_index':ws[-1][0]} if ws else None),
+           'prior_successful_writes':len(ws),
+           'protected_count':len(protected),'protected_indices':protected,
+           'unmet_count':len(unmet),'unmet_indices':unmet,'vector':now,
+           'checkpoint':f'private/checkpoints/{cid}.json'}
+      traj_candidates.append(rec);store.append('derived/candidate_boundaries.jsonl',rec)
+      store.event('reference_candidate',candidate_id=cid,trajectory_id=trajectory,pending_call=pending,
+                  pending_class=rec['pending_class'],protected_count=len(protected),unmet_count=len(unmet),
+                  completed_assistant_tools=completed,user_text_events=users)
+     o.step();o._check_termination()
+     trace.append(vector(o.environment,task))
+     steps.append({'step':len(trace)-1,'completed':depth(o)[0],'users':depth(o)[1],
+                   'pending_supported_call':pending_supported_call(o),
+                   'from':o.from_role.value if o.from_role else None,'to':o.to_role.value if o.to_role else None,
+                   'vector':trace[-1]})
+   except RunFailure as exc:
+    reference_failures+=1;store.event('reference_incomplete',trajectory_id=trajectory,status=str(exc))
+   final=trace[-1]
+   for m in o.trajectory:
+    if isinstance(m,UserMessage):
+     if m.is_tool_call(): comm['user_tool_turns']+=1
+     elif m.has_text_content(): comm['user_text_turns']+=1
+   # Subsequent-actor-boundary opportunity per candidate, computed offline from the recorded trace.
+   for rec in traj_candidates:
+    s=rec['step'];rec['subsequent_actor_boundaries']=sum(1 for x in steps[s+1:] if x['from']=='agent' and x['to'] in ('env','user'))
+    rec['steps_remaining']=max(0,len(steps)-1-s)
+    store.append('derived/candidate_boundaries_enriched.jsonl',rec)
+   candidates.extend(traj_candidates)
+   nonempty=[r for r in traj_candidates if r['protected_count']>0]
+   protected_unmet=[r for r in traj_candidates if r['protected_count']>0 and r['unmet_count']>0]
+   trow={'trajectory_id':trajectory,'task_id':meta['task_id'],'family_id':meta['family_id'],
+         'termination':o.termination_reason.value if o.termination_reason else None,'native_steps':o.step_count,
+         'done':o.done,'steps':len(trace)-1,'candidates':len(traj_candidates),
+         'nonempty_protected_candidates':len(nonempty),'protected_and_unmet_candidates':len(protected_unmet),
+         'initial_true_count':sum(initial),'final_true_count':sum(final),
+         'goal_count':len(initial),'reference_failure':bool(o.termination_reason is None and not o.done)}
+   trajectory_rows.append(trow)
+   store.save('private/evaluation/'+trajectory+'-reference-trace.json',
+              {'trajectory_id':trajectory,'task_id':meta['task_id'],'family_id':meta['family_id'],
+               'termination':trow['termination'],'native_steps':o.step_count,'steps':steps})
+   store.event('reference_trajectory_complete',**{k:trow[k] for k in ('trajectory_id','termination','native_steps','candidates','nonempty_protected_candidates','protected_and_unmet_candidates')})
+ events=[json.loads(l) for l in (store.root/'journal/events.jsonl').read_text().splitlines()] if (store.root/'journal/events.jsonl').exists() else []
+ comm['user_mixed_adapted']=sum(1 for x in events if x['kind']=='user_mixed_message_adapted')
+ comm['user_protocol_errors']=sum(1 for x in events if x['kind']=='received_model_protocol_error' and x.get('role')=='user')
+ # user_tool_turns (counted from the final trajectory) already includes every adapter-rerouted turn:
+ # the adapter drops the suppressed preamble and keeps the single call, which lands in the trajectory
+ # as a clean tool call. Adding user_mixed_adapted again double-counts and understates the raw rate,
+ # so the denominator for the raw mixed-output rate is user_tool_turns alone.
+ comm['user_tool_call_turns_total']=comm['user_tool_turns']
+ comm['mixed_output_rate']=(comm['user_mixed_adapted']/comm['user_tool_turns']) if comm['user_tool_turns'] else None
+ comm['user_comm_protocol']=config['models']['user_comm_protocol']
+ total_traj=len(trajectory_rows);total_cand=len(candidates)
+ coverage={'trajectories':total_traj,'reference_failures':reference_failures,
+   'trajectories_with_candidate':sum(1 for t in trajectory_rows if t['candidates']>0),
+   'trajectories_with_nonempty_protection':sum(1 for t in trajectory_rows if t['nonempty_protected_candidates']>0),
+   'trajectories_with_protected_and_unmet':sum(1 for t in trajectory_rows if t['protected_and_unmet_candidates']>0),
+   'candidates':total_cand,'nonempty_protected_candidates':sum(1 for c in candidates if c['protected_count']>0),
+   'protected_and_unmet_candidates':sum(1 for c in candidates if c['protected_count']>0 and c['unmet_count']>0),
+   'public_candidate_coverage':(sum(1 for t in trajectory_rows if t['candidates']>0)/total_traj) if total_traj else None,
+   'nonempty_protection_coverage':(sum(1 for c in candidates if c['protected_count']>0)/total_cand) if total_cand else None,
+   'protected_and_unmet_coverage':(sum(1 for c in candidates if c['protected_count']>0 and c['unmet_count']>0)/total_cand) if total_cand else None,
+   'natural_terminations':sum(1 for t in trajectory_rows if t['termination'] in ('user_stop','agent_stop')),
+   'user_error_terminations':sum(1 for t in trajectory_rows if t['termination']=='user_error'),
+   'agent_error_terminations':sum(1 for t in trajectory_rows if t['termination']=='agent_error')}
+ store.save('derived/reference_coverage.json',{'coverage':coverage,'comm':comm,'trajectories':trajectory_rows})
+ _write_reference_csv(store,trajectory_rows,candidates,coverage,comm)
+ store.save('derived/costs.json',summarize_costs(client,[]))
+ if client.recovery:client.recovery.assert_complete()
+ store.event('reference_run_settled',trajectories=total_traj,candidates=total_cand,reference_failures=reference_failures)
+ store.save('status.json',{'status':'completed_with_missing' if reference_failures else 'completed',
+   'evidence_kind':store.evidence,'stage':'reference-only',
+   'real_model_calls':0 if store.mode=='dry-run' else client.calls,'physical_attempts':client.calls,
+   'trajectories':total_traj,'candidates':total_cand,'reference_failures':reference_failures,
+   'coverage':coverage,'comm':comm})
+ return {'coverage':coverage,'comm':comm,'trajectories':trajectory_rows}
+
+def _write_reference_csv(store,trajectory_rows,candidates,coverage,comm):
+ import csv
+ def emit(name,header,rows):
+  path=store.root/'derived'/name
+  with path.open('w',newline='',encoding='utf8') as f:
+   w=csv.writer(f);w.writerow(header);w.writerows(rows)
+  path.chmod(0o600);store.reserve(path.stat().st_size+1)
+ emit('reference_coverage.csv',
+      ['trajectory_id','task_id','family_id','termination','native_steps','steps','candidates',
+       'nonempty_protected_candidates','protected_and_unmet_candidates','initial_true_count','final_true_count','goal_count'],
+      [[t[k] for k in ('trajectory_id','task_id','family_id','termination','native_steps','steps','candidates',
+                       'nonempty_protected_candidates','protected_and_unmet_candidates','initial_true_count','final_true_count','goal_count')] for t in trajectory_rows])
+ emit('candidate_boundaries.csv',
+      ['candidate_id','trajectory_id','task_id','step','completed_assistant_tools','user_text_events',
+       'pending_call','pending_class','prior_successful_writes','protected_count','unmet_count',
+       'subsequent_actor_boundaries','steps_remaining'],
+      [[c.get(k) for k in ('candidate_id','trajectory_id','task_id','step','completed_assistant_tools','user_text_events',
+                           'pending_call','pending_class','prior_successful_writes','protected_count','unmet_count',
+                           'subsequent_actor_boundaries','steps_remaining')] for c in candidates])
+ emit('reference_summary.csv',['metric','value'],
+      [['trajectories',coverage['trajectories']],['candidates',coverage['candidates']],
+       ['public_candidate_coverage',coverage['public_candidate_coverage']],
+       ['nonempty_protection_coverage',coverage['nonempty_protection_coverage']],
+       ['protected_and_unmet_coverage',coverage['protected_and_unmet_coverage']],
+       ['user_mixed_adapted',comm['user_mixed_adapted']],['user_tool_turns',comm['user_tool_turns']],
+       ['mixed_output_rate',comm['mixed_output_rate']],['user_protocol_errors',comm['user_protocol_errors']],
+       ['user_error_terminations',coverage['user_error_terminations']]])

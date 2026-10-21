@@ -1,0 +1,117 @@
+{
+  "schema_version": "e2e-study-design-v1",
+  "created_utc": "2026-10-21",
+  "campaign": "workbench-20261020-004",
+  "protocol_id": "advice-lifetimes-local-v4",
+  "stage": "end-to-end",
+  "study_label": "confirmatory",
+  "estimand": {
+    "primary": "ΔJ = J(C) − J(P), the difference in end-to-end episode completion between the "
+               "advice-lifetime-CLOSED policy (C: neutral header flips to 'consumed' and the extra "
+               "packet is withdrawn after one fulfilled valid Actor response, when closable) and the "
+               "advice-lifetime-PERSISTENT policy (P: neutral header and packet stay for the whole "
+               "episode).",
+    "secondary_arms": ["B (receipt+packet+header, never closed)", "R (packet removed after one valid response, no lifetime header)"],
+    "J_definition": "J(arm) = task-macro mean completion over ALL episodes of that arm. Completion is the "
+                    "official tau2 ENV_ASSERTION reward over the frozen terminal goal vector. No-trigger "
+                    "episodes remain in the denominator (they run to natural termination).",
+    "independence_unit": "task cluster (disjoint fault component). ΔJ is paired by task; the bootstrap "
+                         "resamples task clusters, not episodes.",
+    "not_the_root_contrast": "This is NOT the root experiment's same-protected-set causal contrast L(P)−L(C). "
+                             "Each policy runs its own natural trajectory and forms its own ever-achieved goal "
+                             "set, so J/ΔJ measures realized end-to-end utility, not loss of a shared protected "
+                             "goal. See reports/coverage_structure_finding.md §13 for why the root estimand is "
+                             "unmeasurable in this frozen pool."
+  },
+  "why_end_to_end": "The root primary endpoint L(P)−L(C) was established UNMEASURABLE from the frozen Telecom "
+                    "pool: across ~66 live reference trajectories and 288 candidate boundaries only ONE "
+                    "protected-and-unmet root from ONE task ever appeared, and a targeted §8.4 expansion "
+                    "(6 multi-fault families × 4 starts) reproduced ZERO separation. The end-to-end estimand "
+                    "J/ΔJ does not depend on that rare mid-trajectory goal separation and is therefore the "
+                    "achievable primary deliverable (continuation doc §11.1, correcting the prior erroneous "
+                    "G3/G4 terminal verdict).",
+  "population_identity": {
+    "name": "prospective_fixed_benchmark",
+    "meaning": "A FIXED, KNOWN benchmark task list run with NEW independent starts. Inference conditions on "
+               "this exact task set; it does NOT claim unseen-family generalization.",
+    "operator_attests_unseen": false,
+    "exposure_ledger_bound": true,
+    "rationale": "The doc resolves the confirmation identity via prospective_fixed_benchmark rather than by "
+                 "the agent asserting unseen-ness (which is forbidden). Tasks may be previously exposed; the "
+                 "independence unit is the START, resampled fresh, with root/shared-prefix/arm dependencies "
+                 "preserved."
+  },
+  "benchmark": {
+    "manifest": "docs/planning/manifests/tasks_e2e_fixed_benchmark_v4.json",
+    "builder": "tools/build_e2e_benchmark.py",
+    "task_count": 8,
+    "source_pool": "docs/planning/manifests/tasks_development_roaming_protectable.json (32 verified roaming-protectable tasks)",
+    "selection_rule": "complexity-stratified across fault-token count, quota {2:1,3:2,4:2,5:2,6:1}=8; within "
+                      "stratum rank by (persona difficulty DESC [Hard>Easy>None], tasks_json_index ASC). "
+                      "STRUCTURAL attributes only -- no model outcomes, completion labels, or live-run results "
+                      "were consulted (outcome-blind design).",
+    "selection_prior": "Higher fault count and harder persona are structural difficulty proxies chosen to give "
+                       "completion headroom (room for J to vary below 1), because the 2-task live integration "
+                       "run on 3-fault roaming tasks saturated at J=1 for B/P/R and showed the Reviewer never "
+                       "altered the Actor's action (0 valid_changed draws). This is a design prior, not an "
+                       "outcome-based selection.",
+    "selected_task_indices": [18, 41, 44, 106, 111, 182, 184, 232],
+    "sha_verification": "every row task_sha256 = freeze.sha over the canonical pinned task object, verified "
+                        "against official tasks.json at commit 4ce7c03; tasks_json_index verified to point at "
+                        "the selected task."
+  },
+  "sampling": {
+    "starts_per_task": 2,
+    "task_start_units": 16,
+    "arms": ["B", "R", "P", "C"],
+    "episodes": 64,
+    "confirmatory_sample_size": 16,
+    "allocation_seed": 20261021,
+    "review_slots_per_episode": 1,
+    "trigger": "public_single_call_after_depth_v3 (min_completed_assistant_tools=2, min_user_text_events=1); "
+               "outcome-blind, structural; fires at most once per episode; no-trigger episodes run to natural "
+               "termination and stay in the denominator."
+  },
+  "models": {
+    "actor": "sophnet/qwen3.6-plus",
+    "reviewer": "sophnet/DeepSeek-V4-Pro-0813",
+    "user": "sophnet/qwen3.5-flash",
+    "temperature": 0.0,
+    "provider_seed_supported": false,
+    "require_reported_model": true,
+    "reported_model_note": "gateway routes on '<prefix>/<name>' but reports bare '<name>'; the identity check "
+                           "accepts exactly one stripped routing prefix."
+  },
+  "decision_rule": {
+    "primary_criterion": "claim_status = 'criteria_met' iff all benchmark task units are represented, "
+                         "missing_endpoints == 0, and the 95% task-cluster bootstrap lower bound of ΔJ exceeds "
+                         "delta (=0.0). Otherwise 'not_established'.",
+    "delta": 0.0,
+    "epsilon": 0.0,
+    "confidence_level": 0.95,
+    "bootstrap_replicates": 2000,
+    "bootstrap_seed": 20261021,
+    "inequality_fixed_before_freeze": true,
+    "honest_expectation": "Given the integration run's mechanism gap (Reviewer rarely changes the Actor's action "
+                          "on roaming tasks), the pre-registered neutral threshold delta=0 is expected to yield "
+                          "'not_established'. That is a valid pre-registered null test, reported as-is; the "
+                          "threshold was NOT tuned to manufacture a positive claim."
+  },
+  "power_limitation": "The bootstrap independence unit is the task cluster; this design has only 8 clusters. "
+                      "Increasing starts_per_task reduces within-task variance but does NOT increase the number "
+                      "of independent clusters, so cluster-limited power cannot be fixed by more starts. A "
+                      "wide ΔJ interval is therefore expected and will be reported honestly. This is a bounded "
+                      "feasibility-and-null test, not a high-powered trial.",
+  "cost_discipline": {
+    "monetary_cap": null,
+    "pricing_status": "unknown",
+    "concurrency": 1,
+    "serial_execution": true,
+    "note": "User authorized no total monetary cap; batches are bounded and consumption recorded. Real runs "
+            "stay serial. Unknown prices/usage are never zeroed."
+  },
+  "provenance_caveat": "A 2-task live integration run (development/e2e-live-integration-001) preceded this "
+                       "freeze to validate the run->analyze->export path. It used DIFFERENT tasks (idx70/71) "
+                       "than this benchmark, was recorded used_for_formal_analysis=false, and neither the "
+                       "benchmark task set nor delta/epsilon were chosen based on its outcomes."
+}

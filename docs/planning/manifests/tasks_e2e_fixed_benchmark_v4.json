@@ -1,0 +1,108 @@
+{
+  "schema_version": "planning-manifest-v1",
+  "evidence_kind": "not_run",
+  "source_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+  "tasks_file_sha256": "5a948fad69753a9d04668ba6a74a3b457a04bed62da6f2b6f49a956cbb90df46",
+  "task_hash_encoding": "freeze.sha over canonical pinned task object",
+  "population": "prospective_fixed_benchmark",
+  "notes": "End-to-end (doc §11.1) prospective_fixed_benchmark task list for the J(P)/J(C)/ΔJ estimand under the v4 identity. A FIXED, KNOWN benchmark: inference conditions on this exact task set using NEW independent starts resampled by start; it does NOT claim unseen-family generalization (operator_attests_unseen stays false) and the exposure ledger is bound at freeze. Selected outcome-blind from the verified roaming-protectable pool by structural complexity only.",
+  "selection_rule": "complexity-stratified across fault-token count with per-stratum quota {2:1,3:2,4:2,5:2,6:1}=8; within stratum rank by (persona difficulty DESC, tasks_json_index ASC); structural attributes only, no model outcomes consulted",
+  "tasks": [
+    {
+      "task_id": "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "task_sha256": "68e6999a530548ccce6503568d9ab45e010e15b69ea236352e59cb8fb79764f3",
+      "family_id": "bad_network_preference|user_abroad_roaming_state",
+      "research_partition": "prospective_fixed_benchmark",
+      "tasks_json_index": 18,
+      "fault_token_count": 2,
+      "persona_rank": 2,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": true,
+      "protectable_coupled_user_goal": true
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "task_sha256": "070de23507af8447ebbf6c8fa1be8245b52d8882b91e3c38cc14df9bf315a500",
+      "family_id": "airplane_mode|data_mode|user_abroad_roaming_state",
+      "research_partition": "prospective_fixed_benchmark",
+      "tasks_json_index": 41,
+      "fault_token_count": 3,
+      "persona_rank": 2,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": true,
+      "protectable_coupled_user_goal": true
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "task_sha256": "4e7ed8ebee4deee0ea86a022e7c18d4434d1a1b21e84d99c93527a4b8d5bbcde",
+      "family_id": "airplane_mode|bad_vpn|user_abroad_roaming_state",
+      "research_partition": "prospective_fixed_benchmark",
+      "tasks_json_index": 44,
+      "fault_token_count": 3,
+      "persona_rank": 2,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": true,
+      "protectable_coupled_user_goal": true
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "task_sha256": "027d4e45483bcb4ee4995320133ea36352454e9a42c9fab33494122aa14c34ef",
+      "family_id": "airplane_mode|data_mode|data_saver_mode|user_abroad_roaming_state",
+      "research_partition": "prospective_fixed_benchmark",
+      "tasks_json_index": 106,
+      "fault_token_count": 4,
+      "persona_rank": 2,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": true,
+      "protectable_coupled_user_goal": true
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "task_sha256": "2e7d11ee01fb439264bcd30bea2a8257d69ac875bf6f41793b99c002ca8d1145",
+      "family_id": "airplane_mode|bad_vpn|data_saver_mode|user_abroad_roaming_state",
+      "research_partition": "prospective_fixed_benchmark",
+      "tasks_json_index": 111,
+      "fault_token_count": 4,
+      "persona_rank": 2,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": true,
+      "protectable_coupled_user_goal": true
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+      "task_sha256": "5b5f1f34dedc1dfd8fba6f3e53ecf26ccadb13e8556928be9427a4a97e8daa3b",
+      "family_id": "airplane_mode|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+      "research_partition": "prospective_fixed_benchmark",
+      "tasks_json_index": 182,
+      "fault_token_count": 5,
+      "persona_rank": 1,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": true,
+      "protectable_coupled_user_goal": true
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+      "task_sha256": "77a120e6ee60a46b14e6d5bc4c24c11cb91bd26f611e5ec144ac231e1515de24",
+      "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_mode|user_abroad_roaming_state",
+      "research_partition": "prospective_fixed_benchmark",
+      "tasks_json_index": 184,
+      "fault_token_count": 5,
+      "persona_rank": 1,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": true,
+      "protectable_coupled_user_goal": true
+    },
+    {
+      "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+      "task_sha256": "ad42b95cb93ab860bfd7f8ecd705c2d9e08999cabefa6ec890a910304d369b57",
+      "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+      "research_partition": "prospective_fixed_benchmark",
+      "tasks_json_index": 232,
+      "fault_token_count": 6,
+      "persona_rank": 2,
+      "assistant_side_env_assertion": false,
+      "regressible_protected_goal": true,
+      "protectable_coupled_user_goal": true
+    }
+  ]
+}

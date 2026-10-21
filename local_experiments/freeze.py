@@ -46,21 +46,36 @@ def check_dataset(config):
   if set(task['evaluation_criteria']['reward_basis'])!={'ENV_ASSERTION'}:raise ConfigError('Unsupported evaluator basis for this study scope')
   ids.append(row['task_id'])
  if len(set(ids))!=len(ids):raise ConfigError('Duplicate task identity')
- if config['stage']=='confirmatory-roots':
+ if config['study_label']=='confirmatory':
   if manifest.get('source_commit')!=PIN:raise ConfigError('Confirmation requires pinned source commit')
-  known=read_json('docs/planning/manifests/tasks_readiness.json')['tasks']+read_json('docs/validation/development_exposures.json')['tasks']
-  for path in d['exposure_manifests']:
-   extra=read_json(path)
-   if not isinstance(extra,dict) or not isinstance(extra.get('tasks'),list):raise ConfigError('Invalid exposure manifest')
-   known.extend(extra['tasks'])
-  exposed_ids={r['task_id'] for r in known}
-  for row in selected:
-   if row['task_id'] in exposed_ids or any(near_family(fault_set(row['task_id']),fault_set(x)) for x in exposed_ids):raise ConfigError('Confirmation task or near-duplicate fault family already exposed')
-   if row.get('research_partition')!='heldout_confirmatory':raise ConfigError('Confirmation task is not marked heldout')
-  # A stricter sufficient independence restriction: no shared normalized fault token.
-  for i,row in enumerate(selected):
-   if any(fault_set(row['task_id']) & fault_set(other['task_id']) for other in selected[:i]):raise ConfigError('Confirmation independent units share a fault component; select one task per disjoint component')
-  if config['analysis']['confirmatory_sample_size']!=len(selected):raise ConfigError('Frozen sample size must equal selected independent task count')
+  if config['protocol_id']=='advice-lifetimes-local-v4':
+   # prospective_fixed_benchmark identity (doc §8.2/§8.3): the benchmark tasks are a KNOWN, fixed
+   # list; inference conditions on this set using NEW independent starts. Tasks are therefore allowed
+   # to be previously exposed (that is the point), the independence unit is the START (resampled by
+   # start, preserving root/shared-prefix/arm dependencies), and the family/cluster structure is
+   # reported rather than required disjoint. The exposure ledger must be bound.
+   for row in selected:
+    if row.get('research_partition')!='prospective_fixed_benchmark':raise ConfigError('v4 confirmation task is not marked prospective_fixed_benchmark')
+   if not d['exposure_manifests']:raise ConfigError('v4 confirmation requires exposure ledger binding')
+   for path in d['exposure_manifests']:
+    extra=read_json(path)
+    if not isinstance(extra,dict) or not isinstance(extra.get('tasks'),list):raise ConfigError('Invalid exposure manifest')
+   starts=config['sampling']['starts_per_task']
+   if config['analysis']['confirmatory_sample_size']!=len(selected)*starts:raise ConfigError('Frozen sample size must equal selected task count x independent starts per task')
+  else:
+   known=read_json('docs/planning/manifests/tasks_readiness.json')['tasks']+read_json('docs/validation/development_exposures.json')['tasks']
+   for path in d['exposure_manifests']:
+    extra=read_json(path)
+    if not isinstance(extra,dict) or not isinstance(extra.get('tasks'),list):raise ConfigError('Invalid exposure manifest')
+    known.extend(extra['tasks'])
+   exposed_ids={r['task_id'] for r in known}
+   for row in selected:
+    if row['task_id'] in exposed_ids or any(near_family(fault_set(row['task_id']),fault_set(x)) for x in exposed_ids):raise ConfigError('Confirmation task or near-duplicate fault family already exposed')
+    if row.get('research_partition')!='heldout_confirmatory':raise ConfigError('Confirmation task is not marked heldout')
+   # A stricter sufficient independence restriction: no shared normalized fault token.
+   for i,row in enumerate(selected):
+    if any(fault_set(row['task_id']) & fault_set(other['task_id']) for other in selected[:i]):raise ConfigError('Confirmation independent units share a fault component; select one task per disjoint component')
+   if config['analysis']['confirmatory_sample_size']!=len(selected):raise ConfigError('Frozen sample size must equal selected independent task count')
  return selected
 
 def normalized(config):
@@ -68,17 +83,18 @@ def normalized(config):
 
 def binding(config):
  from .provenance import source_hashes
+ v4=config['protocol_id']=='advice-lifetimes-local-v4'
  return {'schema_version':'frozen-root-study-v1','config':normalized(config),'source_hashes':source_hashes(),
          'task_manifest':read_json(config['dataset']['manifest']),
          'additional_exposures':[read_json(p) for p in config['dataset']['exposure_manifests']],
          'known_exposure_sha256':sha([read_json('docs/planning/manifests/tasks_readiness.json'),read_json('docs/validation/development_exposures.json')]),
-         'family_exclusion_rule':'normalized on/off and enabled/disabled; containment or Jaccard >= 0.5; confirmation units share no fault token; v2',
+         'family_exclusion_rule':('prospective_fixed_benchmark: fixed known benchmark task list; inference conditions on this set with NEW independent starts resampled by start (root/shared-prefix/arm dependencies preserved); family/cluster structure reported, not required disjoint; exposure ledger bound; v4' if v4 else 'normalized on/off and enabled/disabled; containment or Jaccard >= 0.5; confirmation units share no fault token; v2'),
          'not_external_preregistration':True}
 
 def seal(config,output):
  from .config import validate
  validate(config,require_freeze=False)
- if config['stage']!='confirmatory-roots':raise ConfigError('Freeze targets confirmatory-roots only')
+ if not (config['study_label']=='confirmatory' and config['stage'] in ('confirmatory-roots','end-to-end')):raise ConfigError('Freeze targets confirmatory root/end-to-end studies only')
  body=binding(config)
  record={'payload':body,'sha256':sha(body),'created_utc':datetime.now(timezone.utc).isoformat(),'model_calls':0}
  path=Path(output);path.parent.mkdir(parents=True,exist_ok=True)

@@ -1,0 +1,1337 @@
+{
+  "payload": {
+    "schema_version": "frozen-root-study-v1",
+    "config": {
+      "schema_version": 2,
+      "protocol_id": "advice-lifetimes-local-v4",
+      "stage": "end-to-end",
+      "evidence_kind": "not_run",
+      "study_label": "confirmatory",
+      "source": {
+        "benchmark_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699"
+      },
+      "dataset": {
+        "manifest": "docs/planning/manifests/tasks_e2e_fixed_benchmark_v4.json",
+        "population": "prospective_fixed_benchmark",
+        "task_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "exposure_manifests": [
+          "results/workbench-20261020-004/manifests/exposure_ledger.json"
+        ],
+        "operator_attests_unseen": false
+      },
+      "models": {
+        "api_protocol": "openai-compatible-chat-completions",
+        "api_base_url_env": "MODEL_API_BASE_URL",
+        "api_key_env": "MODEL_API_KEY",
+        "actor_model_env": "ACTOR_MODEL",
+        "reviewer_model_env": "REVIEWER_MODEL",
+        "user_model_env": "USER_MODEL",
+        "temperature": 0.0,
+        "provider_seed_supported": false,
+        "max_completion_tokens": 8192,
+        "actor_model": "sophnet/qwen3.6-plus",
+        "reviewer_model": "sophnet/DeepSeek-V4-Pro-0813",
+        "user_model": "sophnet/qwen3.5-flash",
+        "require_reported_model": true,
+        "user_comm_protocol": "user_single_channel_adapter_v1"
+      },
+      "arms": [
+        "B",
+        "R",
+        "P",
+        "C"
+      ],
+      "review": {
+        "max_slots": 1,
+        "draws_per_root": 1,
+        "public_trigger_version": "public_single_call_after_depth_v3",
+        "min_completed_assistant_tools": 2,
+        "min_user_text_events": 1,
+        "fallback": "original_action_no_packet",
+        "projection_version": "local-receipt-v2",
+        "allowed_writes": [
+          "enable_roaming",
+          "disable_roaming"
+        ],
+        "fixture_scenario": "roaming"
+      },
+      "sampling": {
+        "max_roots_per_trajectory": 1,
+        "starts_per_task": 2,
+        "common_prefix_repeats": 1,
+        "suffix_repeats": 1,
+        "independent_control_continuations": 1,
+        "allocation_seed": 20261021
+      },
+      "limits": {
+        "max_physical_requests": 6000,
+        "max_native_steps": 80,
+        "max_native_errors": 12,
+        "max_retries_per_request": 2,
+        "retry_backoff_seconds": 0.25,
+        "concurrency": 1,
+        "request_timeout_seconds": 90.0,
+        "run_timeout_seconds": 21600.0,
+        "max_output_bytes": 400000000,
+        "max_response_bytes": 2000000,
+        "monetary_cap": null
+      },
+      "pricing": {
+        "status": "unknown"
+      },
+      "analysis": {
+        "primary_contrast": [
+          "P",
+          "C"
+        ],
+        "confidence_level": 0.95,
+        "bootstrap_replicates": 2000,
+        "bootstrap_seed": 20261021,
+        "delta": 0.0,
+        "epsilon": 0.0,
+        "confirmatory_sample_size": 16
+      },
+      "gates": {
+        "frozen_protocol_receipt": null,
+        "natural_coverage_receipt": null,
+        "mutation_restore_receipt": null
+      },
+      "output": {
+        "raw_private": true,
+        "overwrite": false,
+        "export_allowlist_only": true
+      },
+      "endpoint_policy": "fixed_task_goals_native_model_errors_v1",
+      "independence_policy": "one_task_per_disjoint_fault_component_v1"
+    },
+    "source_hashes": {
+      "code_inputs/reviewer_pilot/source_manifest_final.json": "c33e80b25e4c060a1c8395287956696a505e7dcae9b215433558ecc98721ea46",
+      "docs/planning/manifests/tasks_readiness.json": "2c672bef77f867dbdad4349fe57e537309dfef1c6749d59310d02bd62d17351e",
+      "docs/protocol/current_protocol.md": "2c8085ff045c94feaa85016224771dba795c9f1566211d1bbaa908bb3d23d2bf",
+      "docs/protocol/local_runner_v2.md": "c317a03948f2c71985fe701dd63f846519222e14ea236272450b546b51b99773",
+      "docs/validation/development_exposures.json": "1357e6fc05ac08fe6f851e0946bcf355e85eea7fe8fec9c6d57f86bb5c53d324",
+      "local_experiments/__init__.py": "ea5992cb2a0a1c148851466da8966a96e44f3489b9c8540ae965a193f2862056",
+      "local_experiments/__main__.py": "22c085896fed7e3f0e458bbaa8ccf6ed34f30452c002deb50932675b84d10936",
+      "local_experiments/analysis.py": "e605b3b2acb161d6952551382d994e99a528d62a0a1a26542de72de9af7f5909",
+      "local_experiments/config.py": "f1cc17195ea55e2b22953710e49e9cdc407c20e2ff3363766ec6469d8d2c95e7",
+      "local_experiments/costs.py": "1f11ed8689b90e5991a0db617329b93fb0e36caf33b03ce953b54f59486aa6f4",
+      "local_experiments/engine.py": "43c4ed3fc47eaf20e0bda18cb267e63a7bd8c862854967330afa4fe375cd0279",
+      "local_experiments/freeze.py": "9e8fd4c1750e68c443eb26f237cabdb4414afdb3f534b3ed23f11155a424cba6",
+      "local_experiments/launcher.py": "2718589fc120b895b0903a774647a30ae07f948b6d88e4699a01b3d5abed48a4",
+      "local_experiments/mock.py": "d406dfa78861d21c435002c4440c47ca3cd3502e1b08006c5ebf48facb223081",
+      "local_experiments/provenance.py": "ec65907507d9a55b52b2ac900e480d138080e95d754668987c524fed4bb04c48",
+      "local_experiments/provider.py": "d5c6b70364ee8463f8ba90d05901156d9937c00fdea917137b765dbbb81a8f01",
+      "local_experiments/recovery.py": "911d5fbd3c1dbc32a3678257674b59355f5e7b9e3b9c88d0368ba5bbb9baed8b",
+      "local_experiments/storage.py": "b4112fa2567a999006fc52fdca382a57169781737f1411c1682bead84a0348d2",
+      "local_experiments/telecom.py": "bf60a57cfc093aea78d6ec07652adc7b4799a8852a679178c58c0cbaa4eac9d0",
+      "local_experiments/trigger_comparison.py": "b87063ac6b844727f64d9fb98768020113d4577d68081223c6948ac737ea0726",
+      "local_experiments/worker.py": "4cca9b754966e9ecc377408607f95e2e7f5cc6bf3d8ce9eee37f8b92e9ed1329",
+      "paper/manuscript.txt": "5bbf5cacf9e3a2d211681b7d2f2b2390bf1a1d34c868f949f80467fa8972714c"
+    },
+    "task_manifest": {
+      "schema_version": "planning-manifest-v1",
+      "evidence_kind": "not_run",
+      "source_commit": "4ce7c0397c1eb65c9bbe59aeacfe1ca44a1cd699",
+      "tasks_file_sha256": "5a948fad69753a9d04668ba6a74a3b457a04bed62da6f2b6f49a956cbb90df46",
+      "task_hash_encoding": "freeze.sha over canonical pinned task object",
+      "population": "prospective_fixed_benchmark",
+      "notes": "End-to-end (doc \u00a711.1) prospective_fixed_benchmark task list for the J(P)/J(C)/\u0394J estimand under the v4 identity. A FIXED, KNOWN benchmark: inference conditions on this exact task set using NEW independent starts resampled by start; it does NOT claim unseen-family generalization (operator_attests_unseen stays false) and the exposure ledger is bound at freeze. Selected outcome-blind from the verified roaming-protectable pool by structural complexity only.",
+      "selection_rule": "complexity-stratified across fault-token count with per-stratum quota {2:1,3:2,4:2,5:2,6:1}=8; within stratum rank by (persona difficulty DESC, tasks_json_index ASC); structural attributes only, no model outcomes consulted",
+      "tasks": [
+        {
+          "task_id": "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+          "task_sha256": "68e6999a530548ccce6503568d9ab45e010e15b69ea236352e59cb8fb79764f3",
+          "family_id": "bad_network_preference|user_abroad_roaming_state",
+          "research_partition": "prospective_fixed_benchmark",
+          "tasks_json_index": 18,
+          "fault_token_count": 2,
+          "persona_rank": 2,
+          "assistant_side_env_assertion": false,
+          "regressible_protected_goal": true,
+          "protectable_coupled_user_goal": true
+        },
+        {
+          "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+          "task_sha256": "070de23507af8447ebbf6c8fa1be8245b52d8882b91e3c38cc14df9bf315a500",
+          "family_id": "airplane_mode|data_mode|user_abroad_roaming_state",
+          "research_partition": "prospective_fixed_benchmark",
+          "tasks_json_index": 41,
+          "fault_token_count": 3,
+          "persona_rank": 2,
+          "assistant_side_env_assertion": false,
+          "regressible_protected_goal": true,
+          "protectable_coupled_user_goal": true
+        },
+        {
+          "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+          "task_sha256": "4e7ed8ebee4deee0ea86a022e7c18d4434d1a1b21e84d99c93527a4b8d5bbcde",
+          "family_id": "airplane_mode|bad_vpn|user_abroad_roaming_state",
+          "research_partition": "prospective_fixed_benchmark",
+          "tasks_json_index": 44,
+          "fault_token_count": 3,
+          "persona_rank": 2,
+          "assistant_side_env_assertion": false,
+          "regressible_protected_goal": true,
+          "protectable_coupled_user_goal": true
+        },
+        {
+          "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+          "task_sha256": "027d4e45483bcb4ee4995320133ea36352454e9a42c9fab33494122aa14c34ef",
+          "family_id": "airplane_mode|data_mode|data_saver_mode|user_abroad_roaming_state",
+          "research_partition": "prospective_fixed_benchmark",
+          "tasks_json_index": 106,
+          "fault_token_count": 4,
+          "persona_rank": 2,
+          "assistant_side_env_assertion": false,
+          "regressible_protected_goal": true,
+          "protectable_coupled_user_goal": true
+        },
+        {
+          "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+          "task_sha256": "2e7d11ee01fb439264bcd30bea2a8257d69ac875bf6f41793b99c002ca8d1145",
+          "family_id": "airplane_mode|bad_vpn|data_saver_mode|user_abroad_roaming_state",
+          "research_partition": "prospective_fixed_benchmark",
+          "tasks_json_index": 111,
+          "fault_token_count": 4,
+          "persona_rank": 2,
+          "assistant_side_env_assertion": false,
+          "regressible_protected_goal": true,
+          "protectable_coupled_user_goal": true
+        },
+        {
+          "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+          "task_sha256": "5b5f1f34dedc1dfd8fba6f3e53ecf26ccadb13e8556928be9427a4a97e8daa3b",
+          "family_id": "airplane_mode|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+          "research_partition": "prospective_fixed_benchmark",
+          "tasks_json_index": 182,
+          "fault_token_count": 5,
+          "persona_rank": 1,
+          "assistant_side_env_assertion": false,
+          "regressible_protected_goal": true,
+          "protectable_coupled_user_goal": true
+        },
+        {
+          "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+          "task_sha256": "77a120e6ee60a46b14e6d5bc4c24c11cb91bd26f611e5ec144ac231e1515de24",
+          "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_mode|user_abroad_roaming_state",
+          "research_partition": "prospective_fixed_benchmark",
+          "tasks_json_index": 184,
+          "fault_token_count": 5,
+          "persona_rank": 1,
+          "assistant_side_env_assertion": false,
+          "regressible_protected_goal": true,
+          "protectable_coupled_user_goal": true
+        },
+        {
+          "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+          "task_sha256": "ad42b95cb93ab860bfd7f8ecd705c2d9e08999cabefa6ec890a910304d369b57",
+          "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+          "research_partition": "prospective_fixed_benchmark",
+          "tasks_json_index": 232,
+          "fault_token_count": 6,
+          "persona_rank": 2,
+          "assistant_side_env_assertion": false,
+          "regressible_protected_goal": true,
+          "protectable_coupled_user_goal": true
+        }
+      ]
+    },
+    "additional_exposures": [
+      {
+        "schema_version": 1,
+        "ledger_version": "workbench-20261020-004/exposure-1",
+        "generated": "2026-10-21",
+        "basis": "metadata-only aggregation of run_manifest.json + status.json + dev manifests; no model calls, no outcome labels",
+        "categories": {
+          "metadata_screening": "task entered a manifest via exhaustive metadata-only scan",
+          "answers_read_for_design": "reference-solution structure inspected during manifest construction (design use, not outcome observation)",
+          "real_development_runs": "task actually executed live with real models; outcomes observed",
+          "offline_scripted_runs": "task executed only under scripted mock fixture (no real model exposure)",
+          "pre_registered_only": "present in a manifest/config but never executed live"
+        },
+        "caveats": [
+          {
+            "id": "idx37_shared_token_with_dev_refuel",
+            "description": "A heldout confirmatory candidate (idx37) shares one lexical fault token with a development refuel task, but does not satisfy the modern code containment or Jaccard>=0.5 neighbour-exclusion condition. Under the v4 prospective_fixed_benchmark route this is disclosed rather than treated as a heldout violation; the strict v3 heldout neighbour-exclusion remains a separate rule and is not deleted to let an old config masquerade as confirmatory.",
+            "affects_route": "heldout_confirmatory_v3",
+            "resolution": "disclose_in_report; do not conflate intra-sample token-disjointness with dev/confirm neighbour exclusion"
+          }
+        ],
+        "tasks": [
+          {
+            "task_id": "[mms_issue]bad_wifi_calling[PERSONA:Easy]",
+            "task_sha256": "32d9c0fb43bf080343d6a49ac5eb66553569c7169f7362afe43dd4fe7c1d3b29",
+            "family_id": "bad_wifi_calling",
+            "source_manifest": "heldout_confirmatory_v3",
+            "research_partition": "heldout_confirmatory",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": false,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 3
+          },
+          {
+            "task_id": "[mms_issue]break_apn_mms_setting[PERSONA:Hard]",
+            "task_sha256": "4608171e3cb495eb1ee448e9a359d48df2a5780ea6a7bc3ff973b891b6b7b3b5",
+            "family_id": "break_apn_mms_setting",
+            "source_manifest": "heldout_confirmatory_v3",
+            "research_partition": "heldout_confirmatory",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": false,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 4
+          },
+          {
+            "task_id": "[mms_issue]break_app_both_permissions[PERSONA:Hard]",
+            "task_sha256": "6cc5d24a46d49a43795e2f48dc85c35e6847ad961ee84ae4ba9f0cbf8ddbdb7e",
+            "family_id": "break_app_both_permissions",
+            "source_manifest": "heldout_confirmatory_v3",
+            "research_partition": "heldout_confirmatory",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": false,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 7
+          },
+          {
+            "task_id": "[mms_issue]break_app_sms_permission[PERSONA:None]",
+            "task_sha256": "17073e4bd1b00df31b9d8bb66b75123eb3a87ef7d1b5fd58cc7e5b94fe23478e",
+            "family_id": "break_app_sms_permission",
+            "source_manifest": "heldout_confirmatory_v3",
+            "research_partition": "heldout_confirmatory",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": false,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 5
+          },
+          {
+            "task_id": "[mms_issue]break_app_storage_permission[PERSONA:Easy]",
+            "task_sha256": "1c4bc76e2da134056847669e3dd09c31cef0bffef99c9768e10df83a67b5b8c3",
+            "family_id": "break_app_storage_permission",
+            "source_manifest": "heldout_confirmatory_v3",
+            "research_partition": "heldout_confirmatory",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": false,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 6
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference[PERSONA:Hard]",
+            "task_sha256": "d0283876405e929871524eefdd1c72e07db22587ecc98bedc7e19e00cbe5009b",
+            "family_id": "airplane_mode_on|bad_network_preference",
+            "source_manifest": "readiness",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261019-001/live-pilot-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261019-001/live-wire-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261019-002/live-pilot-002",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261019-002/live-trace-probe-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261019-002/live-wire-002",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261020-004/development/ref-smoke-live-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [
+              {
+                "run": "ci-pilot",
+                "status": "completed"
+              },
+              {
+                "run": "ci-resumed",
+                "status": "completed"
+              },
+              {
+                "run": "ci-wire",
+                "status": "completed"
+              },
+              {
+                "run": "cleanflow-1792526863/e2e",
+                "status": "completed"
+              },
+              {
+                "run": "cleanflow-1792526863/pilot",
+                "status": "completed"
+              },
+              {
+                "run": "cleanflow-1792526863/resumed",
+                "status": "completed"
+              },
+              {
+                "run": "cleanflow-1792526863/wire",
+                "status": "completed"
+              },
+              {
+                "run": "dev/e2e-dryrun-001",
+                "status": "implementation_error"
+              },
+              {
+                "run": "dev/e2e-dryrun-dbg",
+                "status": "completed"
+              },
+              {
+                "run": "refdry-20261020-001",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-001/offline-pilot",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-001/offline-read",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-002/offline-pilot",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-002/offline-pilot-v3",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-002/offline-read",
+                "status": "completed"
+              }
+            ],
+            "pre_registered_only": false,
+            "regressible_protected_goal": null,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": null,
+            "manifest_index": 0
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+            "task_sha256": "ad42b95cb93ab860bfd7f8ecd705c2d9e08999cabefa6ec890a910304d369b57",
+            "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 31
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "77a120e6ee60a46b14e6d5bc4c24c11cb91bd26f611e5ec144ac231e1515de24",
+            "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 28
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "1efd238febf95acbcf99a3bd743c2dd6b5a247ca58d1f5af1c31b13562713c5a",
+            "family_id": "airplane_mode|bad_network_preference|bad_vpn|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round2-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 29
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|bad_vpn|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+            "task_sha256": "ce13bdea0828bfc00b4a49ea0baa60b5f7fde7f14375ca622dadace9224c24c3",
+            "family_id": "airplane_mode|bad_network_preference|bad_vpn|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 21
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on[PERSONA:Hard]",
+            "task_sha256": "f1e96d40e8fd2bc69d17d4336854a04f4d24d5bedc863ee75dec625a8a545468",
+            "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on",
+            "source_manifest": "readiness",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": null,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": null,
+            "manifest_index": 6
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "06482b67fea407a440068f5608b3217067de2fb789e8ab6332178649db209c34",
+            "family_id": "airplane_mode|bad_network_preference|data_mode|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 26
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on[PERSONA:Hard]",
+            "task_sha256": "c16f03ad8a07c2481bbb43d61c31f58639cae48c8b67a8a2e37f3f9d1a8e0ae1",
+            "family_id": "airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_disabled_on",
+            "source_manifest": "readiness",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": null,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": null,
+            "manifest_index": 5
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "c463aeb8855d68b3036ef59605e6d786437c54095878ae0a7cc8b954e9042ce5",
+            "family_id": "airplane_mode|bad_network_preference|data_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 17
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "c0ac0a926cc85f342303ee72093e1960b13f1ca995b8e4ad0c35dbf306b62bba",
+            "family_id": "airplane_mode|bad_network_preference|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 19
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "0aafc65bebf3b400a7b9b9ea4cf9169e468a10b790433fcf60b2ddf082ae087b",
+            "family_id": "airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off",
+            "source_manifest": "readiness",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": null,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": null,
+            "manifest_index": 8
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "5b5f1f34dedc1dfd8fba6f3e53ecf26ccadb13e8556928be9427a4a97e8daa3b",
+            "family_id": "airplane_mode|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 27
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "a24aeda088c63de73f1e61db8daeb2c3b73e8bc44e210e4ce62fd83af168c137",
+            "family_id": "airplane_mode|bad_vpn|data_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 18
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+            "task_sha256": "2e7d11ee01fb439264bcd30bea2a8257d69ac875bf6f41793b99c002ca8d1145",
+            "family_id": "airplane_mode|bad_vpn|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 20
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|bad_vpn|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+            "task_sha256": "4e7ed8ebee4deee0ea86a022e7c18d4434d1a1b21e84d99c93527a4b8d5bbcde",
+            "family_id": "airplane_mode|bad_vpn|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 9
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+            "task_sha256": "027d4e45483bcb4ee4995320133ea36352454e9a42c9fab33494122aa14c34ef",
+            "family_id": "airplane_mode|data_mode|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 16
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+            "task_sha256": "070de23507af8447ebbf6c8fa1be8245b52d8882b91e3c38cc14df9bf315a500",
+            "family_id": "airplane_mode|data_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 6
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+            "task_sha256": "bffb4ccceb96ce6173aa336a0452fa4e5032f5bca6b5e419a8ec95f2efbe9044",
+            "family_id": "airplane_mode_on|data_saver_mode_on|user_abroad_roaming_disabled_on",
+            "source_manifest": "readiness",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261019-001/live-pilot-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261019-001/live-write-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261019-002/live-pilot-002",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261019-002/live-trace-probe-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [
+              {
+                "run": "ci-pilot",
+                "status": "completed"
+              },
+              {
+                "run": "ci-write",
+                "status": "completed"
+              },
+              {
+                "run": "cleanflow-1792526863/pilot",
+                "status": "completed"
+              },
+              {
+                "run": "cleanflow-1792526863/write",
+                "status": "completed"
+              },
+              {
+                "run": "refdry-20261020-001",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-001/offline-pilot",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-001/offline-write",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-002/offline-pilot",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-002/offline-pilot-v3",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261019-002/offline-write",
+                "status": "completed"
+              }
+            ],
+            "pre_registered_only": false,
+            "regressible_protected_goal": null,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": null,
+            "manifest_index": 4
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "103c6007da9d58d5de4776833e824c47f06378d546f87355f88f412e707185db",
+            "family_id": "airplane_mode|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 7
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|data_usage_exceeded[PERSONA:Easy]",
+            "task_sha256": "8d966b657bf07b96477e735da07b839f37e3d44db219e2924269eafffeb3c3fd",
+            "family_id": "airplane_mode|data_usage_exceeded",
+            "source_manifest": "refuel",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-003/live-refuel-002",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261020-004/development/ref-refuel-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [
+              {
+                "run": "workbench-20261020-003/dry-run-multiwrite-feasibility-001",
+                "status": "completed"
+              },
+              {
+                "run": "workbench-20261020-003/dry-run-refuel-001",
+                "status": "completed"
+              }
+            ],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": true,
+            "manifest_index": 0
+          },
+          {
+            "task_id": "[mobile_data_issue]airplane_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "823f44269a5a611c2d0bc5d0243b7edcdd1505128c13a0769c3274d87d9976b8",
+            "family_id": "airplane_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-003/live-roaming-protectable-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [
+              {
+                "run": "workbench-20261020-003/dry-run-roaming-protectable-001",
+                "status": "completed"
+              }
+            ],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 1
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_network_preference|bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "2c1faf164270a4ba27fa2d4f8efd3c7aa3f873403a788c5a56d0fbb45b5fe5e3",
+            "family_id": "bad_network_preference|bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 30
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_network_preference|bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "4eb9f0c9e06ed0a9f1f9510b17faf85c2fcf90db115b3af9bad81749611ad2f3",
+            "family_id": "bad_network_preference|bad_vpn|data_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 24
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_network_preference|bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "918f353b36fa5a3e57f257e61153bb70e4d851cfb80efe93b2df128e9e027453",
+            "family_id": "bad_network_preference|bad_vpn|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round2-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 25
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_network_preference|bad_vpn|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "31d00f128a5fe5e2c5528dea1f8c8ea241ba04323155d095cf7a975f6941bbfc",
+            "family_id": "bad_network_preference|bad_vpn|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round2-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 15
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "92397a5feb6aa7be854d567a007a758d33c96bdc0c8f71a9756a8a8034f1435c",
+            "family_id": "bad_network_preference|data_mode|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round2-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 22
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_network_preference|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+            "task_sha256": "fb92b3edc60c2a641746f15573845f4c5c09d102b7620818af78e8c0baf09731",
+            "family_id": "bad_network_preference|data_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 11
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_network_preference|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "b7ceaf929416c9af88f5954e401c625a4fa0b91f99da6ddbc86b7115ce6b93d7",
+            "family_id": "bad_network_preference|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round2-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 13
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+            "task_sha256": "68e6999a530548ccce6503568d9ab45e010e15b69ea236352e59cb8fb79764f3",
+            "family_id": "bad_network_preference|user_abroad_roaming_enabled_off",
+            "source_manifest": "readiness",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": null,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": null,
+            "manifest_index": 4
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_vpn|data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "59f38c0397df7dfe56fea33c53b4c4bfaa4562e2395f2cbf400408b0a12cc3e8",
+            "family_id": "bad_vpn|data_mode|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 23
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_vpn|data_mode_off|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "43544bd815eec0b9b6961fd9445f8bb708abdbcee88520208458bbcd6c084662",
+            "family_id": "bad_vpn|data_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 12
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_vpn|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "5c475bfec6c70b8c731e702740a8a55bb8bdf52d0080e137878a07f029e0cec6",
+            "family_id": "bad_vpn|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round2-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 14
+          },
+          {
+            "task_id": "[mobile_data_issue]bad_vpn|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "99bc6eac394ac1f6c83d2ead25954e4de73ecd672fd45467c96a34daa019413b",
+            "family_id": "bad_vpn|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 5
+          },
+          {
+            "task_id": "[mobile_data_issue]data_mode_off|data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "b1877e85a3770d7491ba19f97482046f0855c1aafdbf8987118129df7dae3ff6",
+            "family_id": "data_mode|data_saver_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 10
+          },
+          {
+            "task_id": "[mobile_data_issue]data_mode_off|data_usage_exceeded[PERSONA:None]",
+            "task_sha256": "f957625ede7b287573c4a292f1c199871f8cecc3dbf0d600e325630c0111b435",
+            "family_id": "data_mode|data_usage_exceeded",
+            "source_manifest": "refuel",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-refuel-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": true,
+            "manifest_index": 2
+          },
+          {
+            "task_id": "[mobile_data_issue]data_mode_off|user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "03b72bb2c42bc95a99ea005accc695880eebfcee2e848c9563b65017cd39a9a1",
+            "family_id": "data_mode|user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-003/live-roaming-protectable-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [
+              {
+                "run": "workbench-20261020-003/dry-run-roaming-protectable-001",
+                "status": "completed"
+              }
+            ],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 2
+          },
+          {
+            "task_id": "[mobile_data_issue]data_saver_mode_on|data_usage_exceeded[PERSONA:Easy]",
+            "task_sha256": "cad5aca518d193e4c5186036eaa27c16849941a3a1a4e25632f1cf264b5a888a",
+            "family_id": "data_saver_mode|data_usage_exceeded",
+            "source_manifest": "heldout_confirmatory_v3",
+            "research_partition": "heldout_confirmatory",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": true,
+            "manifest_index": 0
+          },
+          {
+            "task_id": "[mobile_data_issue]data_saver_mode_on|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "fc18c2d140e675a6b8c4b18d101c65bbdc59d664b6fd94d21617ae395819650f",
+            "family_id": "data_saver_mode_on|user_abroad_roaming_enabled_off",
+            "source_manifest": "readiness",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261020-004/development/ref-smoke-live-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": null,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": null,
+            "manifest_index": 3
+          },
+          {
+            "task_id": "[mobile_data_issue]data_usage_exceeded|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+            "task_sha256": "4fdcf8bc45591eb42124d60b4b8c1fe6cfb95b93a959ca2f1df64e859feadf44",
+            "family_id": "data_usage_exceeded|user_abroad_roaming_state",
+            "source_manifest": "refuel",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-004/development/ref-refuel-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": true,
+            "manifest_index": 1
+          },
+          {
+            "task_id": "[mobile_data_issue]user_abroad_roaming_enabled_off[PERSONA:None]",
+            "task_sha256": "c3a6b399afea620c7ba3f43c02d93a24ff3fa6029be8a82a488194095f5ede64",
+            "family_id": "user_abroad_roaming_state",
+            "source_manifest": "roaming_protectable",
+            "research_partition": "exposed_development_only",
+            "metadata_screening": true,
+            "answers_read_for_design": true,
+            "real_development_runs": [
+              {
+                "run": "workbench-20261020-003/live-roaming-protectable-001",
+                "status": "completed_with_missing",
+                "evidence": "exploratory_live"
+              },
+              {
+                "run": "workbench-20261020-004/development/ref-roaming-round1-001",
+                "status": "completed",
+                "evidence": "exploratory_live"
+              }
+            ],
+            "offline_scripted_runs": [
+              {
+                "run": "workbench-20261020-003/dry-run-roaming-protectable-001",
+                "status": "completed"
+              }
+            ],
+            "pre_registered_only": false,
+            "regressible_protected_goal": true,
+            "protectable_coupled_user_goal": true,
+            "assistant_side_env_assertion": false,
+            "manifest_index": 0
+          },
+          {
+            "task_id": "[service_issue]break_apn_settings[PERSONA:None]",
+            "task_sha256": "88e260b5cbe5d60761e3670e71b29fc02bdeba8278558a49311d3c057c360fcf",
+            "family_id": "break_apn_settings",
+            "source_manifest": "heldout_confirmatory_v3",
+            "research_partition": "heldout_confirmatory",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": false,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": true,
+            "manifest_index": 2
+          },
+          {
+            "task_id": "[service_issue]unseat_sim_card[PERSONA:Easy]",
+            "task_sha256": "a946ef7c7f9a3b478fdd576dcb71839944dc52f6aa1808cbf5b91624f7e86bea",
+            "family_id": "unseat_sim_card",
+            "source_manifest": "heldout_confirmatory_v3",
+            "research_partition": "heldout_confirmatory",
+            "metadata_screening": true,
+            "answers_read_for_design": false,
+            "real_development_runs": [],
+            "offline_scripted_runs": [],
+            "pre_registered_only": true,
+            "regressible_protected_goal": false,
+            "protectable_coupled_user_goal": null,
+            "assistant_side_env_assertion": true,
+            "manifest_index": 1
+          }
+        ]
+      }
+    ],
+    "known_exposure_sha256": "b94f4f8c9109ad5988cc42d00cad327fa533e255f2a15975c7743143ab7e1d32",
+    "family_exclusion_rule": "prospective_fixed_benchmark: fixed known benchmark task list; inference conditions on this set with NEW independent starts resampled by start (root/shared-prefix/arm dependencies preserved); family/cluster structure reported, not required disjoint; exposure ledger bound; v4",
+    "not_external_preregistration": true
+  },
+  "sha256": "67fc480d5c56358f5cb998b76287ad8defeffaa819e509524f64589e5ce99252",
+  "created_utc": "2026-10-20T23:44:29.289903+00:00",
+  "model_calls": 0
+}

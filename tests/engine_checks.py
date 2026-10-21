@@ -125,6 +125,52 @@ class EngineChecks(unittest.TestCase):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
   self.c,self.store,self.client,self.task,self.o=setup_run(self.temp.name)
  def draw(self): return e.capture(self.o,self.client)
+ def _episode_config(self,scenario='read',**over):
+  c=copy.deepcopy(DEFAULT)
+  c['protocol_id']='advice-lifetimes-local-v4';c['stage']='end-to-end';c['arms']=['B','R','P','C']
+  c['review']['fixture_scenario']=scenario
+  c['dataset']={**DEFAULT['dataset'],'manifest':'docs/planning/manifests/tasks_readiness.json',
+                'population':'exposed_development_only','task_indices':[0]}
+  for k,v in over.items():
+   if k in c['review']:c['review'][k]=v
+   elif k in c['sampling']:c['sampling'][k]=v
+   else:c[k]=v
+  return c
+ def _run_episode(self,c,name,scenario='read'):
+  store=Store(Path(self.temp.name)/name,c,'dry-run')
+  client=Client(c,store,MockTransport(scenario),{r:'mock-'+r for r in ('actor','user','reviewer','self')})
+  res=e.run_episode(c,store,client)
+  events=[json.loads(l) for l in (store.root/'journal/events.jsonl').read_text().splitlines()]
+  return res,store,client,events
+ def test_episode_runner_scores_every_arm_after_trigger(self):
+  res,store,client,events=self._run_episode(self._episode_config(),'ep-trigger')
+  cov=res['coverage']
+  self.assertEqual(cov['episodes'],4);self.assertEqual(cov['triggered'],4)
+  self.assertEqual(cov['no_trigger'],0);self.assertEqual(cov['episode_failures'],0)
+  byarm=res['summary']['arms']
+  for arm in ('B','R','P','C'):
+   self.assertEqual(byarm[arm]['episodes'],1);self.assertEqual(byarm[arm]['scored'],1)
+   self.assertIsNotNone(byarm[arm]['J'])
+  # B is a receipt-only control: it never invokes the reviewer; P/R/C each capture exactly one draw.
+  self.assertEqual(len([x for x in events if x['kind']=='draw_captured']),3)
+  self.assertIsInstance(res['summary']['dJ_C_minus_P'],float)
+ def test_episode_no_trigger_still_enters_denominator(self):
+  res,store,client,events=self._run_episode(self._episode_config(min_completed_assistant_tools=1000),'ep-notrigger')
+  cov=res['coverage']
+  self.assertEqual(cov['episodes'],4);self.assertEqual(cov['no_trigger'],4);self.assertEqual(cov['triggered'],0)
+  self.assertEqual(len([x for x in events if x['kind']=='draw_captured']),0)
+  byarm=res['summary']['arms']
+  for arm in ('B','R','P','C'):
+   self.assertEqual(byarm[arm]['episodes'],1);self.assertEqual(byarm[arm]['scored'],1)
+   self.assertIsNotNone(byarm[arm]['J']) # completion scored even with no intervention
+ def test_episode_uses_a_single_review_slot_per_episode(self):
+  c=self._episode_config();c['sampling']['starts_per_task']=2
+  res,store,client,events=self._run_episode(c,'ep-slots')
+  cov=res['coverage'];trig=[x for x in events if x['kind']=='episode_trigger']
+  self.assertEqual(cov['episodes'],8);self.assertEqual(len(trig),cov['triggered'])
+  self.assertEqual(len({x['episode_id'] for x in trig}),len(trig)) # at most one trigger per episode
+  draws=[x for x in events if x['kind']=='draw_captured']
+  self.assertEqual(len(draws),sum(1 for x in trig if x['arm'] in ('P','R','C')))
  def test_common_first_and_later_status_only(self):
   draw=self.draw();e.execute(self.o,draw,'P')
   wire=e.to_litellm_messages(self.o.agent_state.system_messages+self.o.agent_state.messages+[self.o.message]);record=self.o.agent.record
@@ -379,6 +425,114 @@ class EngineChecks(unittest.TestCase):
     o.step();self.assertTrue(o.done)
     self.assertEqual(o.termination_reason,e.TerminationReason.AGENT_ERROR if role=='actor' else e.TerminationReason.USER_ERROR)
     self.assertEqual(e.outcome(o,self.task,[],[])['completion'],0)
+
+ def _mixed_user_reply(self):
+  # Regression input modeled on the saved roaming mixed responses
+  # (live-roaming-protectable-001/private/responses/8.json, 11.json): the user model emitted
+  # preamble text plus exactly one valid device tool call in a single reply.
+  return {'model':'mock-user','id':'fixture-mixed','usage':None,
+   'choices':[{'finish_reason':'tool_calls','message':{'role':'assistant',
+     'content':'Hello! My phone number is 555-123-2002. Let me check my network status first.',
+     'tool_calls':[{'id':'fixture-mixed-call','type':'function',
+                   'function':{'name':'check_network_status','arguments':'{}'}}]}}]}
+ def _route_to_user(self,o):
+  o.from_role=e.Role.AGENT;o.to_role=e.Role.USER
+  o.message=e.AssistantMessage(role='assistant',content='Could you check your device and confirm your phone number?',timestamp=e.get_now())
+ def _events(self,kind):
+  path=self.store.root/'journal/events.jsonl'
+  if not path.exists(): return []
+  return [r for r in (json.loads(l) for l in path.read_text().splitlines()) if r['kind']==kind]
+
+ def test_user_single_channel_convention_is_in_system_prompt(self):
+  o=e.restore(e.snapshot(self.o),self.task,self.client,self.c)
+  prompt=o.user_state.system_messages[0].content
+  self.assertIn('Communication protocol (single channel',prompt)
+  self.assertIn('exactly one tool call with no text',prompt)
+  for version in ('user_single_channel_prompt_v1','user_single_channel_adapter_v1'):
+   c2=copy.deepcopy(self.c);c2['models']['user_comm_protocol']=version
+   self.assertIn('Communication protocol (single channel',
+                 e.make(self.task,self.client,c2,initialize=False).user.global_simulation_guidelines)
+
+ def test_user_mixed_message_adapter_reroutes_and_retains_text(self):
+  # Default user_single_channel_adapter_v1: a mixed reply becomes a clean single tool call, the
+  # suppressed preamble is retained in provenance, and the episode does NOT terminate.
+  o=e.restore(e.snapshot(self.o),self.task,self.client,self.c)
+  self.assertEqual(self.c['models']['user_comm_protocol'],'user_single_channel_adapter_v1')
+  self._route_to_user(o);self.client.transport=lambda p: self._mixed_user_reply()
+  o.step()
+  self.assertFalse(o.done)
+  self.assertEqual((o.from_role,o.to_role),(e.Role.USER,e.Role.ENV))
+  self.assertTrue(o.message.is_tool_call());self.assertFalse(o.message.has_text_content())
+  self.assertEqual(o.message.tool_calls[0].name,'check_network_status')
+  adapted=self._events('user_mixed_message_adapted')
+  self.assertEqual(len(adapted),1)
+  self.assertIn('555-123-2002',adapted[0]['suppressed_text'])
+  self.assertEqual(adapted[0]['tool_name'],'check_network_status')
+  self.assertEqual(adapted[0]['comm_protocol'],'user_single_channel_adapter_v1')
+
+ def test_user_mixed_message_prompt_only_is_native_user_error(self):
+  # The prompt-only version documents that the convention alone does not stop the native
+  # communication check from terminating on a mixed reply (doc §5.1 -> §5.2 rationale).
+  c=copy.deepcopy(self.c);c['models']['user_comm_protocol']='user_single_channel_prompt_v1'
+  o=e.make(self.task,self.client,c)
+  self._route_to_user(o);self.client.transport=lambda p: self._mixed_user_reply()
+  o.step()
+  self.assertTrue(o.done);self.assertEqual(o.termination_reason,e.TerminationReason.USER_ERROR)
+  self.assertEqual(e.outcome(o,self.task,[],[])['completion'],0)
+  self.assertEqual(len(self._events('user_mixed_message_adapted')),0)
+
+ def test_user_adapted_tool_call_survives_snapshot_restore(self):
+  # Recovery path: the adapter's rerouted message is a clean user tool call; parked at user->env it
+  # must round-trip like any pending user tool call (restore trims the trailing proposal from replay).
+  o=e.restore(e.snapshot(self.o),self.task,self.client,self.c)
+  self._route_to_user(o);self.client.transport=lambda p: self._mixed_user_reply()
+  o.step();self.assertFalse(o.done)
+  adapted=o.message
+  self.assertTrue(adapted.is_tool_call());self.assertFalse(adapted.has_text_content())
+  self.assertEqual(adapted.tool_calls[0].name,'check_network_status')
+  # Park a consistent user->env state carrying the adapted call (mirrors the pending-call fork test).
+  o2=e.restore(e.snapshot(self.o),self.task,self.client,self.c)
+  o2.message=adapted;o2.trajectory[-1]=adapted;o2.from_role=e.Role('user');o2.to_role=e.Role('env')
+  saved=e.snapshot(o2)
+  self.assertEqual((saved['payload']['routing']['from'],saved['payload']['routing']['to']),('user','env'))
+  restored=e.restore(saved,self.task,self.client,self.c)
+  self.assertEqual(e.env_state(restored.environment),saved['payload']['environment'])
+  self.assertEqual((restored.from_role.value,restored.to_role.value),('user','env'))
+  self.assertTrue(restored.message.is_tool_call());self.assertFalse(restored.message.has_text_content())
+  self.assertEqual(restored.message.tool_calls[0].name,'check_network_status')
+
+ def test_user_protocol_endpoints_under_adapter(self):
+  # Empty / unknown-tool / multiple-tool replies still reach the native USER_ERROR endpoint with the
+  # adapter on; normal single-tool and normal-text replies pass through unchanged.
+  def reply(content=None,calls=None,finish=None):
+   return {'model':'mock-user','id':'fixture','usage':None,
+    'choices':[{'finish_reason':finish or ('tool_calls' if calls else 'stop'),
+      'message':{'role':'assistant','content':content,'tool_calls':calls or []}}]}
+  def call(name,tag): return [{'id':tag,'type':'function','function':{'name':name,'arguments':'{}'}}]
+  cases=[('empty',reply(content=''),'error'),
+         ('unknown_tool',reply(calls=call('enable_roaming','u1')),'error'),
+         ('multiple_tools',reply(calls=call('check_network_status','m1')+call('check_status_bar','m2')),'error'),
+         ('normal_single_tool',reply(calls=call('check_network_status','n1')),'tool'),
+         ('normal_text',reply(content='My phone number is 555-123-2002.'),'text')]
+  for name,response,expected in cases:
+   o=e.restore(e.snapshot(self.o),self.task,self.client,self.c)
+   self._route_to_user(o);self.client.transport=lambda p,response=response: response
+   o.step()
+   if expected=='error':
+    self.assertTrue(o.done,name);self.assertEqual(o.termination_reason,e.TerminationReason.USER_ERROR,name)
+   elif expected=='tool':
+    self.assertFalse(o.done,name);self.assertTrue(o.message.is_tool_call(),name)
+    self.assertFalse(o.message.has_text_content(),name)
+    self.assertEqual((o.from_role,o.to_role),(e.Role.USER,e.Role.ENV),name)
+   else:
+    self.assertFalse(o.done,name);self.assertTrue(o.message.has_text_content(),name)
+    self.assertFalse(o.message.is_tool_call(),name)
+    self.assertEqual((o.from_role,o.to_role),(e.Role.USER,e.Role.AGENT),name)
+   if name in ('unknown_tool','multiple_tools'):
+    self.assertGreaterEqual(len(self._events('received_model_protocol_error')),1,name)
+   # The adapter must never fire on a non-mixed reply.
+   self.assertEqual(len(self._events('user_mixed_message_adapted')),0,name)
+
  def test_completed_run_recovery_replays_without_model_dispatch(self):
   from local_experiments.recovery import Recovery,plan
   with tempfile.TemporaryDirectory() as directory:

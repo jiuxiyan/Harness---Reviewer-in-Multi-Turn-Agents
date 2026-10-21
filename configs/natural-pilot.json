@@ -30,7 +30,8 @@
     "actor_model": null,
     "reviewer_model": null,
     "user_model": null,
-    "require_reported_model": false
+    "require_reported_model": false,
+    "user_comm_protocol": "user_single_channel_adapter_v1"
   },
   "arms": [
     "B_bare",

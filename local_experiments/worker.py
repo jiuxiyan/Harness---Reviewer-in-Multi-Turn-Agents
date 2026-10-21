@@ -45,9 +45,10 @@ def main():
   def denied(*args,**kwargs): raise RunFailure('unsupported_native_model_path')
   for name,module in list(sys.modules.items()):
    if name.startswith('tau2.') and hasattr(module,'generate'): module.generate=denied
-  from local_experiments.engine import run
-  store.save('capabilities.json',{'official_domain':'telecom','scope':'single assistant READ or roaming WRITE intervention; fixed-goal Telecom tasks; text half-duplex','supported_arms':['B_bare','B','S','A','P0','P','R','C'],'unsupported_arms':[],'supported_stages':['wire-smoke','natural-pilot','confirmatory-roots'],'confirmatory':config['stage']=='confirmatory-roots','provider_acceptance_measured':False,'formal_model_experiments':0})
-  run(config,store,client)
+  from local_experiments.engine import run, run_reference, run_episode
+  store.save('capabilities.json',{'official_domain':'telecom','scope':'single assistant READ or roaming WRITE intervention; fixed-goal Telecom tasks; text half-duplex','supported_arms':['B_bare','B','S','A','P0','P','R','C'],'unsupported_arms':[],'supported_stages':['wire-smoke','natural-pilot','reference-only','confirmatory-roots','end-to-end'],'confirmatory':config['stage'] in ('confirmatory-roots',),'provider_acceptance_measured':False,'formal_model_experiments':0})
+  runner=run_reference if config['stage']=='reference-only' else run_episode if config['stage']=='end-to-end' else run
+  runner(config,store,client)
   return 0
  except BaseException as exc:
   status=str(exc) if isinstance(exc,RunFailure) else ('user_interrupted' if isinstance(exc,KeyboardInterrupt) else 'implementation_error')
